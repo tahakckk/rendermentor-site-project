@@ -1,0 +1,198 @@
+﻿@model RenderMentor.Models.ViewModels.CourseListVM
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var setBg = "/images/breadcrumb-bg.jpg";
+    if (Model.CourseCategory != null)
+    {
+        if (Model.CourseCategory.PageBg != null)
+        {
+            setBg = Model.CourseCategory.PageBg;
+            setBg = setBg.Replace("\\", "/");
+        }
+    }
+    else
+    {
+        if (Model.CourseList.PageBg != null)
+        {
+            setBg = Model.CourseList.PageBg;
+            setBg = setBg.Replace("\\", "/");
+        }
+    }
+}
+
+<div class="padding-y-60 bg-cover" data-dark-overlay="6" style="background:url(@setBg) no-repeat">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 my-2 text-white">
+                <ol class="breadcrumb breadcrumb-double-angle bg-transparent p-0">
+                    <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Anasayfa</a></li>
+                    <li class="breadcrumb-item"><a asp-controller="CourseList" asp-action="Index" asp-route-courseCategory="">Kurslar</a></li>
+                    @if (Model.CourseCategory != null)
+                    {
+                        <li class="breadcrumb-item">@Model.CourseCategory.Name</li>
+                    }
+                </ol>
+                <h2 class="h1">
+
+                    @if (Model.CourseCategory != null)
+                    {
+                        @Model.CourseCategory.Name
+                    }
+                    else
+                    {
+                        <span>Tüm Online Kurslar</span>
+                    }
+                </h2>
+                <p class="lead">
+                    <span class="text-primary">@Model.Courses.Count()</span> kurs listelendi
+                </p>
+            </div>
+            <!-- Search form here -->
+        </div>
+    </div>
+</div>
+
+<section class="py-3 position-relative shadow-v1">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 my-2">
+                @await Component.InvokeAsync("CourseCategory")
+            </div>
+            @if (Model.CourseCategory != null)
+            {
+                if (Model.CourseCategory.PageTitle != null)
+                {
+                    <div class="col-md-8 mt-3">
+                        <h2>@Model.CourseCategory.PageTitle</h2>
+                        <div class="width-4rem height-4 bg-primary my-2 rounded"></div>
+                    </div>
+                }
+            }
+            else
+            {
+                if (Model.CourseList.PageTitle != null)
+                {
+                    <div class="col-md-8 mt-3">
+                        <h2>@Model.CourseList.PageTitle</h2>
+                        <div class="width-4rem height-4 bg-primary my-2 rounded"></div>
+                    </div>
+                }
+            }
+        </div> <!-- END row-->
+    </div> <!-- END container-->
+</section>
+
+@if (Model.CourseCategory != null)
+{
+    if (Model.CourseCategory.PageDesc != null)
+    {
+        <section class="padding-y-30">
+            <div class="container">
+                <div class="row">
+                    @if (Model.CourseCategory.PageDesc != null)
+                    {
+                        <div class="col-lg-12 mt-5">
+                            @Html.Raw(Model.CourseCategory.PageDesc)
+                        </div>
+                    }
+
+                </div> <!-- END row-->
+            </div> <!-- END container-->
+        </section>
+    }
+
+}
+else
+{
+    if (Model.CourseList.PageDescription != null)
+    {
+        <section class="padding-y-30">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 mt-5">
+                        @Html.Raw(Model.CourseList.PageDescription)
+                    </div>
+                </div> <!-- END row-->
+            </div> <!-- END container-->
+        </section>
+    }
+}
+
+<section class="padding-y-60 bg-light-v2">
+    <div class="container">
+        <div class="row">
+
+            @if (Model.Courses.Count() > 0)
+            {
+                foreach (var course in Model.Courses)
+                {
+                    <div class="col-lg-4 col-md-6 marginTop-30 marginBottom-30">
+                        <div class="card height-100p text-gray shadow-v1">
+                            <a asp-action="Details" asp-route-courseCategory="@course.CourseCategory.SEOUrl" asp-route-SEOUrl="@course.SEOUrl">
+                                <img class="card-img-top" src="@course.CoverImage" alt="@course.Title">
+                            </a>
+                            <div class="card-body">
+                                <a asp-action="Details" asp-route-courseCategory="@course.CourseCategory.SEOUrl" asp-route-SEOUrl="@course.SEOUrl" class="h5">
+                                    @course.Title
+                                </a>
+                                <p class="mt-1 mb-0">
+                                    <i class="ti-user mr-2"></i>
+                                    @course.Instructor.ApplicationUser.Name
+                                </p>
+                            </div>
+                            <div class="card-footer media align-items-center justify-content-between">
+                                <ul class="list-unstyled mb-0">
+                                    <li class="mb-1">
+                                        <i class="ti-headphone small mr-2"></i>
+                                        @if (course.TotalLectures == 0)
+                                        {
+                                            <span>Ders yok</span>
+                                        }
+                                        else
+                                        {
+                                            @course.TotalLectures <span>ders</span>
+                                        }
+                                    </li>
+                                    <li class="mb-1">
+                                        <i class="ti-time small mr-2"></i>
+                                        @if (course.TotalDuration.TotalHours < 1 && course.TotalDuration.TotalHours > 0)
+                                        {
+                                            @(String.Format("{0:0.0}", course.TotalDuration.TotalMinutes))                            <span>dakika</span>
+
+                                        }
+                                        else if (course.TotalDuration.TotalHours == 0)
+                                        {
+                                            <span>Video ders yok</span>
+                                        }
+                                        else
+                                        {
+                                            @(String.Format("{0:0.0}", course.TotalDuration.TotalHours)) <span>saat</span>
+                                        }
+                                    </li>
+                                </ul>
+                                <h4 class="h5 text-right">
+                                    
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="alert alert-warning alert-dismissible d-flex my-5" role="alert">
+                    <i class="fa fa-award fa-3x mr-3"></i>
+                    <div>
+                        <p><strong>@Model.CourseCategory.Name</strong> bölümü için kurslarımız hazırlanmaktadır. En kısa zamanda bu sayfadan kurslarımızı inceleyebilirsiniz.</p>
+                        <a class="icon-btn btn btn-warning" href="/online-kurslar"><i class="fa fa-award"></i> Tüm Kursları İncele</a>
+                    </div>
+                </div>
+            }
+
+            <!-- Pagination here -->
+
+        </div> <!-- END row-->
+    </div> <!-- END container-->
+</section>
+

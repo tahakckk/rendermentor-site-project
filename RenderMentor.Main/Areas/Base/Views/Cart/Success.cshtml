@@ -1,0 +1,79 @@
+﻿@model RenderMentor.Utility.VerifyGatewayResult
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Ödeme Başarılı";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card border-success">
+                <div class="card-header bg-success text-white">
+                    <h3 class="mb-0"><i class="fa fa-check-circle mr-2"></i> Ödeme İşlemi Başarılı</h3>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-success">
+                        <h5><i class="fa fa-check mr-2"></i> Ödemeniz başarıyla alındı</h5>
+                        <p>Ödeme işleminiz başarıyla tamamlanmıştır. Siparişiniz işleme alınmıştır.</p>
+                        
+                        @if (!string.IsNullOrEmpty(Model.OrderNumber))
+                        {
+                            <p><strong>Sipariş Numarası:</strong> @Model.OrderNumber</p>
+                        }
+                        
+                        @if (!string.IsNullOrEmpty(Model.TransactionId))
+                        {
+                            <p><strong>İşlem Numarası:</strong> @Model.TransactionId</p>
+                        }
+                        
+                        @if (!string.IsNullOrEmpty(Model.HostReferenceNumber))
+                        {
+                            <p><strong>Referans Numarası:</strong> @Model.HostReferenceNumber</p>
+                        }
+                    </div>
+                    
+                    <div class="text-center mt-4">
+                        <p>3 saniye içinde otomatik olarak yönlendirileceksiniz.</p>
+                        <a href="/odeme-tamamlandi/@Model.OrderNumber" class="btn btn-outline-success btn-lg">
+                            <i class="fa fa-shopping-bag mr-2"></i> Siparişi Görüntüle
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Konsola başarı logla
+    console.log("Ödeme işlemi başarılı", {
+        orderNumber: "@Model.OrderNumber",
+        transactionId: "@Model.TransactionId"
+    });
+    
+    // Ödeme başarısı için event gönderme dene
+    if (typeof window.parent !== 'undefined' && window.parent !== window) {
+        try {
+            // Ana sayfaya veri göndermeye çalışma (hatalara neden olabilir)
+            console.log("İframe içindeyiz, ana sayfaya mesaj gönderme devre dışı bırakıldı");
+        } catch (e) {
+            console.error("Ana sayfaya mesaj gönderme hatası:", e);
+        }
+    }
+    
+    // Otomatik yönlendirme - güvenli bir şekilde
+    var redirectTimer = null;
+    try {
+        redirectTimer = setTimeout(function() {
+            window.location.href = "/odeme-tamamlandi/@Model.OrderNumber";
+        }, 3000);
+    } catch (e) {
+        console.error("Yönlendirme hatası:", e);
+        // Zamanlayıcıyı temizle
+        if (redirectTimer !== null) {
+            clearTimeout(redirectTimer);
+        }
+    }
+</script>
+

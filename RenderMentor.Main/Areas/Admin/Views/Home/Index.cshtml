@@ -1,0 +1,401 @@
+﻿@model HomeContent
+
+@{
+    Layout = "~/Views/Shared/_Layout-admin.cshtml";
+}
+
+<div class="col-lg-10">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h1>Anasayfa</h1>
+            <ol class="breadcrumb breadcrumb-double-angle bg-transparent p-0">
+                <li class="breadcrumb-item"><a asp-area="Base" asp-controller="Home" asp-action="Index">Anasayfa</a></li>
+                <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Admin</a></li>
+                <li class="breadcrumb-item"> Anasayfa</li>
+            </ol>
+        </div>
+        <div class="col-md-6">
+            <div class="admin-top-actions d-flex justify-content-end">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <a asp-area="Base" asp-controller="Home" asp-action="Index" target="_blank" class="btn btn-light"><i class="fa fa-search"></i> Sayfayı İncele</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card shadow-v1 padding-30">
+        <ul class="nav tab-line tab-line border-bottom mb-4" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#Tabs_1-1" role="tab" aria-selected="true">
+                    Slayt Alanı
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#Tabs_1-2" role="tab" aria-selected="true">
+                    Sayfa İçeriği
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#Tabs_1-3" role="tab" aria-selected="true">
+                    Referanslar
+                </a>
+            </li>
+        </ul>
+
+        <div class="tab-content">
+            <div class="tab-pane fade show active" id="Tabs_1-1" role="tabpanel">
+                <div class="table-responsive my-4">
+                    <table id="tblData" class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th scope="col">Sıra</th>
+                                <th scope="col">Slayt Görseli</th>
+                                <th scope="col">Slayt Başlığı</th>
+                                <th scope="col">Eylemler</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div class="my-3">
+                    <a href="#createSlide" data-toggle="modal" class="icon-btn btn btn-success text-white mr-2"><i class="fa fa-plus"></i> Slayt Ekle</a>
+                    <a asp-action="Index" class="icon-btn btn btn-info mr-2"><i class="fa fa-arrow-left"></i> Listeye Dön</a>
+                    <a asp-area="Base" asp-controller="Home" asp-action="Index" target="_blank" class="icon-btn btn btn-light mr-2"><i class="fa fa-search"></i> Sayfayı İncele</a>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="Tabs_1-2" role="tabpanel">
+                <form method="post" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    @if (Model.Id != 0)
+                    {
+                        <input type="hidden" asp-for="Id" />
+                    }
+                    <div class="border-bottom mb-4 pb-4">
+                        <div class="form-group row">
+                            <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                                Kısa Üst Başlık
+                                <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Eğer kullanacaksanız anasayfa içerik alanı balığının üstünde yer alacak sarı üst başlığı yazınız.">
+                                    <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                </span>
+                            </label>
+                            <div class="col-md-10">
+                                <input asp-for="SubTitle" class="form-control" value="@Model.SubTitle" autofocus>
+                                <span asp-validation-for="SubTitle" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                                Anasayfa İçerik Alanı Başlığı
+                                <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Anasayfa içerik alanının balığını yazınız.">
+                                    <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                </span>
+                            </label>
+                            <div class="col-md-10">
+                                <input asp-for="Title" class="form-control" value="@Model.Title">
+                                <span asp-validation-for="Title" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                                Başlık Altı Kısa Açıklama
+                                <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Eğer kullanacaksanız içerik alanının başlığının altındaki kısa açıklamayı yazınız.">
+                                    <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                </span>
+                            </label>
+                            <div class="col-md-10">
+                                <textarea asp-for="ShortDesc" rows="2" class="form-control">@Model.ShortDesc</textarea>
+                                <span asp-validation-for="ShortDesc" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                                İçerik Alanı Açıklama
+                                <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Anasayfa içerik alanının açıklamasını yazınız.">
+                                    <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                </span>
+                            </label>
+                            <div class="col-md-10">
+                                <textarea asp-for="Desc" rows="6" class="form-control ckeditor">@Model.Desc</textarea>
+                                <span asp-validation-for="Desc" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="border-bottom mb-4 pb-4">
+                        <h4 class="mb-4">Mentor Bilgileri</h4>
+                        <div class="form-group row">
+                            <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                                Mentor Adı
+                                <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Sitenin baş mentorunun adı ve soyadını yazınız.">
+                                    <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                </span>
+                            </label>
+                            <div class="col-md-10">
+                                <input asp-for="MentorName" class="form-control" value="@Model.MentorName">
+                                <span asp-validation-for="MentorName" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                                Mentor Unvanı
+                                <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Mentor unvanını yazınız. Alt satıra geçmek isterseniz araya <br /> etiketi ekleyebilirsiniz.">
+                                    <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                </span>
+                            </label>
+                            <div class="col-md-10">
+                                <textarea asp-for="MentorTitle" rows="2" class="form-control">@Model.MentorTitle</textarea>
+                                <span asp-validation-for="MentorTitle" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                                Mentor Görseli
+                                <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Anasayfa baş mentorun görselini yükleyiniz.">
+                                    <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                </span>
+                            </label>
+                            <div class="col-md-10">
+                                <div class="image-input media align-items-end mt-4">
+                                    <div class="position-relative">
+                                        @if (Model.MentorImage != null)
+                                        {
+                                            <a href="@Model.MentorImage" data-fancybox="AvatarImage">
+                                                <img src="@Model.MentorImage" width="150" height="215">
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <img src="~/images/placeholder/instructor-page-image.jpg">
+                                        }
+                                    </div>
+                                    <div class="media-body ml-4 mb-4 mb-md-0">
+                                        <p>JPG veya PNG 505x725 px</p>
+                                        <a href=""></a>
+                                        <button type="button" class="upload btn btn-outline-primary">
+                                            <input type="file" name="MentorImage">
+                                            Yükle
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="border-bottom mb-4 pb-4">
+                        <h4 class="mb-4">SEO İçerikleri</h4>
+                        <div class="form-group row">
+                            <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                                Meta Title
+                                <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Sitenin meta title başlığını maksimum 60 karakter olmak üzere yazınız. Meta title google arama sonuçlarında gözüken başlıktır ve ayrıca ilgili sayfadayken tarayıcı sekmesinde yer alır.">
+                                    <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                </span>
+                            </label>
+                            <div class="col-md-10">
+                                <input asp-for="MetaTitle" class="form-control" value="@Model.MetaTitle">
+                                <span asp-validation-for="MetaTitle" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                                Meta Description
+                                <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Sitenin meta description açıklamasını maksimum 160 karakter olmak üzere yazınız. Meta description google arama sonuçlarında gözüken açıklamadır. Google her aramada sonuçları buradan getirmese de sayfanın içerik indekslemesi ve sayfa puanlaması için önem verilen bir özelliktir.">
+                                    <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                </span>
+                            </label>
+                            <div class="col-md-10">
+                                <input asp-for="MetaDesc" class="form-control" value="@Model.MetaDesc">
+                                <span asp-validation-for="MetaDesc" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="my-5">
+                        <button type="submit" class="icon-btn btn btn-success mr-2"><i class="fa fa-check-circle"></i> Kaydet</button>
+                        <a asp-area="Base" asp-controller="Home" asp-action="Index" class="icon-btn btn btn-info mr-2"><i class="fa fa-search"></i> İncele</a>
+                    </div>
+                </form>
+            </div>
+            <div class="tab-pane fade" id="Tabs_1-3" role="tabpanel">
+                <div class="border-bottom mb-4 pb-4">
+                    <h6 class="col-md-2 text-dark font-weight-bold">
+                        Referanslar
+                        <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Anasayfada en altta gözükecek referans logolarını buradan ekleyiniz. Logolar alana tam ortalanacağı için boyutları önemli değildir. İstediğiniz ebatlarda ekleyebilirsiniz.">
+                            <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                        </span>
+                    </h6>
+                    <div class="col-md-12">
+                        <table id="references" class="sectionTable table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Sıra</th>
+                                    <th scope="col">Referans Logosu</th>
+                                    <th scope="col">Eylemler</th>
+                                </tr>
+                            </thead>
+                        </table>
+                        <div class="my-3">
+                            <button id="referenceButton" class="icon-btn btn btn-warning">
+                                <i class="fa fa-plus"></i> Referans Ekle
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <form id="referenceForm" method="post" enctype="multipart/form-data" asp-controller="Home" asp-action="UploadReference">
+            <input type="file" name="ReferenceLogo" id="uploadReference" style="display:none;">
+        </form>
+
+    </div> <!-- END card-->
+</div> <!-- END col-md-8 -->
+
+<partial name="_createSlide.cshtml">
+
+<partial name="_editSlide.cshtml">
+
+<partial name="_pickSlideBg.cshtml">
+
+
+@section Scripts {
+    <script src="~/datatables/home-slider.js"></script>
+    <script src="~/js/jquery.form.min.js"></script>
+    <script src="~/datatables/references.js"></script>
+    <script>
+        $('#tblData').on('click', '.edit', function () {
+            var id = $(this).parent().parent().find('.editId').val();
+            $.ajax({
+                type: 'Get',
+                url: '/findSlide/' + id,
+                success: function (slide) {
+                    $('#editSlide #slideId').val(slide.id);
+                    $('#editSlide #title').val(slide.title);
+                    $('#editSlide #desc').val(slide.desc);
+                    $('#editSlide #buttonLink').val(slide.buttonLink);
+                    $('#editSlide #buttonText').val(slide.buttonText);
+                    $('#editSlide #slideBg').attr("href", slide.slideBg);
+                    $('#editSlide #slideBg img').attr("src", slide.slideBg);
+                    $('#editSlide #slideBgInput').val(slide.slideBg);
+                }
+            });
+        });
+
+        var gallery = $("#gallerySection");
+        var currentImages = [];
+        $('#tblData').on('click', '.pickImage', function () {
+            var id = $(this).parent().parent().find('.editId').val();
+            currentImages = [];                        
+            $.ajax({
+                type: 'Get',
+                url: '/Admin/MediaGallery/GetAllSlideBgs',
+                success: function (data) {
+                    $('#pickSlideBgs #slideId').val(id);
+                    gallery.empty();
+                    $.each(data.data, function (i, item) {
+                        gallery.append(`
+                            <div id="gallery-box-${i}" class="col-md-6 col-lg-4 marginTop-30"></div>
+                        `);
+                        var galleryBox = $(`#gallery-box-${i}`);
+                        if (data.data[i].homeSliderId == id) {
+                            galleryBox.append(`
+                                <div class="media-box picked"></div>
+                            `);
+                        } else if (data.data[i].homeSliderId != null && data.data[i].homeSliderId != id) {
+                            galleryBox.append(`
+                                <div class="media-box locked"></div>
+                            `);
+                        } else {
+                            galleryBox.append(`
+                                <div class="media-box"></div>
+                            `);
+                        }
+                        mediaBox = galleryBox.find('.media-box');
+                        if (mediaBox.hasClass('picked')) {
+                            mediaBox.append(`
+                                <div class="selection"><span class="select-box"><i class="far fa-check-square"></i></span></div>
+                            `);
+                        } else if (mediaBox.hasClass('locked')) {
+                            mediaBox.append(`
+                                <div class="selection"><span class="select-box"><i class="far fa-times-circle"></i></span></div>
+                            `);
+                        } else {
+                            mediaBox.append(`
+                                <div class="selection"></div>
+                            `);
+                        }
+                        mediaBox.append(`
+                            <a href="javascript:void(0);" class="pick-image card shadow-v1 align-items-center p-0">
+                                <img class="img-responsive" src="${data.data[i].imageSM}" />
+                            </a>
+                            <input class="imageId" type="hidden" name="id" value="${data.data[i].id}" />
+                        `);
+                    });
+                }
+            });            
+        });
+        $('#pickSlideBgs').on('click', '.media-box', function () {
+            if ($(this).hasClass('locked')) {
+                toastr.error("Bu görsel başka bir slayt için seçilmiş.");
+            } else {
+                $(this).toggleClass('picked');
+                if ($(this).hasClass('picked')) {
+                    $(this).find('.selection').append(`
+                <span class="select-box"><i class="far fa-check-square"></i></span>
+                `);
+                } else {
+                    $(this).find('.selection').empty();
+                }
+            }
+        });
+
+        var pickedImages = [];
+        $('#pickSlideBgs').on('click', '#pickButton', function () {
+            var slideId = $('#pickSlideBgs #slideId').val();
+            pickedImages = [];
+            $.each($('.picked'), function (i, item) {
+                var toPickId = $(this).parent().find('.imageId').val();
+                pickedImages.push(toPickId);
+            });
+            pickedImages = JSON.stringify(pickedImages);
+            $.ajax({
+                type: "POST",
+                url: "/Admin/Home/PickImages/" + pickedImages + "/" + slideId,
+                success: function (data) {
+                    if (data.success) {
+                        toastr.success(data.message);
+                        $('#pickSlideBgs').modal('toggle');
+                    } else {
+                        toastr.error(data.message);
+                    }
+                }
+            });
+        });
+
+        function validateInput() {
+            if (document.getElementById("uploadBoxSlide").value == "") {
+                swal("Error", "Lütfen bir slayt görseli yükleyiniz", "error");
+                return false;
+            }
+            return true;
+        }
+
+        $('#referenceButton').click(function (e) {
+            e.preventDefault();
+            $('#uploadReference').trigger('click');
+        });
+
+        $('#uploadReference').change(function (e) {
+            e.preventDefault();
+            var form = $(this).form();
+            var url = form.attr('action');
+            form.ajaxSubmit({
+                url: url,
+                success: function (data) {
+                    if (data.success) {
+                        toastr.success(data.message);
+                        referenceTable.ajax.reload();
+                    } else {
+                        toastr.error(data.message);
+                    }
+                }
+            });
+
+            return false;
+        });        
+    </script>
+}

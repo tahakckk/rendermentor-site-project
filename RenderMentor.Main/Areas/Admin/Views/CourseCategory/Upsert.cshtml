@@ -1,0 +1,245 @@
+﻿@model CourseCategory
+@{
+    Layout = "~/Views/Shared/_Layout-admin.cshtml";
+    var title = "Kurs Kategorisi Ekle";
+}
+            
+<div class="col-lg-10">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            @if (Model.Id != 0)
+            {
+                // edit
+                title = "Kurs Kategorisini Düzenle";
+            }
+            <h1>@title</h1>
+            <ol class="breadcrumb breadcrumb-double-angle bg-transparent p-0">
+                <li class="breadcrumb-item"><a <a asp-area="Base" asp-controller="Home" asp-action="Index">>Anasayfa</a></li>
+                <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Admin</a></li>
+                <li class="breadcrumb-item"><a asp-action="Index"> Kurs Kategorileri</a></li>
+                <li class="breadcrumb-item"> @(Model.Id != 0 ? Model.Name : "Kurs Kategorisi Ekle")</li>
+            </ol>
+        </div>
+        <div class="col-md-6">
+            <div class="admin-top-actions d-flex justify-content-end">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <a asp-action="Upsert" asp-route-id="" class="btn btn-light"><i class="fa fa-plus"></i> Yeni Ekle</a>
+                    <a asp-area="Base" asp-controller="CourseList" asp-action="Index" asp-route-courseCategory="@Model.SEOUrl" target="_blank" class="btn btn-light"><i class="fa fa-search"></i> Sayfayı İncele</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card shadow-v1 padding-30">
+        <ul class="nav tab-line tab-line border-bottom mb-4" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#Tabs_1-1" role="tab" aria-selected="true">
+                    Kategori İçeriği
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#Tabs_1-2" role="tab" aria-selected="true">
+                    Sayfa İçeriği
+                </a>
+            </li>
+        </ul>
+
+        <form method="post" enctype="multipart/form-data">
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="Tabs_1-1" role="tabpanel">
+                    <div class="border-bottom mb-4 pb-4">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        @if (Model.Id != 0)
+                        {
+                            <input type="hidden" asp-for="Id" />
+                        }
+                        <div class="form-group row">
+                            <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                                Kategori Adı
+                                <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Kategorinin adını yazınız.">
+                                    <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                </span>
+                            </label>
+                            <div class="col-md-10">
+                                <input asp-for="Name" class="form-control" value="@Model.Name" autofocus>
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                                Kısa Açıklama
+                                <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="(Max: 120 karakter) Kategorinin liste sayfasındaki kutucuğunda yer alan kısa açıklamayı yazınız.">
+                                    <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                </span>
+                            </label>
+                            <div class="col-md-10">
+                                <textarea asp-for="ShortDesc" rows="2" class="form-control">@Model.ShortDesc</textarea>
+                                <span asp-validation-for="ShortDesc" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <label class="col-form-label text-dark font-weight-bold">
+                                    Kapak Görseli
+                                    <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Kategorinin anasayfadaki kutucuğunda yer alan ikon görselini PNG formatında yükleyiniz.">
+                                        <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                    </span>
+                                </label>
+                                <div class="image-input media align-items-end mt-4">
+                                    <div class="position-relative">
+                                        @if (Model.CoverImage != null)
+                                        {
+                                            <a href="@Model.CoverImage" data-fancybox="CoverImage">
+                                                <img src="@Model.CoverImage" width="100" height="100">
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <img src="~/images/placeholder/category-cover-image.jpg">
+                                            <input type="hidden" value="@Model.CoverImage" />
+                                            
+                                        }
+                                    </div>
+                                    <div class="media-body ml-4 mb-4 mb-md-0">
+                                        <p>JPG veya PNG 100x100 px</p>
+                                        <a href=""></a>
+                                        <button type="button" class="upload btn btn-outline-primary">
+                                            <input type="file" name="CoverImage" id="uploadBoxCover" multiple>
+                                            Yükle
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="my-5">
+                        @if (Model.Id != 0)
+                        {
+                            <partial name="_EditAndBackToListButton" model="@Model.Id" />
+                            <a asp-area="Base" asp-controller="CourseList" asp-action="Index" asp-route-courseCategory="@Model.SEOUrl" target="_blank" class="icon-btn btn btn-light mr-2"><i class="fa fa-search"></i> İncele</a>
+                        }
+                        else
+                        {
+                            <button type="submit" onclick="return validateInput()" class="icon-btn btn btn-success mr-2"><i class="fa fa-check-circle"></i> Kaydet</button>
+                            <a asp-action="Index" class="icon-btn btn btn-info mr-2"><i class="fa fa-arrow-left"></i> Listeye Dön</a>
+
+                        }
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="Tabs_1-2" role="tabpanel">
+                    <div class="border-bottom mb-4 pb-4">
+                        <h4>Arkaplan Görseli</h4>
+                        <div class="image-input media align-items-end mt-4">
+                            <div class="position-relative">
+                                @if (Model.PageBg != null)
+                                {
+                                    <a href="@Model.PageBg" data-fancybox="pageBg">
+                                        <img src="@Model.PageBg" width="853" height="120">
+                                    </a>
+                                }
+                                else
+                                {
+                                    <img src="~/images/placeholder/inner-background-image.jpg">
+                                }
+                            </div>
+                            <div class="media-body ml-4 mb-4 mb-md-0">
+                                <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Kategorinin detay sayfasındaki arkaplan görseli.">
+                                    <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                </span>
+                                <p>JPG or PNG 1920x270 px</p>
+                                <a href=""></a>
+                                <button type="button" class="upload btn btn-outline-primary">
+                                    <input type="file" name="PageBg" id="uploadBoxBg">
+                                    Yükle
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="border-bottom mb-4 pb-4">
+                        <h4 class="mb-4">Sayfa İçeriği</h4>
+                        <div class="form-group row">
+                            <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                                Sayfa İçi Başlığı
+                                <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Kategorinin detay sayfasındaki iç sayfa başlığını yazınız.">
+                                    <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                </span>
+                            </label>
+                            <div class="col-md-10">
+                                <input asp-for="PageTitle" class="form-control" value="@Model.PageTitle">
+                                <span asp-validation-for="PageTitle" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <label class="col-form-label text-dark font-weight-bold">Sayfa İçi Açıklaması</label>
+                                <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Kategorinin detay sayfasındaki iç sayfa açıklamasını yazınız.">
+                                    <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                </span>
+                                <textarea asp-for="PageDesc" rows="6" class="form-control ckeditor">@Model.PageDesc</textarea>
+                                <span asp-validation-for="PageDesc" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="border-bottom mb-4 pb-4">
+                        <h4 class="mb-4">SEO İçeriği</h4>
+                        <div class="form-group row">
+                            <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                                Meta Title
+                                <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Kategori detay sayfasının meta title başlığını maksimum 60 karakter olmak üzere yazınız. Meta title google arama sonuçlarında gözüken başlıktır ve ayrıca ilgili sayfadayken tarayıcı sekmesinde yer alır.">
+                                    <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                </span>
+                            </label>
+                            <div class="col-md-10">
+                                <input asp-for="MetaTitle" class="form-control" value="@Model.MetaTitle">
+                                <span asp-validation-for="MetaTitle" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                                Meta Description
+                                <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Kategori detay sayfasının meta description açıklamasını maksimum 160 karakter olmak üzere yazınız. Meta description google arama sonuçlarında gözüken açıklamadır. Google her aramada sonuçları buradan getirmese de sayfanın içerik indekslemesi ve sayfa puanlaması için önem verilen bir özelliktir.">
+                                    <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                </span>
+                            </label>
+                            <div class="col-md-10">
+                                <input asp-for="MetaDesc" class="form-control" value="@Model.MetaDesc">
+                                <span asp-validation-for="MetaDesc" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="my-5">
+                        @if (Model.Id != 0)
+                        {
+                            <partial name="_EditAndBackToListButton" model="@Model.Id" />
+                            <a asp-area="Base" asp-controller="CourseList" asp-action="Index" asp-route-courseCategory="@Model.SEOUrl" target="_blank" class="icon-btn btn btn-light mr-2"><i class="fa fa-search"></i> İncele</a>
+                        }
+                        else
+                        {
+                            <button type="submit" onclick="return validateInput()" class="icon-btn btn btn-success mr-2"><i class="fa fa-check-circle"></i> Kaydet</button>
+                            <a asp-action="Index" class="icon-btn btn btn-info mr-2"><i class="fa fa-arrow-left"></i> Listeye Dön</a>        
+                        }
+                    </div>
+                </div> <!-- END tab-pane -->
+
+            </div> <!-- END tab-content-->
+        </form>
+    </div> <!-- END card-->
+</div> <!-- END col-md-8 -->
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function validateInput() {
+            if (document.getElementById("uploadBoxCover").value == "") {
+                swal("Error", "Lütfen bir görsel seçiniz", "error");
+                return false;
+            }
+            return true;
+        }
+    </script>
+}

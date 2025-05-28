@@ -1,0 +1,132 @@
+﻿@page
+@model RegisterModel
+@using RenderMentor.Utility
+@{
+    ViewData["Title"] = "Register";
+}
+
+<section class="padding-y-100 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 mx-auto">
+                <div class="card shadow-v2">
+                    <div class="card-header border-bottom">
+                        <h4 class="mt-4">
+                            Hemen Kaydolun ve Öğrenmeye Başlayın!
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        @{
+                            if ((Model.ExternalLogins?.Count ?? 0) != 0)
+                            {
+                                <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+                                    <div class="row">
+                                        @foreach (var provider in Model.ExternalLogins)
+                                        {
+                                            <div class="col my-2">
+                                                <button type="submit" class="btn btn-block btn-@provider.Name" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">
+                                                    <i class="ti-@provider.Name mr-1"></i>
+                                                    @provider.DisplayName
+                                                </button>
+                                            </div>
+                                        }
+                                    </div>
+                                </form>
+                                <p class="text-center my-4">
+                                    VEYA
+                                </p>
+                            }
+                        }
+                        <form asp-route-returnUrl="@Model.ReturnUrl" method="post" class="px-lg-4">
+                            <div asp-validation-summary="All" class="text-danger"></div>
+                            <div class="input-group input-group--focus mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text bg-white ti-user"></span>
+                                </div>
+                                <input asp-for="Input.Name" class="form-control border-left-0 pl-0" placeholder="İsim ve Soyadınız">
+                                <span asp-validation-for="Input.Name" class="text-danger"></span>
+                            </div>
+                            <div class="input-group input-group--focus mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text bg-white ti-email"></span>
+                                </div>
+                                <input asp-for="Input.Email" class="form-control border-left-0 pl-0" placeholder="Email">
+                                <span asp-validation-for="Input.Email" class="text-danger"></span>
+                            </div>
+                            <div class="input-group input-group--focus mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text bg-white ti-mobile"></span>
+                                </div>
+                                <input asp-for="Input.PhoneNumber" class="form-control border-left-0 pl-0" placeholder="Telefon Numaranız">
+                                <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+                            </div>
+                            <div class="input-group input-group--focus mb-3">
+                                @foreach (var gender in System.Enum.GetValues(typeof(RenderMentor.Models.ApplicationUser.Genders)))
+                                {
+                                    <label for="gender@(gender)" class="ec-radio radio-thin mb-3 mr-4">
+                                        <input type="radio" asp-for="Input.Gender" id="gender@(gender)" value="@((int)gender)" />
+                                        <span class="ec-radio__control"></span>
+                                        <span class="ec-radio__label">@gender</span>
+                                    </label>
+
+                                }
+                            </div>
+                            <div class="input-group input-group--focus mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text bg-white ti-lock"></span>
+                                </div>
+                                <input asp-for="Input.Password" class="form-control border-left-0 pl-0" placeholder="Parola" required>
+                                <span asp-validation-for="Input.Password" class="text-danger"></span>
+                            </div>
+                            <div class="input-group input-group--focus mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text bg-white ti-lock"></span>
+                                </div>
+                                <input asp-for="Input.ConfirmPassword" class="form-control border-left-0 pl-0" placeholder="Parola Tekrarı" required>
+                                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                            </div>
+                            @*<div class="my-4">
+                                    <label class="ec-checkbox check-sm my-2 clearfix">
+                                        <input type="checkbox" name="checkbox">
+                                        <span class="ec-checkbox__control mt-1"></span>
+                                        <span class="ec-checkbox__lebel">
+                                            By signing up, you agree to our
+                                            <a href="page-terms-and-privacy-policy.html" class="text-primary">Terms of Use</a>
+                                            and
+                                            <a href="page-terms-and-privacy-policy.html" class="text-primary">Privacy Policy.</a>
+                                        </span>
+                                    </label>
+                                </div>*@
+                            @if (User.IsInRole(SD.Role_Admin))
+                            {
+                                <div class="form-group">
+                                    <label asp-for="Input.Role"></label>
+                                    @Html.DropDownListFor(m => m.Input.Role, Model.Input.RoleList, "_Lütfen kullanıcı rolü seçiniz", new { @class = "form-control" })
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Input.CompanyId"></label>
+                                    @Html.DropDownListFor(m => m.Input.CompanyId, Model.Input.CompanyList, "_Lütfen firma seçiniz", new { @class = "form-control" })
+                                </div>
+                            }
+                            <button type="submit" class="btn btn-block btn-primary">Kayıt Ol</button>
+                            <p class="my-5 text-center">
+                                Zaten hesabınız var mı? <a asp-area="Identity" asp-page="/Account/Login" class="text-primary">Giriş yapın</a>
+                            </p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div> <!-- END row-->
+    </div> <!-- END container-->
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $('#genderMale').siblings('.ec-radio__label').text("Erkek");
+        $('#genderFemale').siblings('.ec-radio__label').text("Kadın");
+        $(document).ready(function () {
+            $('#genderMale').prop("checked", true);
+        });
+    </script>
+}

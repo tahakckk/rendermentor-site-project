@@ -1,0 +1,50 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout-admin.cshtml";
+}
+
+<div class="col-lg-10">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h1>Firmalar</h1>
+            <ol class="breadcrumb breadcrumb-double-angle bg-transparent p-0">
+                <li class="breadcrumb-item"><a asp-area="Base" asp-controller="Home" asp-action="Index">Anasayfa</a></li>
+                <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Admin</a></li>
+                <li class="breadcrumb-item"> Firmalar</li>
+            </ol>
+        </div>
+        <div class="col-md-6">
+            <div class="admin-top-actions d-flex justify-content-end">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <a asp-action="Upsert" class="btn btn-light"><i class="fa fa-plus"></i> Yeni Ekle</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card shadow-v1 padding-30">
+
+        <div class="table-responsive my-4">
+            <table id="tblData" class="table table-bordered no-order">
+                <thead>
+                    <tr>
+                        <th scope="col">Firma Adı</th>
+                        <th scope="col">Şehir</th>
+                        <th scope="col">Telefon</th>
+                        <th scope="col">Yetkilendirilmiş</th>
+                        <th scope="col">Eylemler</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div class="my-3">
+            <a asp-action="Upsert" class="icon-btn btn btn-success mr-2"><i class="fa fa-plus"></i> Yeni Ekle</a>
+        </div>
+            
+
+    </div> <!-- END card-->
+</div> <!-- END col-md-8 -->
+
+
+@section Scripts {
+    <script src="~/datatables/company.js"></script>
+}

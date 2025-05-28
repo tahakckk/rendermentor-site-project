@@ -1,0 +1,678 @@
+﻿@model RenderMentor.Models.ViewModels.CourseVM
+@{
+    Layout = "~/Views/Shared/_Layout-admin.cshtml";
+    var title = "Kurs Ekle";
+}
+
+<div class="col-lg-10">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            @if (Model.Course.Id != 0)
+            {
+                // edit
+                title = "Kursu Düzenle";
+                <input type="hidden" asp-for="Course.Id" />
+                <input type="hidden" id="courseId" name="courseId" value="@Model.Course.Id" />
+            }
+            <h1>@title</h1>
+            <ol class="breadcrumb breadcrumb-double-angle bg-transparent p-0">
+                <li class="breadcrumb-item"><a asp-area="Base" asp-controller="Home" asp-action="Index">Anasayfa</a></li>
+                <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Admin</a></li>
+                <li class="breadcrumb-item"><a asp-action="Index"> Kurslar</a></li>
+                <li class="breadcrumb-item"> @(Model.Course.Id != 0 ? Model.Course.Title : "Kurs Ekle")</li>
+            </ol>
+        </div>
+        <div class="col-md-6">
+            <div class="admin-top-actions d-flex justify-content-end">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <a asp-action="Upsert" asp-route-id="" class="btn btn-light"><i class="fa fa-plus"></i> Yeni Ekle</a>
+                    @if (Model.Course.Id != 0)
+                    {
+                        <a asp-area="Base" asp-controller="CourseList" asp-action="Details" asp-route-courseCategory="@Model.CategoryURL" asp-route-SEOUrl="@Model.Course.SEOUrl" target="_blank" class="btn btn-light"><i class="fa fa-search"></i> Sayfayı İncele</a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card shadow-v1 padding-30">
+        <ul class="nav tab-line tab-line border-bottom mb-4" role="tablist">
+            @if (Model.Course.Id != 0)
+            {
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#Tabs_1-1" role="tab" aria-selected="true">
+                        Kurs Bölümleri
+                    </a>
+                </li>
+            }
+            <li class="nav-item">
+                <a class="nav-link@(Model.Course.Id != 0 ? "" : " active")" data-toggle="tab" href="#Tabs_1-@(Model.Course.Id != 0 ? "2" : "1")" role="tab" aria-selected="true">
+                    Kurs Bilgileri
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#Tabs_1-@(Model.Course.Id != 0 ? "3" : "2")" role="tab" aria-selected="true">
+                    Sayfa İçeriği
+                </a>
+            </li>
+        </ul>
+
+        <form method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @if (Model.Course.Id != 0)
+            {
+                <input type="hidden" asp-for="Course.Id" />
+            }
+            <div class="tab-content">
+                @if (Model.Course.Id != 0)
+                {
+                    <div class="tab-pane fade show active" id="Tabs_1-1" role="tabpanel">
+                        <div class="border-bottom mb-4 pb-4">
+                            <h4 class="mb-4">Kurs Bölümleri</h4>
+                            <table id="tblData" class="sectionTable table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th scope="col"></th>
+                                        <th scope="col">Sıra</th>
+                                        <th scope="col">Bölüm Adı</th>
+                                        <th scope="col">Eylemler</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                            <div class="my-3">
+                                <a href="#createSection" data-toggle="modal" class="icon-btn btn btn-success text-white mr-2"><i class="fa fa-plus"></i> Bölüm Ekle</a>
+                                <a asp-action="Index" class="icon-btn btn btn-info mr-2"><i class="fa fa-arrow-left"></i> Listeye Dön</a>
+                                <a asp-area="Base" asp-controller="CourseList" asp-action="Details" asp-route-courseCategory="@Model.CategoryURL" asp-route-SEOUrl="@Model.Course.SEOUrl" target="_blank" class="icon-btn btn btn-light mr-2"><i class="fa fa-search"></i> Sayfayı İncele</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+                <div class="tab-pane fade@(Model.Course.Id != 0 ? "" : " show active")" id="Tabs_1-@(Model.Course.Id != 0 ? "2" : "1")" role="tabpanel">
+                    <div class="border-bottom mb-4 pb-4">
+                        <div class="form-group row">
+                            <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                                Kurs Başlığı
+                                <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Kursun başlığını yazınız.">
+                                    <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                </span>
+                            </label>
+                            <div class="col-md-10">
+                                <input asp-for="Course.Title" class="form-control" value="@Model.Course.Title" autofocus>
+                                <span asp-validation-for="Course.Title" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                                Kursun Fiyatı
+                                <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Kursun fiyatını sadece sayı olarak yazınız. (₺ sembolü otomatik eklenecektir.)">
+                                    <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                </span>
+                            </label>
+                            <div class="col-md-10">
+                                <input asp-for="Course.Price" class="form-control" value="@Model.Course.Price">
+                                <span asp-validation-for="Course.Price" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                                Kurs Yayında
+                                <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Kursun yayında olup olmadığını bu bölümden görebilirsiniz. İşareti kaldırmanız durumunda kurs liste sayfasında görünemez olacaktır. Yayından kaldırdığınız kurslar önceden satın almış öğrencilerin kütüphanelerinde yer almaya devam edecektir.">
+                                    <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                </span>
+                            </label>
+                            <div class="col-md-10">
+                                <input type="checkbox" asp-for="Course.Published" class="form-check-input">
+                                <span asp-validation-for="Course.Published" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                                Kurs Satışta
+                                <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Kursun satışta olup olmadığını bu bölümden görebilirsiniz. İşareti kaldırmanız durumunda kurs öğrenciler için satın alınamaz olacaktır Ancak satışta olmasa da yine siz kursu elle bir öğrenciye aktarabilirsiniz. Satıştan kaldırdığınız kurslar önceden satın almış öğrencilerin kütüphanelerinde yer almaya devam edecektir.">
+                                    <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                </span>
+                            </label>
+                            <div class="col-md-10">
+                                <input type="checkbox" asp-for="Course.OnSale" class="form-check-input">
+                                <span asp-validation-for="Course.OnSale" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                                Deneme Üyeliğine Dahil
+                                <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Kursun deneme üyeliği sürecince ücretsiz olarak erişime açık olup olmadığını buradan düzenleyebilirsiniz.">
+                                    <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                </span>
+                            </label>
+                            <div class="col-md-10">
+                                <input type="checkbox" asp-for="Course.IsTrial" class="form-check-input">
+                                <span asp-validation-for="Course.IsTrial" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                                Kurs Kategorisi
+                                <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Kursun kategorisini seçiniz.">
+                                    <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                </span>
+                            </label>
+                            <div class="col-md-10">
+                                @Html.DropDownListFor(m => m.Course.CourseCategoryId, Model.CourseCategoryList, "- Kategori seçiniz",
+                                new { @class = "form-control" })
+                                <span asp-validation-for="Course.CourseCategoryId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                                Eğitmen
+                                <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Kursun eğitmenini seçiniz.">
+                                    <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                </span>
+                            </label>
+                            <div class="col-md-10">
+                                @Html.DropDownListFor(m => m.Course.InstructorId, Model.CourseInstructorList,
+                                new { @class = "form-control" })
+                                <span asp-validation-for="Course.InstructorId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                                Kurs Açıklaması
+                                <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Kursun açıklama yazısını yazınız.">
+                                    <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                </span>
+                            </label>
+                            <div class="col-md-10">
+                                <textarea id="course-desc" asp-for="Course.Description" rows="3" class="form-control">@Model.Course.Description</textarea>
+                                <span asp-validation-for="Course.Description" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <label class="col-form-label text-dark font-weight-bold">
+                                    Kapak Görseli
+                                    <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Kursun liste sayfasındaki kutucuğunda yer alan kapak görselini yükleyiniz.">
+                                        <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                    </span>
+                                </label>
+                                <div class="image-input media align-items-end mt-4">
+                                    <div class="position-relative">
+                                        @if (Model.Course.CoverImage != null)
+                                        {
+                                            <a href="@Model.Course.CoverImage" data-fancybox="CoverImage">
+                                                <img src="@Model.Course.CoverImage" width="196" height="120">
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <img src="~/images/placeholder/category-cover-image.jpg">
+                                            <input type="hidden" value="@Model.Course.CoverImage" />
+                                        }
+                                    </div>
+                                    <div class="media-body ml-4 mb-4 mb-md-0">
+                                        <p>JPG veya PNG 360x220 px</p>
+                                        <a href=""></a>
+                                        <button type="button" class="upload btn btn-outline-primary">
+                                            <input type="file" name="CoverImage" id="uploadBoxCover" multiple>
+                                            Yükle
+                                        </button>
+                                    </div>
+                                </div>
+                                @if (Model.Course.Id != 0)
+                                {
+                                    <a href="#pickCourseCovers" data-toggle="modal" class="pickImage icon-btn btn btn-warning my-5"><i class="fa fa-images"></i> Kapak Fotoğraf Galerisinden Seç</a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="my-5">
+                        @if (Model.Course.Id != 0)
+                        {
+                            <partial name="_EditAndBackToListButton" model="@Model.Course.Id" />
+                            <a asp-area="Base" asp-controller="CourseList" asp-action="Details" asp-route-courseCategory="@Model.CategoryURL" asp-route-SEOUrl="@Model.Course.SEOUrl" target="_blank" class="icon-btn btn btn-light mr-2"><i class="fa fa-search"></i> İncele</a>
+                        }
+                        else
+                        {
+                            <button type="submit" class="icon-btn btn btn-success mr-2"><i class="fa fa-check-circle"></i> Kaydet</button>
+                            <a asp-action="Index" class="icon-btn btn btn-info mr-2"><i class="fa fa-arrow-left"></i> Listeye Dön</a>
+                        }
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="Tabs_1-@(Model.Course.Id != 0 ? "3" : "2")" role="tabpanel">
+                    <div class="border-bottom mb-4 pb-4">
+                        <h4 class="mb-4">Sayfa İçeriği</h4>
+                        <div class="form-group row">
+                            <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                                Kurs Tanıtım Videosu
+                                <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Kursun tanıtım sayfasındaki tanıtıcı video linkini aşağıdaki alana yapıştırınız.">
+                                    <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                </span>
+                            </label>
+                            <div class="col-md-10">
+                                <input asp-for="Course.Intro" class="form-control" value="@Model.Course.Intro">
+                                <span asp-validation-for="Course.Intro" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="border-bottom mb-4 pb-4">
+                        <h6 class="col-md-2 text-dark font-weight-bold">
+                            Kurs Galerisi
+                            <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Kursun tanıtımı için galeri fotoğrafları kullanacaksanız aşağıdan ekleyiniz.">
+                                <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                            </span>
+                        </h6>
+                        @if (Model.Course.Id != 0)
+                        {
+                            <div class="col-md-12">
+                                <table id="courseGallery" class="sectionTable table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Sıra</th>
+                                            <th scope="col">Galeri Görseli</th>
+                                            <th scope="col">Eylemler</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                                <div class="my-3">
+                                    <button id="galleryButton" class="icon-btn btn btn-warning">
+                                        <i class="fa fa-plus"></i> Galeriye Yükle
+                                    </button>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="alert alert-warning alert-dismissible d-flex align-items-center mb-4" role="alert">
+                                <i class="fa fa-info-circle fa-2x mr-3"></i>
+                                <span>Kurs galerisi kursu oluşturduktan sonra aktif olacaktır.</span>
+                            </div>
+                        }
+                    </div>
+                    <div class="border-bottom mb-4 pb-4">
+                        <h4 class="mb-4">SEO İçeriği</h4>
+                        <div class="form-group row">
+                            <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                                Meta Title
+                                <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Kurs detay sayfasının meta title başlığını maksimum 60 karakter olmak üzere yazınız. Meta title google arama sonuçlarında gözüken başlıktır ve ayrıca ilgili sayfadayken tarayıcı sekmesinde yer alır.">
+                                    <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                </span>
+                            </label>
+                            <div class="col-md-10">
+                                <input asp-for="Course.MetaTitle" class="form-control" value="@Model.Course.MetaTitle">
+                                <span asp-validation-for="Course.MetaTitle" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                                Meta Description
+                                <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Kurs liste sayfasının meta description açıklamasını maksimum 160 karakter olmak üzere yazınız. Meta description google arama sonuçlarında gözüken açıklamadır. Google her aramada sonuçları buradan getirmese de sayfanın içerik indekslemesi ve sayfa puanlaması için önem verilen bir özelliktir.">
+                                    <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                </span>
+                            </label>
+                            <div class="col-md-10">
+                                <input asp-for="Course.MetaDesc" class="form-control" value="@Model.Course.MetaDesc">
+                                <span asp-validation-for="Course.MetaDesc" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="my-5">
+                        @if (Model.Course.Id != 0)
+                        {
+                            <partial name="_EditAndBackToListButton" model="@Model.Course.Id" />
+                            <a asp-area="Base" asp-controller="CourseList" asp-action="Details" asp-route-courseCategory="@Model.CategoryURL" asp-route-SEOUrl="@Model.Course.SEOUrl" target="_blank" class="icon-btn btn btn-light mr-2"><i class="fa fa-search"></i> İncele</a>
+                        }
+                        else
+                        {
+                            <button type="submit" class="icon-btn btn btn-success mr-2"><i class="fa fa-check-circle"></i> Kaydet</button>
+                            <a asp-action="Index" class="icon-btn btn btn-info mr-2"><i class="fa fa-arrow-left"></i> Listeye Dön</a>
+                        }
+                    </div>
+                </div> <!-- END tab-pane -->
+
+            </div> <!-- END tab-content-->
+        </form>
+        <form id="galleryForm" method="post" enctype="multipart/form-data" asp-controller="Course" asp-action="UploadGallery">
+            <input type="file" name="GalleryImage" id="uploadGallery" style="display:none;">
+            <input type="hidden" name="id" value="@Model.Course.Id" />
+        </form>
+    </div> <!-- END card-->
+</div> <!-- END col-md-8 -->
+
+<partial name="_createSection.cshtml">
+
+<partial name="_editSection.cshtml">
+
+<partial name="_createLecture.cshtml">
+
+<partial name="_editLecture.cshtml">
+
+<partial name="_pickCourseCover.cshtml">
+
+<div class="container">
+    <div class="modal fade" id="videoPreview" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Dersin Videosu Önizleme</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div id="videoContainer"></div>                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/datatables/course-section.js"></script>
+    <script src="~/js/jquery.form.min.js"></script>
+    <script src="https://player.vimeo.com/api/player.js"></script>
+    <script src="~/datatables/course-gallery.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            CKEDITOR.replace('lec-desc');
+            CKEDITOR.replace('lec-mainDesc');
+            CKEDITOR.replace('lec-desc2');
+            CKEDITOR.replace('lec-mainDesc2');
+            CKEDITOR.replace('course-desc');
+
+            $('#secCourseId').val(@Model.Course.Id);
+            $('.popupModal').on('shown.bs.modal', function () {
+                $("input[name='title']").focus();
+                $(this).find('button').removeClass('btn-primary');
+                $(this).find('button').addClass('btn-light');
+                $(this).find('button.for-video').addClass('btn-primary');
+                $(this).find('.text-content').hide();
+                $(this).find('.video-content').show();
+            });
+            $('.popupModal').on('hidden.bs.modal', function (e) {
+                $(this)
+                    .find("input[type='text'],input[type='number'],textarea,select")
+                    .val('')
+                    .end()
+                    .find("input[type=checkbox], input[type=radio]")
+                    .prop("checked", "")
+                    .end();
+            });
+
+            var videoOptions = {
+                id: 32615209,
+                width: 640,
+                autoplay: false,
+                loop: false
+            };
+            var player = new Vimeo.Player('videoContainer', videoOptions);
+            var videoIdToDuration = "";
+            var previewVideo = "";
+            var selectForm;
+
+            $(".previewButton").click(function () {
+                previewVideo = $(this).parent().prev().children('#lec-video').val();
+                if (previewVideo != '') {
+                    player.loadVideo(parseInt(previewVideo));
+                }
+            });
+
+            function serializeModal(thisSelector, event, modalId, tableSelector, videoSelector) {
+                event.preventDefault();
+                $(thisSelector).addClass('loading');
+                $(thisSelector).children('span').text('Kaydediliyor...');
+                $(modalId + ' form').find('input[name="lectureDuration"]').remove();
+                selectForm = $(thisSelector).parent().parent();
+                tableNumber = selectForm.find(tableSelector).val();
+                for (var instanceName in CKEDITOR.instances) {
+                    CKEDITOR.instances[instanceName].updateElement();
+                }
+                isVideo = selectForm.find(videoSelector).val();
+                if (isVideo != '') {
+                    videoIdToDuration = parseInt(isVideo);
+                    player.loadVideo(videoIdToDuration).then(function () {
+                        player.getDuration().then(function (duration) {
+                            $(modalId + ' form').append('<input type="hidden" name="lectureDuration" value="' + secondsTimeSpanToHMS(parseInt(duration)) + '" />');
+                        }).then(function () {
+                            serializeAjax(selectForm, tableNumber, modalId);
+                        });
+                    });
+                } else {
+                    serializeAjax(selectForm, tableNumber, modalId);
+                }
+            }
+
+            function serializeAjax(form, tableNumber, modal) {
+                form.ajaxSubmit({
+                    url: form.attr('action'),
+                    success: function (data) {
+                        if (data.success) {
+                            toastr.success(data.message);
+                            lecturesTable[tableNumber].ajax.reload();
+                        } else {
+                            toastr.error(data.message);
+                        }
+                        $(modal + " button[type='submit']").removeClass('loading');
+                        $(modal + " button[type='submit'] span").text('Kaydet');
+                        $(modal).modal('hide');
+                    }
+                });
+            }
+            
+            $("#editLecture button[type='submit']").click(function (event) {
+                serializeModal(this, event, '#editLecture', 'input[name="tableNumber"]', '#lec-video');
+            });
+
+            $("#createLecture button[type='submit']").click(function (event) {
+                serializeModal(this, event, '#createLecture', '#tableNumber', 'input[name="video"]');
+            });
+        });
+        $('#tblData').on('click', '.edit', function () {
+            var id = $(this).parent().parent().find('.editId').val();
+            $.ajax({
+                type: 'Get',
+                url: '/findSection/' + id,
+                success: function (section) {
+                    $('#editSection #id').val(section.id);
+                    $('#editSection #title').val(section.title);
+                    courseSectionId = section.id;
+                }
+            });
+        });
+
+        $('#tblData').on('click', '.edit-lecture', function () {
+            var lectureId = $(this).parent().find('.lectureId').val();
+            $.ajax({
+                type: 'Get',
+                url: '/findLecture/' + @Model.Course.Id + '/'  + lectureId,
+                success: function (lectureJson) {
+                    $('#editLecture #lectureId').val(lectureJson.lecture.id);
+                    $('#editLecture #lec-title').val(lectureJson.lecture.title);
+                    $('#editLecture #lec-video').val(lectureJson.lecture.video);
+                    $('#cke_4_contents').css('height', '78px');
+                    $('#lectureSection option').remove();
+                    $.each(lectureJson.courseSections, function () {
+                        if (lectureJson.lecture.courseSectionId == this.id) {
+                            var isSelected = "selected";
+                        }
+                        $('#lectureSection').append('<option value="' + this.id + '" ' + isSelected + '>' + this.title + '</option>');
+                    });
+                    if (lectureJson.lecture.isPreview === true) {
+                        $('#editLecture #lec-prev').prop("checked", true);
+                    } else {
+                        $('#editLecture #lec-prev').prop("checked", false);
+                    }
+                    $('#editLecture #lec-desc').val(lectureJson.lecture.description);
+                    CKEDITOR.instances['lec-desc'].setData(lectureJson.lecture.description);
+                    $('#editLecture #lec-mainDesc').val(lectureJson.lecture.mainDescription);
+                    CKEDITOR.instances['lec-mainDesc'].setData(lectureJson.lecture.mainDescription);
+                    $.ajax({
+                        type: 'Get',
+                        url: '/findSection/' + lectureJson.lecture.courseSectionId,
+                        success: function (section) {
+                            $('input[name="tableNumber"]').val(section.listOrder - 1);
+                        }
+                    });
+                }
+            });           
+        });
+
+        // courseSecIdSrc is necessary for preventing .courseSecId to change when expanding a different section table row than the one which this button is nested. Without this fix; if another section is expanded, create-lecture button in this one creates the lecture in that other section.
+        $('#tblData').on('click', '.create-lecture', function () {
+            var id = $(this).parent().parent().parent().prev().find('.editId').val();
+            var courseSecIdSrc = $(this).attr('data-id');
+            $('#cke_2_contents').css('height', '78px');
+            $('.courseSecId').val(courseSecIdSrc);
+            $.ajax({
+                type: 'Get',
+                url: '/findSection/' + id,
+                success: function (section) {
+                    $('#tableNumber').val(section.listOrder - 1);
+                }
+            });
+        });
+
+        var gallery = $("#gallerySection");
+        var currentImages = [];
+        $('.pickImage').on('click', function () {
+            var id = @Model.Course.Id;
+            currentImages = [];
+            $.ajax({
+                type: 'Get',
+                url: '/Admin/MediaGallery/GetAllCourseCovers',
+                success: function (data) {
+                    $('#pickCourseCovers #courseId').val(id);
+                    gallery.empty();
+                    $.each(data.data, function (i, item) {
+                        gallery.append(`
+                            <div id="gallery-box-${i}" class="col-md-6 col-lg-4 marginTop-30"></div>
+                        `);
+                        var galleryBox = $(`#gallery-box-${i}`);
+                        if (data.data[i].courseId == id) {
+                            galleryBox.append(`
+                                <div class="media-box picked"></div>
+                            `);
+                        } else if (data.data[i].courseId != null && data.data[i].courseId != id) {
+                            galleryBox.append(`
+                                <div class="media-box locked"></div>
+                            `);
+                        } else {
+                            galleryBox.append(`
+                                <div class="media-box"></div>
+                            `);
+                        }
+                        mediaBox = galleryBox.find('.media-box');
+                        if (mediaBox.hasClass('picked')) {
+                            mediaBox.append(`
+                                <div class="selection"><span class="select-box"><i class="far fa-check-square"></i></span></div>
+                            `);
+                        } else if (mediaBox.hasClass('locked')) {
+                            mediaBox.append(`
+                                <div class="selection"><span class="select-box"><i class="far fa-times-circle"></i></span></div>
+                            `);
+                        } else {
+                            mediaBox.append(`
+                                <div class="selection"></div>
+                            `);
+                        }
+                        mediaBox.append(`
+                            <a href="javascript:void(0);" class="pick-image card shadow-v1 align-items-center p-0">
+                                <img class="img-responsive" src="${data.data[i].image}" />
+                            </a>
+                            <input class="imageId" type="hidden" name="id" value="${data.data[i].id}" />
+                        `);
+                    });
+                }
+            });
+        });
+        $('#pickCourseCovers').on('click', '.media-box', function () {
+            if ($(this).hasClass('locked')) {
+                toastr.error("Bu görsel başka bir slayt için seçilmiş.");
+            } else {
+                $(this).toggleClass('picked');
+                if ($(this).hasClass('picked')) {
+                    $(this).find('.selection').append(`
+                <span class="select-box"><i class="far fa-check-square"></i></span>
+                `);
+                } else {
+                    $(this).find('.selection').empty();
+                }
+            }
+        });
+
+        var pickedImages = [];
+        $('#pickCourseCovers').on('click', '#pickButton', function () {
+            var courseId = $('#pickCourseCovers #courseId').val();
+            pickedImages = [];
+            $.each($('.picked'), function (i, item) {
+                var toPickId = $(this).parent().find('.imageId').val();
+                pickedImages.push(toPickId);
+            });
+            pickedImages = JSON.stringify(pickedImages);
+            $.ajax({
+                type: "POST",
+                url: "/Admin/Course/PickImages/" + pickedImages + "/" + courseId,
+                success: function (data) {
+                    if (data.success) {
+                        toastr.success(data.message);
+                        $('#pickCourseCovers').modal('toggle');
+                    } else {
+                        toastr.error(data.message);
+                    }
+                }
+            });
+        });
+
+        //function validateInput() {
+        //    if (document.getElementById("uploadBoxCover").value == "") {
+        //        swal("Error", "Lütfen bir görsel seçiniz", "error");
+        //        return false;
+        //    }
+        //    return true;
+        //}
+
+        $('#galleryButton').click(function (e) {
+            e.preventDefault();
+            $('#uploadGallery').trigger('click');
+        });
+
+        $('#uploadGallery').change(function (e) {
+            e.preventDefault();
+            var form = $(this).form();
+            var url = form.attr('action');
+            form.ajaxSubmit({
+                url: url,
+                success: function (data) {
+                    if (data.success) {
+                        toastr.success(data.message);
+                        galleryTable.ajax.reload();
+                    } else {
+                        toastr.error(data.message);
+                    }
+                }
+            });
+
+            return false;
+        });
+
+        $('.content-ts button').click(function () {
+            $(this).parent().find('button').removeClass('btn-primary');
+            $(this).parent().find('button').addClass('btn-light');
+            $(this).removeClass('btn-light');
+            $(this).addClass('btn-primary');
+        });
+        $('.content-ts .for-text').click(function () {
+            $(this).parent().parent().find('.video-content').hide();
+            $(this).parent().parent().find('.text-content').show();
+        });
+        $('.content-ts .for-video').click(function () {
+            $(this).parent().parent().find('.text-content').hide();
+            $(this).parent().parent().find('.video-content').show();
+        });
+
+    </script>
+}

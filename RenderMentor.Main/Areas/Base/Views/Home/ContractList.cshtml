@@ -1,0 +1,34 @@
+﻿@model IEnumerable<Contract>
+@{
+    ViewData["Title"] = "Yasal Sözleşmeler | RenderMentor";
+}
+
+<div class="padding-y-60 bg-cover" data-dark-overlay="6" style="background:url(/images/breadcrumb-bg.jpg) no-repeat">
+    <div class="container">
+        <h1 class="text-white">
+            Yasal Sözleşmeler
+        </h1>
+        <ol class="breadcrumb breadcrumb-double-angle text-white bg-transparent p-0">
+            <li class="breadcrumb-item"><a asp-action="Index">Anasayfa</a></li>
+            <li class="breadcrumb-item">Yasal Sözleşmeler</li>
+        </ol>
+    </div>
+</div>
+
+<section class="paddingTop-50 paddingBottom-100 bg-light-v2">
+    <div class="container">
+
+        @if (Model.Count() > 0)
+        {
+            foreach (var contract in Model)
+            {
+                <div class="list-card align-items-center shadow-v1 marginTop-30">
+                    <a asp-action="ContractDetail" asp-route-SEOUrl="@contract.SEOUrl" class="h4 py-4 px-4 w-100">
+                        @contract.Name
+                    </a>
+                </div>
+            }
+        }
+
+    </div> <!-- END container-->
+</section>

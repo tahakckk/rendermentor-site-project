@@ -1,0 +1,742 @@
+﻿@model RenderMentor.Models.ViewModels.CourseDetailVM
+@using Microsoft.AspNetCore.Identity
+@using RenderMentor.Utility
+@using System.Globalization
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var setBg = "/images/breadcrumb-bg.jpg";
+    if (Model.CourseCategory != null)
+    {
+        if (Model.CourseCategory.PageBg != null)
+        {
+            setBg = Model.CourseCategory.PageBg;
+            setBg = setBg.Replace("\\", "/");
+        }
+    }
+    else
+    {
+        if (Model.CourseListBg != null)
+        {
+            setBg = Model.CourseListBg;
+            setBg = setBg.Replace("\\", "/");
+        }
+    }
+    string twitter = ViewData["Title"].ToString();
+    twitter = twitter.Replace("|", "");
+    CultureInfo culture = new CultureInfo("tr-TR");
+}
+
+<div class="padding-y-60 bg-cover" data-dark-overlay="6" style="background:url(@setBg) no-repeat">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-12 my-2 text-white">
+                <ol class="breadcrumb breadcrumb-double-angle bg-transparent p-0">
+                    <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Anasayfa</a></li>
+                    <li class="breadcrumb-item"><a asp-action="Index">Kurslar</a></li>
+                    @if (Model.CourseCategory != null)
+                    {
+                        <li class="breadcrumb-item"><a asp-action="Index" asp-route-courseCategory="@Model.CourseCategory.SEOUrl">@Model.CourseCategory.Name</a></li>
+                    }
+                    <li class="breadcrumb-item">@Model.Title</li>
+                </ol>
+                <h2 class="h1">
+                    @(Model.Title + " " + twitter)
+                </h2>
+            </div>
+            <!-- Search courses -->
+        </div>
+    </div>
+</div>
+
+<section class="py-3">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 z-index-10" data-offset-top-md="-40">
+                <ul class="list-inline d-inline-block py-2 px-4 shadow-v3 bg-white rounded-pill">
+                    <li class="list-inline-item"><span class="d-none d-md-inline-block">Bu Kursu</span> Paylaşın:</li>
+                    <li class="list-inline-item mx-0">
+                        <a href="http://www.facebook.com/sharer.php?u=@Context.Request.Host@Context.Request.Path&p[title]=@(ViewData["Title"] != null ? ViewData["Title"] : Model.Title)" target="_blank" class="btn btn-opacity-primary iconbox iconbox-xs">
+                            <i class="ti-facebook"></i>
+                        </a>
+                    </li>
+                    <li class="list-inline-item mx-0">
+                        <a href="http://twitter.com/share?text=@(ViewData["Title"] != null ? twitter : Model.Title)&url=https://@Context.Request.Host@Context.Request.Path" target="_blank" class="btn btn-opacity-primary iconbox iconbox-xs">
+                            <i class="ti-twitter"></i>
+                        </a>
+                    </li>
+                    <li class="list-inline-item mx-0">
+                        <a href="https://www.linkedin.com/shareArticle?mini=true&url=@Context.Request.Host@Context.Request.Path&title=@(ViewData["Title"] != null ? ViewData["Title"] : Model.Title)" target="_blank" class="btn btn-opacity-primary iconbox iconbox-xs">
+                            <i class="ti-linkedin"></i>
+                        </a>
+                    </li>
+                </ul>
+
+            </div>
+        </div> <!-- END row-->
+    </div>
+</section>
+
+<section class="paddingBottom-100">
+    <div class="container">
+
+        <div class="row">
+            <div class="col-lg-9 marginTop-30">
+                <h1>
+                    @Model.Title
+                </h1>
+                <input type="hidden" name="courseId" value="@Model.Id" />
+                <div class="row mt-3">
+                    <div class="col-lg-3 col-md-6 my-2">
+                        <div class="media border-right height-100p">
+                            <img class="iconbox mr-3" src="@Model.Instructor.AvatarImage" alt="@Model.Instructor.ApplicationUser.Name">
+                            <div class="media-body">
+                                <span class="text-gray d-block">Eğitmen:</span>
+                                <a href="#" class="h6">@Model.Instructor.ApplicationUser.Name</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 my-2">
+                        <div class="border-right height-100p">
+                            <span class="text-gray d-block">Kategoriler:</span>
+                            <a href="#" class="h6">@Model.CourseCategory.Name</a>
+                        </div>
+                    </div>
+                    @if (Model.CourseReviews.Count() > 0 || (SignInManager.IsSignedIn(User) && User.IsInRole(SD.Role_User_Individual) && Model.StudentCourseIDs.Contains(Model.Id) && Model.StudentHasReview == false))
+	                {
+		                <div class="col-lg-3 col-md-6 my-2">
+                        <div class="border-right height-100p">
+                            @if (Model.CourseReviews.Count() > 0 && Model.Rating != null)
+                            {
+                                <span class="text-gray">Değerlendirmeler:</span>
+                                <p class="mb-0">
+                                    @switch (Model.Rating)
+                                    {
+                                        case var expression when (Model.Rating >= 1 && Model.Rating < 1.5):
+                                            <text>
+                                                <i class="fas fa-star text-warning small"></i>
+                                                <i class="fas fa-star text-light small"></i>
+                                                <i class="fas fa-star text-light small"></i>
+                                                <i class="fas fa-star text-light small"></i>
+                                                <i class="fas fa-star text-light small"></i>
+                                            </text>
+                                            break;
+                                        case var expression when (Model.Rating >= 1.5 && Model.Rating < 2):
+                                            <text>
+                                                <i class="fas fa-star text-warning small"></i>
+                                                <i class="fas fa-star-half text-warning small"></i>
+                                                <i class="fas fa-star text-light small"></i>
+                                                <i class="fas fa-star text-light small"></i>
+                                                <i class="fas fa-star text-light small"></i>
+                                            </text>
+                                            break;
+                                        case var expression when (Model.Rating >= 2 && Model.Rating < 2.5):
+                                            <text>
+                                                <i class="fas fa-star text-warning small"></i>
+                                                <i class="fas fa-star text-warning small"></i>
+                                                <i class="fas fa-star text-light small"></i>
+                                                <i class="fas fa-star text-light small"></i>
+                                                <i class="fas fa-star text-light small"></i>
+                                            </text>
+                                            break;
+                                        case var expression when (Model.Rating >= 2.5 && Model.Rating < 3):
+                                            <text>
+                                                <i class="fas fa-star text-warning small"></i>
+                                                <i class="fas fa-star text-warning small"></i>
+                                                <i class="fas fa-star-half text-warning small"></i>
+                                                <i class="fas fa-star text-light small"></i>
+                                                <i class="fas fa-star text-light small"></i>
+                                            </text>
+                                            break;
+                                        case var expression when (Model.Rating >= 3 && Model.Rating < 3.5):
+                                            <text>
+                                                <i class="fas fa-star text-warning small"></i>
+                                                <i class="fas fa-star text-warning small"></i>
+                                                <i class="fas fa-star text-warning small"></i>
+                                                <i class="fas fa-star text-light small"></i>
+                                                <i class="fas fa-star text-light small"></i>
+                                            </text>
+                                            break;
+                                        case var expression when (Model.Rating >= 3.5 && Model.Rating < 4):
+                                            <text>
+                                                <i class="fas fa-star text-warning small"></i>
+                                                <i class="fas fa-star text-warning small"></i>
+                                                <i class="fas fa-star text-warning small"></i>
+                                                <i class="fas fa-star-half text-warning small"></i>
+                                                <i class="fas fa-star text-light small"></i>
+                                            </text>
+                                            break;
+                                        case var expression when (Model.Rating >= 4 && Model.Rating < 4.5):
+                                            <text>
+                                                <i class="fas fa-star text-warning small"></i>
+                                                <i class="fas fa-star text-warning small"></i>
+                                                <i class="fas fa-star text-warning small"></i>
+                                                <i class="fas fa-star text-warning small"></i>
+                                                <i class="fas fa-star text-light small"></i>
+                                            </text>
+                                            break;
+                                        case var expression when (Model.Rating >= 4.5 && Model.Rating < 5):
+                                            <text>
+                                                <i class="fas fa-star text-warning small"></i>
+                                                <i class="fas fa-star text-warning small"></i>
+                                                <i class="fas fa-star text-warning small"></i>
+                                                <i class="fas fa-star text-warning small"></i>
+                                                <i class="fas fa-star-half text-warning small"></i>
+                                            </text>
+                                            break;
+                                        case 5:
+                                            <text>
+                                                <i class="fas fa-star text-warning small"></i>
+                                                <i class="fas fa-star text-warning small"></i>
+                                                <i class="fas fa-star text-warning small"></i>
+                                                <i class="fas fa-star text-warning small"></i>
+                                                <i class="fas fa-star text-warning small"></i>
+                                            </text>
+                                            break;
+                                        default:
+                                            <text>
+                                                <i class="fas fa-star text-light small"></i>
+                                                <i class="fas fa-star text-light small"></i>
+                                                <i class="fas fa-star text-light small"></i>
+                                                <i class="fas fa-star text-light small"></i>
+                                                <i class="fas fa-star text-light small"></i>
+                                            </text>
+                                            break;
+                                    }
+                                    <span class="text-dark">@Model.Rating</span>
+                                    <span>(@Model.CourseReviews.Count())</span>
+                                </p>
+                            }
+                            @if (SignInManager.IsSignedIn(User) && User.IsInRole(SD.Role_User_Individual))
+                            {
+                                if (Model.StudentPackageActive || Model.StudentCourseIDs.Contains(Model.Id))
+                                {
+                                    if (Model.StudentHasReview == false)
+                                    {
+                                        <a href="#review" class="btn btn-primary btn-xs mt-2">Kursa Yorum Yap!</a>
+                                    }
+                                }
+                            }
+                        </div>
+                    </div>
+	                }
+                        
+                        
+                    <div class="col-lg-@(Model.CourseReviews.Count() > 0 || (SignInManager.IsSignedIn(User) && User.IsInRole(SD.Role_User_Individual) && Model.StudentCourseIDs.Contains(Model.Id) && Model.StudentHasReview == false) ? "3" : "6") col-md-6 mb-2">
+                        <div class="text-md-right height-100p">
+                            @if (SignInManager.IsSignedIn(User))
+                            {
+                                if (User.IsInRole(SD.Role_User_Individual) || User.IsInRole(SD.Role_User_Company))
+                                {
+                                    if (Model.StudentPackageActive)
+                                    {
+                                        <span class="badge badge-success" style="white-space: normal;"><i class="fa fa-check-circle"></i> Üyelik pakedine sahipsiniz.</span>
+                                    }
+                                    else
+                                    {
+                                        if (Model.StudentCourseIDs.Contains(Model.Id))
+                                        {
+                                            <span class="badge badge-success" style="white-space: normal;"><i class="fa fa-check-circle"></i> Bu kursa zaten sahipsiniz.</span>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-primary" asp-area="Base" asp-controller="Home" asp-action="Subscription">Üyelik Satın Al</a>
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    <span class="badge badge-danger" style="white-space: normal;">Sadece öğrenci hesabı ile kurs satın alabilirsiniz.</span>
+                                }
+
+                            }
+                            else
+                            {
+                                if (Model.OnSale == true)
+                                {
+                                    <span class="badge badge-warning" style="white-space: normal;"><i class="fa fa-times"></i> Üyelik için lütfen <a asp-area="Identity" asp-page="/Account/Login" style="text-decoration: underline;">siteye giriş</a> yapınız.</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-warning" style="white-space: normal;"><i class="fa fa-times"></i> Bu kurs şu an için yayında değildir.</span>
+                                }
+
+                            }
+
+                        </div>
+                    </div>
+                </div> <!-- END row-->
+                
+                @if (Model.CourseGallery.Count() > 0)
+                {
+                    <div class="courseGallery-container">
+                        <div id="courseGallery" class="owl-carousel dots-white-outline dots-inset" data-arrow="true" data-dots="true" data-items="1">
+                            @if (Model.Intro != null)
+                            {
+                                <div id="videoContainer"></div>
+                            }
+                            @foreach (var item in Model.CourseGallery)
+                            {
+                                <a href="@item.Image" data-fancybox="Gallery"><img class="rounded img-responsive" src="@item.Image" alt="@Model.Title"></a>
+                            }
+                        </div>
+                    </div>
+                }
+                else if (Model.Intro != null)
+                {
+                    <div id="videoContainer" class="ec-video-container my-4">
+
+                    </div>
+                }
+                else
+                {
+                    @*<div class="courseGallery-container">
+                            <img src="~/images/courses/course-gallery/default.jpg" alt="@Model.Title" />
+                        </div>*@
+                }
+
+                <div class="card padding-30 shadow-v3">
+                    <h4>
+                        Kurs İçeriği:
+                    </h4>
+                    <ul class="list-inline mb-0 mt-2">
+                        <li class="list-inline-item my-2 pr-md-4">
+                            <i class="ti-headphone small text-primary"></i>
+                            <span class="ml-2">@(Model.TotalLectures != 0 ? Model.TotalLectures.ToString() : "") Ders @(Model.TotalLectures == 0 ? "Yok" : "")</span>
+                        </li>
+                        <li class="list-inline-item my-2 pr-md-4">
+                            <i class="ti-time small text-primary"></i>
+                            @if (Model.TotalDuration.TotalHours < 1 && Model.TotalDuration.TotalHours > 0)
+                            {
+                                <span class="ml-2">@(String.Format("{0:0.0}", Model.TotalDuration.TotalMinutes)) Dakika</span>
+                            }
+                            else if (Model.TotalDuration.TotalHours == 0)
+                            {
+                                <span class="ml-2">Video Ders Yok</span>
+                            }
+                            else
+                            {
+                                <span class="ml-2">@(String.Format("{0:0.0}", Model.TotalDuration.TotalHours)) Saat</span>
+                            }
+                        </li>
+                        @*<li class="list-inline-item my-2 pr-md-4">
+                            <i class="ti-reload small text-primary"></i>
+                            <span class="ml-2">Ömür Boyu Erişim</span>
+                        </li>*@
+                    </ul>
+                </div>
+
+                <div class="col-12 mt-4">
+                    <ul class="nav tab-line tab-line tab-line--3x border-bottom mb-5" role="tablist">
+                        @if (Model.Description != null)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link active" data-toggle="tab" href="#tabDescription" role="tab" aria-selected="true">
+                                    Açıklama
+                                </a>
+                            </li>
+                        }
+                        <li class="nav-item">
+                            <a class="nav-link@(Model.Description == null ? " active" : "")" data-toggle="tab" href="#tabCurriculum" role="tab" aria-selected="true">
+                                Kurs İçeriği
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#tabInstructors" role="tab" aria-selected="true">
+                                Eğitmenler
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#tabReviews" role="tab" aria-selected="true">
+                                Yorumlar
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        @if (Model.Description != null)
+                        {
+                            <div class="tab-pane fade show active" id="tabDescription" role="tabpanel">
+                                <h4>
+                                    Kurs Açıklaması
+                                </h4>
+                                <p>
+                                    @Html.Raw(Model.Description)
+                                </p>
+
+                            </div> <!-- END tab-pane-->
+                        }
+
+                        <div class="tab-pane fade@(Model.Description == null ? " show active" : "")" id="tabCurriculum" role="tabpanel">
+                            <div id="accordionCurriculum">
+
+                                @foreach (var item in Model.CourseSections)
+                                {
+                                    <div class="accordion-item list-group mb-3">
+
+                                        <div class="list-group-item bg-light">
+                                            <a class="row" href="#courseSection_@item.ListOrder" data-toggle="collapse" aria-expanded="true">
+                                                <span class="col-9 col-md-8">
+                                                    <span class="accordion__icon text-primary mr-2">
+                                                        <i class="ti-plus"></i>
+                                                        <i class="ti-minus"></i>
+                                                    </span>
+                                                    <span class="h6 d-inline">@item.Title</span>
+                                                </span>
+                                                <span class="col-2 d-none d-md-block text-right">
+                                                    @item.TotalLectures Ders
+                                                </span>
+                                                <span class="showDuration col-3 col-md-2 text-right">
+                                                    @item.TotalDuration
+                                                </span>
+                                            </a>
+                                        </div>
+
+                                        <div id="courseSection_@item.ListOrder" class="collapse show" data-parent="#accordionCurriculum">
+
+                                            @foreach (var lecture in item.Lectures)
+                                            {
+                                                <div id="course_Lecture_@(item.ListOrder)_@lecture.ListOrder" class="list-group-item">
+                                                    <span class="row">
+                                                        <a class="col-9 col-md-8">
+                                                            <i class="@(lecture.Video != null ? "ti-control-play" : "ti-file") small mr-1 text-primary"></i>
+                                                            @lecture.Title
+                                                        </a>
+                                                        @if (lecture.Video != null && lecture.IsPreview)
+                                                        {
+                                                            <span class="listPreview col-3 col-md-2 text-right">
+                                                                <a href="https://www.vimeo.com/@lecture.Video" data-fancybox class="text-success">Önizleme</a>
+                                                            </span>
+                                                            <span class="listDuration showDuration col-3 col-md-2 ml-auto text-right">@lecture.Duration</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="showDuration col-3 col-md-2 ml-auto text-right">@lecture.Duration</span>
+                                                        }
+                                                    </span>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div> <!-- END accordion-item -->
+                                }
+
+                            </div> <!-- END accordion-->
+                        </div> <!-- END tab-pane -->
+
+
+                        <div class="tab-pane fade" id="tabInstructors" role="tabpanel">
+                            <h4 class="mb-4">
+                                Eğitmen Hakkında
+                            </h4>
+
+                            <div class="border-bottom mb-4 pb-4">
+                                <div class="d-md-flex mb-4">
+                                    <img class="iconbox iconbox-xxxl" src="@Model.Instructor.AvatarImage" alt="@Model.Instructor.ApplicationUser.Name">
+                                    <div class="media-body ml-md-4 mt-4 mt-md-0">
+                                        <h6>@Model.Instructor.ApplicationUser.Name</h6>
+                                        @if (Model.InstructorCategories.Count() != 0)
+                                        {
+                                            var last = Model.InstructorCategories.Last();
+                                            <p class="mb-2">
+                                                <i class="fa fa-graduation-cap mr-2"></i>
+                                                @foreach (var category in Model.InstructorCategories)
+                                                {
+                                                    if (category.Equals(last))
+                                                    {
+                                                        @(category.CourseCategory.Name)
+                                                    }
+                                                    else
+                                                    {
+                                                        @(category.CourseCategory.Name)<span>, </span>
+                                                    }
+                                                }
+                                            </p>
+                                        }
+                                    </div>
+                                </div>
+                                @Html.Raw(Model.Instructor.Desc)
+                            </div>
+
+                        </div> <!-- END tab-pane -->
+
+                        <div class="tab-pane fade" id="tabReviews" role="tabpanel">
+                            @foreach (var item in Model.CourseReviews)
+                            {
+                                <div class="row border-bottom mx-0 py-4 mt-4">
+                                    <div class="col-md-4 my-2 media">
+                                        <div class="media-body ml-4">
+                                            <small class="text-gray">@item.Date.ToString("d/MMMM/yyy", culture).Replace(".", " ")</small>
+                                            <h6>@item.ApplicationUser.Name</h6>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8 my-2">
+                                        @if (item.Rating != 0)
+                                        {
+                                            <p>
+                                                @switch (item.Rating)
+                                                {
+                                                    case 1:
+                                                        <text>
+                                                            <i class="fas fa-star text-warning"></i>
+                                                            <i class="fas fa-star text-light"></i>
+                                                            <i class="fas fa-star text-light"></i>
+                                                            <i class="fas fa-star text-light"></i>
+                                                            <i class="fas fa-star text-light"></i>
+                                                        </text>
+                                                        break;
+                                                    case 2:
+                                                        <text>
+                                                            <i class="fas fa-star text-warning"></i>
+                                                            <i class="fas fa-star text-warning"></i>
+                                                            <i class="fas fa-star text-light"></i>
+                                                            <i class="fas fa-star text-light"></i>
+                                                            <i class="fas fa-star text-light"></i>
+                                                        </text>
+                                                        break;
+                                                    case 3:
+                                                        <text>
+                                                            <i class="fas fa-star text-warning"></i>
+                                                            <i class="fas fa-star text-warning"></i>
+                                                            <i class="fas fa-star text-warning"></i>
+                                                            <i class="fas fa-star text-light"></i>
+                                                            <i class="fas fa-star text-light"></i>
+                                                        </text>
+                                                        break;
+                                                    case 4:
+                                                        <text>
+                                                            <i class="fas fa-star text-warning"></i>
+                                                            <i class="fas fa-star text-warning"></i>
+                                                            <i class="fas fa-star text-warning"></i>
+                                                            <i class="fas fa-star text-warning"></i>
+                                                            <i class="fas fa-star text-light"></i>
+                                                        </text>
+                                                        break;
+                                                    case 5:
+                                                        <text>
+                                                            <i class="fas fa-star text-warning"></i>
+                                                            <i class="fas fa-star text-warning"></i>
+                                                            <i class="fas fa-star text-warning"></i>
+                                                            <i class="fas fa-star text-warning"></i>
+                                                            <i class="fas fa-star text-warning"></i>
+                                                        </text>
+                                                        break;
+                                                    default:
+                                                        <text>
+                                                            <i class="fas fa-star text-light"></i>
+                                                            <i class="fas fa-star text-light"></i>
+                                                            <i class="fas fa-star text-light"></i>
+                                                            <i class="fas fa-star text-light"></i>
+                                                            <i class="fas fa-star text-light"></i>
+                                                        </text>
+                                                        break;
+                                                }
+                                            </p>
+                                        }
+                                        @if (!String.IsNullOrEmpty(item.Comment))
+                                        {
+                                            <p>@item.Comment</p>
+                                        }
+                                    </div>
+                                </div> <!-- END row-->
+                            }
+                        </div> <!-- END tab-pane -->
+
+                    </div> <!-- END tab-content-->
+                </div> <!-- END col-12 -->
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    if (User.IsInRole(SD.Role_User_Individual) || User.IsInRole(SD.Role_User_Company))
+                    {
+                        if (Model.StudentCourseIDs.Contains(Model.Id) || Model.StudentPackageActive)
+                        {
+                            <div class="col-12 mt-4">
+                                <div id="review" class="card shadow-v3 mt-5 padding-40">
+                                    <h4>Kursunuza yorum yapın</h4>
+                                    @if (Model.StudentHasReview == true)
+                                    {
+                                        <p><i class="fa fa-check text-success"></i> Bu kursa yorumunuzu yaptınız. Teşekkür ederiz.</p>
+                                    }
+                                    else
+                                    {
+                                        <p>Satın aldığınız bu kurs hakkında geri bildirimleriniz bizim için önemlidir. Lütfen yorumunuzu bizimle paylaşın.</p>
+                                        <form id="SendReview" method="POST" asp-controller="CourseList" asp-action="SendReview">
+                                            <div class="row mt-4">
+                                                <div class="col-md-3 mb-4">
+                                                    <label>Puanınız</label>
+                                                </div>
+                                                <div class="col-md-9 mb-4">
+                                                    <p class="my-2">
+                                                        <span class="rate" data-val="1"><i class="fas fa-star fa-2x"></i></span>
+                                                        <span class="rate" data-val="2"><i class="fas fa-star fa-2x"></i></span>
+                                                        <span class="rate" data-val="3"><i class="fas fa-star fa-2x"></i></span>
+                                                        <span class="rate" data-val="4"><i class="fas fa-star fa-2x"></i></span>
+                                                        <span class="rate" data-val="5"><i class="fas fa-star fa-2x"></i></span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <input type="hidden" id="rating" name="rating" value="" />
+                                            <textarea class="form-control mb-4" name="comment" rows="5" placeholder="Yorumunuz *"></textarea>
+                                            <input type="hidden" name="courseId" value="@Model.Id" />
+                                            <button class="btn btn-primary">Yorumu Gönder</button>
+                                        </form>
+                                    }
+                                </div>
+                            </div>
+                        }
+
+                    }
+                }
+            </div> <!-- END col-lg-9 -->
+
+            <aside class="col-lg-3">
+                <div class="card border border-light marginTop-30 shadow-v1">
+                    <h4 class="card-header border-bottom mb-0 h6">Kurs Kategorileri</h4>
+                    <ul class="card-body list-unstyled mb-0">
+                        @await Component.InvokeAsync("CourseCategory", new { viewName = "Sidebar" })
+                    </ul>
+                </div>
+                @*<div class="card border border-light marginTop-30 shadow-v1">
+                        <h4 class="card-header border-bottom mb-0 h6">Son Bloglar</h4>
+                        <ul class="card-body list-unstyled mb-0">
+                            <li class="mb-2"><a href="">All Courses</a></li>
+                            <li class="mb-2"><a href="">Featured Courses</a></li>
+                            <li class="mb-2"><a href="">Popular Courses</a></li>
+                            <li class="mb-2"><a href="">Starting Soon</a></li>
+                            <li class="mb-2"><a href="">Intermediate</a></li>
+                            <li class="mb-2"><a href="">Advanced</a></li>
+                        </ul>
+                    </div>*@
+                <div class="card marginTop-30 shadow-v1 hover:parent">
+                    <img class="hover:zoomin" src="~/images/side-banner.jpg" alt="Üyeliklerimiz Hakkında Bilgi Alın">
+                    <div class="card-img-overlay text-white bg-black-0_6">
+                        <h4 class="card-title">
+                            Üyeliklerimiz Hakkında Bilgi Alın
+                        </h4>
+                        <p class="my-3">
+                            Öğrenci veya firma üyeliklerimiz hakkında detaylı bilgi almak için inceleyin.
+                        </p>
+                        <a asp-controller="Home" asp-action="Memberships" class="btn btn-white">Üyelikleri İnceleyin</a>
+                    </div>
+                </div>
+            </aside> <!-- END col-lg-3 -->
+
+        </div> <!-- END row-->
+    </div> <!-- END container-->
+</section>
+
+@section Scripts {
+    <script src="~/vendor/owl.carousel/dist/owl.carousel.min.js"></script>
+    <script src="~/js/jquery.form.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    @if (Model.Intro != null)
+    {
+        <script src="https://player.vimeo.com/api/player.js"></script>
+        <script>
+            var options = {
+                                                    id: @Model.Intro,
+                responsive: true,
+                loop: true,
+                autoplay: false
+            };
+            var player = new Vimeo.Player('videoContainer', options);
+        </script>
+    }
+    <script>
+
+        $(document).ready(function () {
+
+            var owl = $(".owl-carousel");
+
+            owl.owlCarousel({
+                video: true,
+                loop: true,
+                items: 1,
+                autoplay: true,
+                autoplayTimeout: 4000,
+                smartSpeed: 800,
+                margin: 0,
+                dots: true,
+                nav: true,
+                dotsClass: 'owl-dots',
+                stageOuterClass: 'owl-stage-outer',
+                navText: ["<i class='ti-angle-left'></i>", "<i class='ti-angle-right'></i>"],
+                autoHeight: false,
+            });
+
+            $('#AddToCart').submit(function (e) {
+                e.preventDefault();
+                var url = $(this).attr('action');
+                $(this).ajaxSubmit({
+                    type: 'POST',
+                    url: url,
+                    success: function (data) {
+                        if (data.success) {
+                            window.location.href = data.url;
+                        } else {
+                            swal({
+                                title: "Hata!",
+                                text: data.message,
+                                icon: "warning",
+                                buttons: ["Tamam"],
+                                dangerMode: true
+                            });
+                        }
+                    }
+                });
+            });
+
+            $('#SendReview').submit(function (e) {
+                e.preventDefault();
+                var url = $(this).attr('action');
+                $(this).ajaxSubmit({
+                    type: 'POST',
+                    url: url,
+                    success: function (data) {
+                        if (data.success) {
+                            window.location.href = data.url;
+                        } else {
+                            swal({
+                                title: "Hata!",
+                                text: data.message,
+                                icon: "warning",
+                                buttons: ["Tamam"],
+                                dangerMode: true
+                            });
+                        }
+                    }
+                });
+            });
+
+            @if (Model.Intro != null)
+            {
+            <text>
+                player.on('play', function() {
+                    owl.trigger('stop.owl.autoplay');
+                });
+                player.on('pause', function() {
+                    owl.trigger('play.owl.autoplay', [5000])
+                });
+                player.on('stop', function() {
+                    owl.trigger('play.owl.autoplay', [5000])
+                });
+            </text>
+            }
+
+            $('.showDuration').each(function () {
+                var trimDuration = ($(this).text()).replace(/ /g, '');
+                $(this).text(trimDuration);
+                var hideHours = ($(this).text()).substring(3, $(this).text().length);
+                if ($(this).text().match("^00:")) {
+                    $(this).text(hideHours);
+                }
+            });
+            $('.rate').click(function () {
+                $('#rating').val($(this).data('val'));
+                $(this).children().css("color", "#ffd35b");
+                $(this).prevAll().children().css("color", "#ffd35b");
+                $(this).nextAll().children().css("color", "#f0f0f2");
+            });
+
+        });
+    </script>
+}

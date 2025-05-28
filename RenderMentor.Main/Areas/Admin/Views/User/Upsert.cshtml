@@ -1,0 +1,413 @@
+﻿@model RenderMentor.Models.ViewModels.AdminStudentVM
+@{
+    Layout = "~/Views/Shared/_Layout-admin.cshtml";
+    var title = "Öğrenci Ekle";
+}
+
+<div class="col-lg-10">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            @if (!String.IsNullOrEmpty(Model.Id))
+            {
+                // edit
+                title = "Öğrenci Bilgilerini Düzenle";
+            }
+            <h1>@title</h1>
+            <ol class="breadcrumb breadcrumb-double-angle bg-transparent p-0">
+                <li class="breadcrumb-item"><a asp-area="Base" asp-controller="Home" asp-action="Index">Anasayfa</a></li>
+                <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Admin</a></li>
+                <li class="breadcrumb-item"><a asp-action="Index"> Öğrenciler</a></li>
+                <li class="breadcrumb-item"> @(!String.IsNullOrEmpty(Model.Id) ? Model.Name : "Öğrenci Ekle")</li>
+            </ol>
+        </div>
+        <div class="col-md-6">
+            <div class="admin-top-actions d-flex justify-content-end">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <a asp-action="Upsert" asp-route-id="" class="btn btn-light"><i class="fa fa-plus"></i> Yeni Ekle</a>
+                    <a href="#" class="btn btn-light"><i class="fa fa-search"></i> Öğrencinin Paneli</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card shadow-v1 padding-30">
+        @if (!String.IsNullOrEmpty(Model.Id))
+        {
+        <ul class="nav tab-line tab-line border-bottom mb-4" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#Tabs_1-1" role="tab" aria-selected="true">
+                    Öğrenci Bilgileri
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#Tabs_1-2" role="tab" aria-selected="true">
+                    Öğrencinin Kursları
+                </a>
+            </li>
+        </ul>
+        }
+
+        <div class="tab-content">
+            <div class="tab-pane fade show active" id="Tabs_1-1" role="tabpanel">
+                <form method="post" enctype="multipart/form-data">
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="Tabs_1-1" role="tabpanel">
+                            <div class="border-bottom mb-4 pb-4">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                @if (!String.IsNullOrEmpty(Model.Id))
+                                {
+                                    <input type="hidden" asp-for="Id" />
+                                }
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div id="packageBox" class="alert alert-@(Model.SubscribeActive ? "success" : "danger") d-flex align-items-center marginTop-10 marginBottom-40" role="alert">
+                                            <i class="fa fa-calendar fa-2x mr-3"></i>
+                                            <div class="w-100">
+                                                <h5>Üyelik Pakedi</h5>
+                                                <hr />
+                                                @if (Model.SubscribeActive)
+                                                {
+                                                    <h4>@Model.SubscribePackageName</h4>
+                                                    <hr />
+                                                    <div class="d-flex justify-content-between w-100">
+                                                        <div>
+                                                            <h5>Başlangıç Tarihi</h5>
+                                                            <p class="lead">@Model.SubscribeStartDate</p>
+                                                        </div>
+                                                        <div>
+                                                            <h5>Bitiş Tarihi</h5>
+                                                            <p class="lead">@Model.SubscribeExpireDate</p>
+                                                        </div>
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <div>
+                                                        <p id="packageText">Üyelik pakedi bulunmuyor.</p>
+                                                        <button id="packageButton" class="icon-btn btn btn-warning">
+                                                            <i class="fa fa-plus"></i> 1 Aylık Üyeliği Aktive Et
+                                                        </button>
+                                                    </div>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                                        Öğrenci Adı
+                                        <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Öğrencinin adını yazınız.">
+                                            <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                        </span>
+                                    </label>
+                                    <div class="col-md-10">
+                                        <input asp-for="Name" class="form-control" value="@Model.Name" autofocus>
+                                        <span asp-validation-for="Name" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                                        Email
+                                        <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Öğrencinin mail adresini düzenlemeniz halinde onay maili gerektirmeden güncellenecektir.">
+                                            <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                        </span>
+                                    </label>
+                                    <div class="col-md-10">
+                                        <input asp-for="Email" rows="2" class="form-control" value="@Model.Email">
+                                        <span asp-validation-for="Email" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                                        Email Doğrulandı Mı?
+                                        <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Öğrencinin email hesabının doğrulanmış olup olmadığını bu bölümden görebilirsiniz. Dilerseniz bu bölümü işaretleyerek emailin doğrulanmasını sağlayabilirsiniz.">
+                                            <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                        </span>
+                                    </label>
+                                    <div class="col-md-10">
+                                        <input type="checkbox" asp-for="EmailConfirmed" rows="2" class="form-check-input">
+                                        <span asp-validation-for="EmailConfirmed" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                                        Telefon
+                                        <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Öğrencinin telefon numarasını geçerli bir telefon numarası olarak yazınız.">
+                                            <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                        </span>
+                                    </label>
+                                    <div class="col-md-10">
+                                        <input asp-for="PhoneNumber" rows="2" class="form-control" value="@Model.PhoneNumber">
+                                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                                        Cinsiyeti
+                                        <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Öğrencinin cinsiyetini seçiniz.">
+                                            <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                        </span>
+                                    </label>
+                                    <div class="col-md-10 mt-1">
+                                        @foreach (var gender in System.Enum.GetValues(typeof(RenderMentor.Models.ApplicationUser.Genders)))
+                                        {
+                                            <label for="gender@(gender)" class="ec-radio radio-thin mb-3 mr-4">
+                                                <input type="radio" asp-for="Gender" id="gender@(gender)" value="@((int)gender)" />
+                                                <span class="ec-radio__control"></span>
+                                                <span class="ec-radio__label">@gender</span>
+                                            </label>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="collapse-group">
+                                    <button class="btn btn-collapse collapsed" type="button" data-toggle="collapse" data-target="#companyCollapse" aria-expanded="false" aria-controls="collapseExample">Firma Üyeliği İçin Firma Seçin</button>
+                                    <div class="collapse" id="companyCollapse">
+                                        <div class="alert alert-info alert-dismissible d-flex align-items-center mb-4" role="alert">
+                                            <i class="fa fa-info-circle fa-2x mr-3"></i>
+                                            <span>Listeden bir firma seçmeniz durumunda bu hesap öğrenci hesabından firma hesabına yükseltilmiş olacaktır. Yükseltme işleminden itibaren eklenmiş tüm mevcut dersler otomatik olarak hesaba tanımlanmış olacaktır. Sonrasında öğrencinin dersleri bölümünden ek olarak ayarlayabilirsiniz.</span>
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                                                Firma
+                                                <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Firma tipi üyelik için listeden firma seçiniz.">
+                                                    <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                                </span>
+                                            </label>
+                                            <div class="col-md-10">
+                                                @Html.DropDownListFor(m => m.CompanyId, Model.CompanyList, "_Firma seçiniz", new { @class = "form-control" })
+                                                <span asp-validation-for="CompanyId" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @if (String.IsNullOrEmpty(Model.Id))
+                                {
+                                    <div class="form-group row">
+                                        <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                                            Parola
+                                            <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Kullanıcının parolasını yazınız.">
+                                                <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                            </span>
+                                        </label>
+                                        <div class="col-md-10">
+                                            <input asp-for="Password" class="form-control" required data-val-required="Kullanıcı parolası gereklidir.">
+                                            <span asp-validation-for="Password" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                                            Parola Tekrarı
+                                            <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Parolayı eksiksiz şekilde tekrar yazınız.">
+                                                <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                            </span>
+                                        </label>
+                                        <div class="col-md-10">
+                                            <input asp-for="ConfirmPassword" class="form-control">
+                                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="collapse-group last">
+                                        <button class="btn btn-collapse collapsed" type="button" data-toggle="collapse" data-target="#passwordCollapse" aria-expanded="false" aria-controls="collapseExample">Parola Değiştirin</button>
+                                        <div class="collapse" id="passwordCollapse">
+                                            <div class="form-group row">
+                                                <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                                                    Yeni Parola
+                                                    <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Eğer değiştirecekseniz yeni parolayı yazınız.">
+                                                        <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                                    </span>
+                                                </label>
+                                                <div class="col-md-10">
+                                                    <input asp-for="Password" class="form-control">
+                                                    <span asp-validation-for="Password" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                                                    Yeni Parola Tekrarı
+                                                    <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Parolayı eksiksiz şekilde tekrar yazınız.">
+                                                        <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                                    </span>
+                                                </label>
+                                                <div class="col-md-10">
+                                                    <input asp-for="ConfirmPassword" class="form-control">
+                                                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+
+                            <div class="my-5">
+                                @if (String.IsNullOrEmpty(Model.Id))
+                                {
+                                    <partial name="_EditAndBackToListButton" model="@Model.Id" />
+                                }
+                                else
+                                {
+                                    <button type="submit" class="icon-btn btn btn-success mr-2"><i class="fa fa-check-circle"></i> Kaydet</button>
+                                    <a asp-action="Index" class="icon-btn btn btn-info mr-2"><i class="fa fa-arrow-left"></i> Listeye Dön</a>
+                                }
+                            </div>
+                        </div>
+                    </div> <!-- END tab-content-->
+                </form>
+                <form id="startPackage" method="post" enctype="multipart/form-data" asp-controller="User" asp-action="StartPackage">
+                    <input type="hidden" name="id" value="@Model.Id" />
+                </form>
+            </div>
+
+            @if (!String.IsNullOrEmpty(Model.Id))
+            {
+                <div class="tab-pane fade" id="Tabs_1-2">
+                    <h4>Öğrencinin Kursları</h4>
+                    <div class="alert alert-info alert-dismissible d-flex align-items-center mb-4" role="alert">
+                        <i class="fa fa-info-circle fa-2x mr-3"></i>
+                        <span>Öğrenciye tanımlanmış kursları buradan ayarlayabilirsiniz. Yeşil olarak işaretlenmiş kurslar öğrencinin satın aldığı kurslardır. Bunları kaldıramazsınız.</span>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form asp-controller="User" asp-action="StudentCourses" method="post">
+                        <div class="collapse-group last">
+                            <button class="btn btn-collapse" type="button" data-toggle="collapse" data-target="#stCoursesCollapse" aria-expanded="true" aria-controls="collapseExample">Öğrenciye Tanımlanmış Tüm Kurslar</button>
+                            <div class="collapse show" id="stCoursesCollapse">
+                                <div class="row">
+                                    <button id="checkAll" type="button" class="btn btn-check-all"><i class="far fa-square"></i> <span>Tümünü Seç</span></button>
+                                    <hr />
+                                </div>
+                                <div class="row">
+                                    @{
+                                        int index = 1;
+
+                                        foreach (var course in Model.AllCourses)
+                                        {
+                                            string isPaid = "";
+                                            foreach (var selected in Model.SelectedCourses)
+                                            {
+                                                if (course.Id == selected.CourseId && selected.isPaid == true)
+                                                {
+                                                    isPaid = "paid";
+                                                }
+                                            }
+                                            <div class="col-md-3 col-4 mb-4">
+                                                <div class="form-check form-check-inline list-check @isPaid">
+                                                    <input type="checkbox" name="studentCourse" id="studentCourse_@index" class="form-check-input course-check" value="@course.Id">
+                                                    <label class="form-check-label" for="studentCourse_@index">@course.Title</label>
+                                                </div>
+                                            </div>
+                                            index++;
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <button id="setUserCourses" type="submit" class="icon-btn btn btn-success"><i class="fa fa-check-circle"></i> Güncelle</button>
+                        <input type="hidden" name="userId" value="@Model.Id" />
+                    </form>
+                </div>
+            }
+        </div>
+
+    </div>
+    </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/jquery.form.min.js"></script>
+    <script>
+        $('#genderMale').siblings('.ec-radio__label').text("Erkek");
+        $('#genderFemale').siblings('.ec-radio__label').text("Kadın");
+        @if (Model.Gender == RenderMentor.Models.ApplicationUser.Genders.Male)
+        {
+            <text>$('#genderMale').prop("checked", true);</text>
+        }
+        else
+        {
+            <text>$('#genderFemale').prop("checked", true);</text>
+        }
+        @{
+            if (!String.IsNullOrEmpty(Model.Id))
+            {
+                int[] selectedCourses = new int[Model.SelectedCourses.Count];
+                int selectedCNumber = 0;
+                foreach (var item in Model.SelectedCourses)
+                {
+                    selectedCourses[selectedCNumber] = item.CourseId;
+                    selectedCNumber++;
+                }
+                foreach (int item in selectedCourses)
+                {
+                <text>
+                $('.course-check').each(function () {
+                    if ($(this).val() == '@item') {
+                        $(this).prop("checked", true);
+                    }
+                });
+                </text>
+                }
+            }
+
+        }
+
+        var checkAll = false;
+        $('#checkAll').click(function () {
+            $(".course-check").prop("checked", !checkAll);
+            $(".paid .course-check").prop("checked", true);
+            $('#checkAll i').addClass(checkAll ? 'far fa-square' : 'fas fa-check-square');
+            $('#checkAll i').removeClass(checkAll ? 'fas fa-check-square' : 'far fa-square');
+            checkAll = !checkAll;
+            $('#checkAll span').text(checkAll ? 'Tüm Seçimleri Kaldır' : 'Tümünü Seç');
+        });
+        $(".paid .course-check").on("click", function (e) {
+            var checkbox = $(this);
+            checkbox.prop("checked", true);
+        });
+
+        $('#setUserCourses').click(function (e) {
+            e.preventDefault();
+            var form = $(this).form();
+            var url = form.attr('action');
+            form.ajaxSubmit({
+                type: 'POST',
+                url: url,
+                success: function (data) {
+                    if (data.success) {
+                        toastr.success(data.message);
+                    } else {
+                        toastr.success(error.message);
+                    }
+
+                }
+            });
+
+            return false;
+        });
+
+        $('#packageButton').click(function (e) {
+            e.preventDefault();
+            var form = $('#startPackage');
+            var url = form.attr('action');
+            $('#startPackage').ajaxSubmit({
+                url: url,
+                success: function (data) {
+                    if (data.success) {
+                        toastr.success(data.message);
+                        $('#packageBox').removeClass('alert-danger');
+                        $('#packageBox').addClass('alert-success');
+                        $('#packageText').text('Üyelik pakedi aktive edildi.');
+                        $('#packageButton').hide();
+                    } else {
+                        toastr.error(data.message);
+                    }
+                }
+            });
+        });
+    </script>
+}
+

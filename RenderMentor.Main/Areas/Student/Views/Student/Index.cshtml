@@ -1,0 +1,269 @@
+﻿@model RenderMentor.Models.ViewModels.StudentIndexVM
+@using Microsoft.AspNetCore.Identity
+@using RenderMentor.Utility
+@inject UserManager<IdentityUser> UserManager
+@{
+    ViewData["Title"] = "Kurslarınız";
+    Layout = "~/Views/Shared/_Layout-student.cshtml";
+}
+
+<h3>Kurslarınız</h3>
+<div class="row">
+    @switch (Model.PackageStatus)
+    {
+        case PackageStatus.InActive:
+            break;
+        case PackageStatus.Ready:
+            <div class="col-md-12 my-4">
+                <div class="alert alert-warning alert-dismissible d-flex my-4" role="alert">
+                    <i class="fa fa-calendar fa-3x mr-3"></i>
+                    <div>
+                        <p>Herhangi bir üyelik pakediniz bulunmamaktadır. Tek bir ücretle tüm kurslarımızdan sınırsız olarak faydalanabileceğiniz üyelik paketleri hakkında bilgi almak veya paket satın almak için <strong>Üyelik Satın Al</strong> sayfamızı ziyaret edebilirsiniz.</p>
+                        <a class="icon-btn btn btn-warning" asp-area="Base" asp-controller="Home" asp-action="Subscription"><i class="fa fa-calendar"></i> Üyelik Satın Al</a>
+                    </div>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </div>
+            break;
+        case PackageStatus.Active:
+        case PackageStatus.Started:
+            <div class="col-md-12 my-4">
+                <div class="alert alert-success alert-dismissible d-flex my-4" role="alert">
+                    <i class="fa fa-check fa-3x mr-3"></i>
+                    <div>
+                        <p><strong>@Model.PackageName</strong> pakediniz aktiftir.</p>
+                        <p class="lead">Kalan Gün: @Model.PackageDaysToExpire</p>
+                    </div>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </div>
+            break;
+        case PackageStatus.Expired:
+            break;
+        case PackageStatus.Completed:
+            <div class="col-md-12 my-4">
+                <div class="alert alert-warning alert-dismissible d-flex my-4" role="alert">
+                    <i class="fa fa-award fa-3x mr-3"></i>
+                    <div>
+                        <p>Mevcut üyeliğiniz sona erdi. En iyi şekilde faydalandığınızı umarız. Kurslarınızda kesinti yaşamadan devam etmek için üyeliğinizi yenileyebilirsiniz. Üyeliğinizi yenilemek için <strong>Üyelik Satın Al</strong> sayfamızı ziyaret edebilirsiniz.</p>
+                        <a class="icon-btn btn btn-warning" asp-area="Base" asp-controller="Home" asp-action="Subscription">Üyelik Satın Al</a>
+                    </div>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </div>
+            break;
+        default:
+            break;
+    }
+    @switch (Model.TrialStatus)
+    {
+        case TrialStatus.InActive:
+            break;
+        case TrialStatus.Ready:
+            <div class="col-md-12 my-4">
+                <div class="alert alert-warning alert-dismissible d-flex my-4" role="alert">
+                    <i class="fa fa-award fa-3x mr-3"></i>
+                    <div>
+                        <p>Dilerseniz tüm kurslarımızı deneyebileceğiniz, 2 saatliğine aktif olacak <strong>deneme üyeliği</strong>nizi buradan aktifleştirebilirsiniz. Üyeliğiniz boyunca bu hakkınızı sadece bir kez kullanabileceğiniz ve aktifleştirmeyi başlattığınız andan itibaren 2 saat sonunda üyeliğiniz sona ereceği için bu hakkınızdan tam olarak faydalanabileceğiniz bir zamanda kullanmanızı öneririz.</p>
+                        <form id="StartTrial" class="d-inline-block" asp-controller="Student" asp-action="StartTrial">
+                            <button type="submit" class="icon-btn btn btn-warning"><i class="fa fa-award"></i> Deneme Üyeliğini Aktifleştir</button>
+                        </form>
+                    </div>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </div>
+            break;
+        case TrialStatus.Active:
+        case TrialStatus.Started:
+            <div class="col-md-12 my-4">
+                <div class="alert alert-success alert-dismissible d-flex my-4" role="alert">
+                    <i class="fa fa-check fa-3x mr-3"></i>
+                    <div>
+                        <p>Deneme üyeliğiniz başlatmanızdan itibaren 2 saat için aktiftir.</p>
+                    </div>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </div>
+            break;
+        case TrialStatus.Expired:
+            break;
+        case TrialStatus.Completed:
+            <div class="col-md-12 my-4">
+                <div class="alert alert-warning alert-dismissible d-flex my-4" role="alert">
+                    <i class="fa fa-smile fa-3x mr-3"></i>
+                    <div>
+                        <p>Deneme üyeliğiniz sona erdi. En iyi şekilde faydalandığınızı umarız.</p>
+                    </div>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </div>
+            break;
+        default:
+            break;
+    }
+
+    @if (Model.StudentCourseVM.Count() == 0)
+    {
+        <div class="alert alert-warning alert-dismissible d-flex my-4" role="alert">
+            <i class="fa fa-award fa-3x mr-3"></i>
+            <div>
+                <p>Henüz hesabınızda kurs bulunmamaktadır. Kurs satın almak için <strong>Kurslar</strong> sayfamızı inceleyebilirsiniz.</p>
+                <a asp-area="Base" asp-controller="CourseList" asp-action="Index" class="icon-btn btn btn-warning"><i class="fa fa-award"></i> Kursları İncele</a>
+            </div>
+        </div>
+    }
+    else
+    {
+        foreach (var course in Model.StudentCourseVM)
+        {
+            <div class="col-md-4 my-4">
+                <div class="card text-gray overflow-hidden height-100p shadow-v1 border">
+                    <a asp-action="Presentation" asp-route-id="@course.Course.Id"><img class="card-img-top" src="@course.Course.CoverImage" alt="@course.Course.Title"></a>
+                    <div class="card-body pb-0">
+                        <a asp-action="Presentation" asp-route-id="@course.Course.Id"><h6>@course.Course.Title</h6></a>
+                        <p>
+                            <i class="ti-user mr-2"></i>
+                            @course.Course.Instructor.ApplicationUser.Name
+                        </p>
+                    </div>
+                    <div class="card-footer media align-items-center justify-content-between">
+                        <ul class="list-unstyled mb-0">
+                            <li class="mb-1">
+                                <i class="ti-headphone small mr-2"></i>
+                                @if (course.Course.TotalLectures == 0)
+                                {
+                                    <span>Ders yok.</span>
+                                }
+                                else
+                                {
+                                    @course.Course.TotalLectures <span>ders</span>
+                                }
+                            </li>
+                            <li class="mb-1">
+                                <i class="ti-time small mr-2"></i>
+                                @if (course.Course.TotalDuration.TotalHours < 1 && course.Course.TotalDuration.TotalHours > 0)
+                                {
+                                    @(String.Format("{0:0.0}", course.Course.TotalDuration.TotalMinutes)) <span>dakika</span>
+
+                                }
+                                else if (course.Course.TotalDuration.TotalHours == 0)
+                                {
+                                    <span>Video ders yok.</span>
+                                }
+                                else
+                                {
+                                    @(String.Format("{0:0.0}", course.Course.TotalDuration.TotalHours)) <span>saat</span>
+                                }
+                            </li>
+                            @if (User.IsInRole(SD.Role_User_Individual))
+                            {
+                                <li class="mb-1">
+                                    <i class="ti-comment small mr-2"></i>
+                                    @if (course.StudentHasReview == true)
+                                    {
+                                        <span>Bu kursa yorum yaptınız <i class="fa fa-check text-success mr-2"></i></span>
+                                    }
+                                    else
+                                    {
+                                        <a class="btn btn-primary btn-xs" asp-area="Base" asp-controller="CourseList" asp-action="Details" asp-route-courseCategory="@course.Course.CourseCategory.SEOUrl" asp-route-SEOUrl="@course.Course.SEOUrl" asp-fragment="review">Kursa Yorum Yap</a>
+                                    }
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+
+</div> <!-- END row-->
+
+@section Scripts {
+    <script src="~/js/jquery.form.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#StartTrial').submit(function (e) {
+                e.preventDefault();
+                var url = $(this).attr('action');
+                $(this).ajaxSubmit({
+                    type: 'POST',
+                    url: url,
+                    success: function (data) {
+                        if (data.success) {
+                            window.location.href = data.url;
+                        } else {
+                            swal({
+                                title: "İşlem Gerçekleşmedi!",
+                                text: data.message,
+                                icon: "warning",
+                                buttons: ["Tamam"],
+                                dangerMode: true
+                            });
+                        }
+                    }
+                });
+            });
+            @if (Model.PackageStatus == PackageStatus.Completed)
+            {
+                <text>
+                swal({
+                    title: "@Html.Raw(Model.PackageName) - Paket Sona Erdi",
+                    text: "@Html.Raw(Model.PackageName) adlı paket üyeliğiniz sona ermiştir. Devam etmek için üyelik satın alarak üyeliğinizi yenileyebilirsiniz.",
+                    icon: "info",
+                    buttons: ["Tamam"],
+                    dangerMode: false
+                });
+                </text>
+            }
+            @if (Model.PackageStatus == PackageStatus.Started)
+            {
+                <text>
+                swal({
+                    title: "@Html.Raw(Model.PackageName)",
+                    text: "Üyeliğiniz @Model.PackageDaysToExpire gün boyunca aktiftir. Güle Güle Kullanınız",
+                    icon: "success",
+                    buttons: ["Kullanmaya başla"],
+                    dangerMode: false
+                });
+                </text>
+            }
+            @if (Model.TrialStatus == TrialStatus.Completed)
+            {
+                <text>
+                swal({
+                    title: "Deneme Üyeliği",
+                    text: "Deneme üyeliğiniz sona ermiştir.",
+                    icon: "info",
+                    buttons: ["Tamam"],
+                    dangerMode: false
+                });
+                </text>
+            }
+            @if (Model.TrialStatus == TrialStatus.Started)
+            {
+                <text>
+                swal({
+                    title: "Deneme Üyeliği",
+                    text: "Deneme üyeliğiniz 2 saat boyunca aktiftir.",
+                    icon: "success",
+                    buttons: ["Kullanmaya başla"],
+                    dangerMode: false
+                });
+                </text>
+            }
+        });
+    </script>
+}

@@ -1,0 +1,22 @@
+﻿@page
+@model ConfirmEmailModel
+@{
+    ViewData["Title"] = "Hesabınızı onaylayın";
+}
+
+<section class="padding-y-100 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 mx-auto">
+                <div class="card shadow-v2">
+                    <div class="card-header bordor-bottom">
+                        <h4 class="mt-4">@ViewData["Title"]</h4>
+                    </div>
+                    <div class="card-body">
+                        <partial name="_StatusMessage" model="Model.StatusMessage" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

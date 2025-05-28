@@ -1,0 +1,10 @@
+﻿@model IEnumerable<RenderMentor.Models.CourseCategory>
+
+@{
+    Layout = null;
+}
+
+@foreach (var item in Model)
+{
+    <li><a asp-area="Base" asp-controller="CourseList" asp-action="Index" asp-route-courseCategory="@item.SEOUrl" class="nav-link__list">@item.Name</a></li>
+}

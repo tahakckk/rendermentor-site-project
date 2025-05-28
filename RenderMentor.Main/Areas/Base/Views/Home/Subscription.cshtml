@@ -1,0 +1,136 @@
+﻿@model IEnumerable<Subscription>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="padding-y-60 bg-cover" data-dark-overlay="6" style="background:url(/images/breadcrumb-bg.jpg) no-repeat">
+    <div class="container">
+        <h1 class="text-white">
+            Üyelik Paketleri
+        </h1>
+        <ol class="breadcrumb breadcrumb-double-angle text-white bg-transparent p-0">
+            <li class="breadcrumb-item"><a asp-action="Index">Anasayfa</a></li>
+            <li class="breadcrumb-item">Üyelik Paketleri</li>
+        </ol>
+    </div>
+</div>
+
+<section class="padding-y-100 bg-light-v2">
+    <div class="container">
+        <div class="row">
+            @foreach (var subscription in Model)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card pricing-card border-0 shadow-lg rounded-lg overflow-hidden transition-all hover:shadow-xl">
+                        <div class="card-header bg-gradient-primary text-white text-center py-4">
+                            <h3 class="mb-0">@subscription.Name</h3>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="text-center mb-4">
+                                <span class="display-4 font-weight-bold text-primary">@subscription.Price ₺</span>
+                                <span class="text-muted">/ @subscription.ExpirationDays gün</span>
+                            </div>
+                            <p class="text-center text-muted mb-4">
+                                @subscription.Description
+                            </p>
+                            <ul class="list-unstyled pricing-features mb-4">
+                                <li class="d-flex align-items-center mb-3">
+                                    <i class="ti-check text-success mr-2"></i>
+                                    <span>Sınırsız Erişim</span>
+                                </li>
+                                <li class="d-flex align-items-center mb-3">
+                                    <i class="ti-check text-success mr-2"></i>
+                                    <span>7/24 Destek</span>
+                                </li>
+                                <li class="d-flex align-items-center mb-3">
+                                    <i class="ti-check text-success mr-2"></i>
+                                    <span>Özel Mentor Desteği</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-footer bg-white p-4 text-center">
+                            <form id="AddToCart_@subscription.Id" method="post" asp-controller="Home" asp-action="AddToCart">
+                                <input type="hidden" name="packageId" value="@subscription.Id" />
+                                <button type="submit" class="btn btn-primary btn-lg btn-block rounded-pill">
+                                    <i class="ti-shopping-cart mr-2"></i>Sepete Ekle
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<style>
+    .pricing-card {
+        transition: all 0.3s ease;
+    }
+    .pricing-card:hover {
+        transform: translateY(-5px);
+    }
+    .bg-gradient-primary {
+        background: linear-gradient(45deg, #4e73df, #224abe);
+    }
+    .pricing-features li {
+        padding: 8px 0;
+    }
+    .pricing-features i {
+        font-size: 1.2rem;
+    }
+</style>
+
+@section Scripts {
+    <script src="~/js/jquery.form.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('form[id^="AddToCart_"]').submit(function (e) {
+                e.preventDefault();
+                var url = $(this).attr('action');
+                $(this).ajaxSubmit({
+                    type: 'POST',
+                    url: url,
+                    success: function (data) {
+                        if (data.success) {
+                            window.location.href = data.url;
+                        } else {
+                            swal({
+                                title: "Hata!",
+                                text: data.message,
+                                icon: "warning",
+                                buttons: ["Tamam"],
+                                dangerMode: true
+                            });
+                        }
+                    },
+                    error: function (xhr) {
+                        if (xhr.status === 401) {
+                            swal({
+                                title: "Giriş Gerekli!",
+                                text: "Sepete eklemek için lütfen giriş yapın.",
+                                icon: "warning",
+                                buttons: ["İptal", "Giriş Yap"],
+                                dangerMode: true
+                            }).then((willLogin) => {
+                                if (willLogin) {
+                                    window.location.href = '/Identity/Account/Login?returnUrl=' + window.location.pathname;
+                                }
+                            });
+                        } else {
+                            swal({
+                                title: "Hata!",
+                                text: "Bir hata oluştu. Lütfen tekrar deneyin.",
+                                icon: "error",
+                                buttons: ["Tamam"],
+                                dangerMode: true
+                            });
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+}

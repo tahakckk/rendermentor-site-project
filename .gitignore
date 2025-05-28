@@ -1,0 +1,106 @@
+# Build results
+[Dd]ebug/
+[Rr]elease/
+bin/
+obj/
+
+# Visual Studio files
+.vs/
+
+# NuGet packages
+packages/
+*.nupkg
+
+# SQL Backup
+backup.sql
+
+# Other common exclusions
+*.log
+*.tmp
+
+# Live files
+RenderMentor_Garanti_Final_LIVE/
+RenderMentor_Garanti_Final_LIVE_V2/
+
+# Sensitive configuration files
+**/appsettings*.json
+!appsettings.json
+!appsettings.Example.json
+
+# Environment files
+.env
+.env.*
+*.env
+!env.example
+
+# Sensitive data files
+**/PersonalData/
+**/PaymentData/
+**/UserData/
+**/CustomerData/
+**/ClientData/
+**/Private/
+**/Secure/
+**/Confidential/
+**/Sensitive/
+**/Credentials/
+**/Secrets/
+**/Keys/
+**/Certificates/
+**/Passwords/
+
+# Logs and databases
+*.log
+*.sqlite
+*.db
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+
+# IDE specific files
+.idea/
+*.sln.iml
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Production specific
+**/Production/
+**/Live/
+**/Staging/
+**/Release/
+**/Deploy/
+
+# Hassas Bilgiler
+.env
+*.env
+appsettings.Development.json
+appsettings.Production.json
+
+# IDE ve Editör Dosyaları
+.vs/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Derleme Çıktıları
+bin/
+obj/
+*.dll
+*.pdb
+*.cache
+
+# Log Dosyaları
+logs/
+*.log
+
+# Geçici Dosyalar
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db 

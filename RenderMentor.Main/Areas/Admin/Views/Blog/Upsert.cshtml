@@ -1,0 +1,436 @@
+﻿@model RenderMentor.Models.ViewModels.BlogVM
+@using RenderMentor.Utility.Helper
+@{
+    Layout = "~/Views/Shared/_Layout-admin.cshtml";
+    var title = "Blog Makalesi Ekle";
+    var datetimeConvert = DateTimeHelper.ToRfc3339StringFull(Model.Blog.CreateDate);
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/tinyPlayer.css">
+}
+
+<div class="col-lg-10">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            @if (Model.Blog.Id != 0)
+            {
+                // edit
+                title = "Blog Makalesini Düzenle";
+            }
+            <h1>@title</h1>
+            <ol class="breadcrumb breadcrumb-double-angle bg-transparent p-0">
+                <li class="breadcrumb-item"><a asp-area="Base" asp-controller="Home" asp-action="Index">Anasayfa</a></li>
+                <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Admin</a></li>
+                <li class="breadcrumb-item"><a asp-action="Index"> Blog Makaleleri</a></li>
+                <li class="breadcrumb-item"> @(Model.Blog.Id != 0 ? Model.Blog.Title : "Blog Makalesi Ekle")</li>
+            </ol>
+        </div>
+        <div class="col-md-6">
+            <div class="admin-top-actions d-flex justify-content-end">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <a asp-action="Upsert" asp-route-id="" class="btn btn-light"><i class="fa fa-plus"></i> Yeni Ekle</a>
+                    <a asp-area="Base" asp-controller="Blog" asp-action="Details" asp-route-SEOUrl="@Model.Blog.SEOUrl" target="_blank" class="btn btn-light"><i class="fa fa-search"></i> Sayfayı İncele</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card shadow-v1 padding-30">
+        <form method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @{
+                var dateDesc = "Makale bugünün tarihine ayarlanmıştır. Eğer farklı bir tarih olarak değiştirmek istiyorsanız buradan düzenleyiniz.";
+                if (Model.Blog.Id != 0)
+                {
+                    <input type="hidden" asp-for="Blog.Id" />
+                    <input type="hidden" id="blogId" name="blogId" value="@Model.Blog.Id" />
+                    dateDesc = "Makalenin tarihi kaydı oluşturduğunuz veya kayıt sırasında elle girdiğiniz tarih olarak ayarlanmıştır. Eğer farklı bir tarih olarak değiştirmek istiyorsanız buradan düzenleyiniz.";
+                }
+            }
+            <div class="border-bottom mb-4 pb-4">
+                <div class="form-group row">
+                    <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                        Makale Başlığı
+                        <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Blog makalesinin başlığını yazınız.">
+                            <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                        </span>
+                    </label>
+                    <div class="col-md-10">
+                        <input asp-for="Blog.Title" class="form-control" autofocus>
+                        <span asp-validation-for="Blog.Title" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                        Makale Tarihi
+                        <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="@dateDesc">
+                            <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                        </span>
+                    </label>
+                    <div class="col-md-10">
+                        <input type="datetime-local" asp-for="Blog.CreateDate" class="form-control" value="@datetimeConvert">
+                        <span asp-validation-for="Blog.CreateDate" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                        Makale Yazarı
+                        <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Makale yazarının adı ve soyadını yazınız.">
+                            <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                        </span>
+                    </label>
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(m => m.Blog.AuthorId, Model.BlogAuthorList, "- Yazar seçiniz",
+                            new { @class = "form-control" })
+                        <span asp-validation-for="Blog.AuthorId" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-12">
+                        <label class="col-form-label text-dark font-weight-bold">
+                            Kapak Görseli
+                            <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Kategorinin anasayfadaki kutucuğunda yer alan ikon görselini PNG formatında yükleyiniz.">
+                                <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                            </span>
+                        </label>
+                        <div class="image-input media align-items-end mt-4">
+                            <div class="position-relative">
+                                @if (Model.Blog.Image != null)
+                                {
+                                    <a href="@Model.Blog.Image" data-fancybox="BlogImage">
+                                        <img src="@Model.Blog.Image" width="170" height="100">
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a href="javascript:void(0);" data-fancybox="BlogImage">
+                                        <img src="~/images/placeholder/blog-cover-image.jpg" width="170" height="100">
+                                    </a>
+                                    <input type="hidden" value="@Model.Blog.Image" />
+
+                                }
+                            </div>
+                            <div class="media-body ml-4 mb-4 mb-md-0">
+                                <p>JPG veya PNG 850x500 px</p>
+                                <a href=""></a>
+                                <button type="button" class="upload btn btn-outline-primary">
+                                    <input type="file" name="BlogImage" id="uploadBoxImage" multiple>
+                                    Yükle
+                                </button>
+                            </div>
+                            @if (Model.Blog.Id != 0)
+                            {
+                                <a href="#pickBlogThumbs" data-toggle="modal" class="pickImage icon-btn btn btn-warning my-5"><i class="fa fa-images"></i> Blog Fotoğraf Galerisinden Seç</a>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-12">
+                        <label class="col-form-label text-dark font-weight-bold">Makale Yazısı</label>
+                        <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Makale yazısını yazınız.">
+                            <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                        </span>
+                        <textarea asp-for="Blog.Desc" rows="6" class="form-control ckeditor">@Model.Blog.Desc</textarea>
+                        <span asp-validation-for="Blog.Desc" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-bottom mb-4 pb-4">
+                <h6 class="col-md-2 text-dark font-weight-bold">
+                    Makalenin Podcastleri
+                    <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Makalede podcast kullanacaksanız .mp3 formatındaki ses dosyaları ile birlikte aşağıdan ekleyiniz.">
+                        <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                    </span>
+                </h6>
+                @if (Model.Blog.Id != 0)
+                {
+                    <div class="col-md-12">
+                        <table id="tblData" class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Sıra</th>
+                                    <th scope="col">Başlık</th>
+                                    <th scope="col">Ses Dosyası</th>
+                                    <th scope="col">Eylemler</th>
+                                </tr>
+                            </thead>
+                        </table>
+                        <div class="my-3">
+                            <a href="#createPodcast" data-toggle="modal" class="icon-btn btn btn-warning">
+                                <i class="fa fa-plus"></i> Podcast Yükle
+                            </a>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-warning alert-dismissible d-flex align-items-center mb-4" role="alert">
+                        <i class="fa fa-info-circle fa-2x mr-3"></i>
+                        <span>Podcast ekleme bölümü makaleyi oluşturduktan sonra düzenleme ile aktif olacaktır.</span>
+                    </div>
+                }
+            </div>
+
+            <div class="border-bottom mb-4 pb-4">
+                <h4 class="mb-4">SEO İçerikleri</h4>
+                <div class="form-group row">
+                    <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                        Meta Title
+                        <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Sayfanın meta title başlığını maksimum 60 karakter olmak üzere yazınız. Meta title google arama sonuçlarında gözüken başlıktır ve ayrıca ilgili sayfadayken tarayıcı sekmesinde yer alır.">
+                            <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                        </span>
+                    </label>
+                    <div class="col-md-10">
+                        <input asp-for="Blog.MetaTitle" class="form-control">
+                        <span asp-validation-for="Blog.MetaTitle" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                        Meta Description
+                        <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Sayfanın meta description açıklamasını maksimum 160 karakter olmak üzere yazınız. Meta description google arama sonuçlarında gözüken açıklamadır. Google her aramada sonuçları buradan getirmese de sayfanın içerik indekslemesi ve sayfa puanlaması için önem verilen bir özelliktir.">
+                            <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                        </span>
+                    </label>
+                    <div class="col-md-10">
+                        <input asp-for="Blog.MetaDesc" class="form-control">
+                        <span asp-validation-for="Blog.MetaDesc" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="my-5">
+                @if (Model.Blog.Id != 0)
+                {
+                    <partial name="_EditAndBackToListButton" model="@Model.Blog.Id" />
+                    <a asp-area="Base" asp-controller="Blog" asp-action="Details" asp-route-SEOUrl="@Model.Blog.SEOUrl" target="_blank" class="icon-btn btn btn-light mr-2"><i class="fa fa-search"></i> İncele</a>
+                }
+                else
+                {
+                    <button type="submit" class="icon-btn btn btn-success mr-2"><i class="fa fa-check-circle"></i> Kaydet</button>
+                    <a asp-action="Index" class="icon-btn btn btn-info mr-2"><i class="fa fa-arrow-left"></i> Listeye Dön</a>
+
+                }
+            </div>
+        </form>
+    </div> <!-- END card-->
+</div> <!-- END col-md-8 -->
+
+<partial name="_createPodcast.cshtml">
+<partial name="_editPodcast.cshtml">
+<partial name="_pickBlogThumb.cshtml" />
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/lib/jquery-validation/dist/additional-methods.min.js"></script>
+    <script src="~/js/howler.min.js"></script>
+    <script src="~/js/tinyPlayer.js"></script>
+    <script src="~/datatables/blog-audio.js"></script>
+    <script src="~/js/jquery.form.min.js"></script>
+    <script>
+        var gallery = $("#gallerySection");
+        var currentImages = [];
+        $('.pickImage').on('click', function () {
+            var id = @Model.Blog.Id;
+            currentImages = [];
+            $.ajax({
+                type: 'Get',
+                url: '/Admin/MediaGallery/GetAllBlogThumbs',
+                success: function (data) {
+                    $('#pickBlogThumbs #blogId').val(id);
+                    gallery.empty();
+                    $.each(data.data, function (i, item) {
+                        gallery.append(`
+                            <div id="gallery-box-${i}" class="col-md-6 col-lg-4 marginTop-30"></div>
+                        `);
+                        var galleryBox = $(`#gallery-box-${i}`);
+                        if (data.data[i].blogId == id) {
+                            galleryBox.append(`
+                                <div class="media-box picked"></div>
+                            `);
+                        } else if (data.data[i].blogId != null && data.data[i].blogId != id) {
+                            galleryBox.append(`
+                                <div class="media-box locked"></div>
+                            `);
+                        } else {
+                            galleryBox.append(`
+                                <div class="media-box"></div>
+                            `);
+                        }
+                        mediaBox = galleryBox.find('.media-box');
+                        if (mediaBox.hasClass('picked')) {
+                            mediaBox.append(`
+                                <div class="selection"><span class="select-box"><i class="far fa-check-square"></i></span></div>
+                            `);
+                        } else if (mediaBox.hasClass('locked')) {
+                            mediaBox.append(`
+                                <div class="selection"><span class="select-box"><i class="far fa-times-circle"></i></span></div>
+                            `);
+                        } else {
+                            mediaBox.append(`
+                                <div class="selection"></div>
+                            `);
+                        }
+                        mediaBox.append(`
+                            <a href="javascript:void(0);" class="pick-image card shadow-v1 align-items-center p-0">
+                                <img class="img-responsive" src="${data.data[i].imageXSM}" />
+                            </a>
+                            <input class="imageId" type="hidden" name="id" value="${data.data[i].id}" />
+                        `);
+                    });
+                }
+            });
+        });
+        $('#pickBlogThumbs').on('click', '.media-box', function () {
+            if ($(this).hasClass('locked')) {
+                toastr.error("Bu görsel başka bir slayt için seçilmiş.");
+            } else {
+                $(this).toggleClass('picked');
+                if ($(this).hasClass('picked')) {
+                    $(this).find('.selection').append(`
+                <span class="select-box"><i class="far fa-check-square"></i></span>
+                `);
+                } else {
+                    $(this).find('.selection').empty();
+                }
+            }
+        });
+
+        var pickedImages = [];
+        $('#pickBlogThumbs').on('click', '#pickButton', function () {
+            var blogId = $('#pickBlogThumbs #blogId').val();
+            pickedImages = [];
+            $.each($('.picked'), function (i, item) {
+                var toPickId = $(this).parent().find('.imageId').val();
+                pickedImages.push(toPickId);
+            });
+            pickedImages = JSON.stringify(pickedImages);
+            $.ajax({
+                type: "POST",
+                url: "/Admin/Blog/PickImages/" + pickedImages + "/" + blogId,
+                success: function (data) {
+                    if (data.success) {
+                        toastr.success(data.message);
+                        $('#pickBlogThumbs').modal('toggle');
+                    } else {
+                        toastr.error(data.message);
+                    }
+                }
+            });
+        });
+
+        //function validateInput() {
+        //    if (document.getElementById("uploadBoxImage").value == "") {
+        //        swal("Error", "Lütfen bir görsel seçiniz", "error");
+        //        return false;
+        //    }
+        //    return true;
+        //}
+
+        $('.popupModal').on('hidden.bs.modal', function (e) {
+            $(this)
+                .find("input[type='text'],input[type='file'],textarea")
+                .val('')
+                .end()
+                .find("#BlogAudioText").html('MP3 formatında Ses Dosyası');
+        });
+
+        $('#tblData').on('click', '.edit', function () {
+            var id = $(this).parent().parent().find('.editId').val();
+            console.log("Burası böyle: " + id);
+            $.ajax({
+                type: 'Get',
+                url: '/findBlogAudio/' + id,
+                success: function (audio) {
+                    $('#editPodcast #blogAudioId').val(audio.id);
+                    $('#editPodcast #BlogAudioText').html(audio.audio);
+                    $('#editPodcast #BlogAudio').val(audio.audio);
+                    $('#editPodcast #audioTitle').val(audio.title);
+                    $('#editPodcast #audioDesc').val(audio.desc);
+                }
+            });
+        });
+
+        function serializeModal(thisSelector, modalId) {
+            thisButton = $(thisSelector).find('button[type="submit"]');
+            thisButton.addClass('loading');
+            thisButton.children('span').text('Kaydediliyor...');
+            selectForm = $(thisSelector);
+            serializeAjax(selectForm, modalId);
+        }
+
+        function serializeAjax(form, modal) {
+            form.ajaxSubmit({
+                url: form.attr('action'),
+                success: function (data) {
+                    if (data.success) {
+                        toastr.success(data.message);
+                        dataTable.ajax.reload();
+                    } else {
+                        toastr.error(data.message);
+                    }
+                    $(modal + " button[type='submit']").removeClass('loading');
+                    $(modal + " button[type='submit'] span").text('Kaydet');
+                    $(modal).modal('hide');
+                }
+            });
+        }
+
+        $("#createPodcast form").submit(function (event) {
+            event.preventDefault();
+            $('#blogIdCreate').val(@Model.Blog.Id);
+        }).validate({
+            errorLabelContainer: "#message_box", wrapper: "li",
+            rules: {
+                BlogAudioFile: {
+                    required: true,
+                    accept: "audio/*"
+                },
+                audioTitle: {
+                    required: true
+                }
+            },
+            messages: {
+                BlogAudioFile: {
+                    required: '<strong>MP3 Ses Dosyası</strong>\'nı yüklemeniz gereklidir.',
+                    accept: 'Ses dosyasını <strong>mp3 veya wav formatlarında</strong> yüklemeniz gereklidir.'
+                },
+                audioTitle: {
+                    required: '<strong>Podcast Başlığı</strong>\'nı yazmanız gereklidir.'
+                }
+            },
+            submitHandler: function (form) {
+                serializeModal($(form), '#createPodcast');
+            }
+        });
+
+        $("#editPodcast form").submit(function (event) {
+            event.preventDefault();
+        }).validate({
+            errorLabelContainer: "#messagebox", wrapper: "li",
+            rules: {
+                BlogAudioFile: {
+                    accept: "audio/*"
+                },
+                audioTitle: {
+                    required: true
+                }
+            },
+            messages: {
+                BlogAudioFile: {
+                    accept: 'Ses dosyasını <strong>mp3 veya wav formatlarında</strong> yüklemeniz gereklidir.'
+                },
+                audioTitle: {
+                    required: '<strong>Podcast Başlığı</strong>\'nı yazmanız gereklidir.'
+                }
+            },
+            submitHandler: function (form) {
+                serializeModal($(form), '#editPodcast');
+            }
+        });
+    </script>
+        }
+

@@ -1,0 +1,74 @@
+﻿@model RenderMentor.Models.ViewModels.StudentVM
+@{
+    ViewData["Title"] = "Profile";
+    Layout = "~/Views/Shared/_Layout-student.cshtml";
+}
+<form method="post">
+    <div class="border-bottom mb-4 pb-4">
+        <h4 class="mb-4">Profiliniz</h4>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group row">
+                <label class="col-md-3 col-form-label text-dark">İsim ve Soyadınız</label>
+                <div class="col-md-9">
+                    <input asp-for="Name" class="form-control">
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-3 col-form-label text-dark">Email</label>
+                <div class="col-md-9">
+                    <input asp-for="UserName" class="form-control" disabled>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-3 col-form-label text-dark">Telefon</label>
+                <div class="col-md-9">
+                    <input asp-for="PhoneNumber" class="form-control">
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-3 col-form-label text-dark">Cinsiyetiniz</label>
+                <div class="col-md-9 mt-1">
+                    @foreach (var gender in System.Enum.GetValues(typeof(RenderMentor.Models.ApplicationUser.Genders)))
+                    {
+                        <label for="gender@(gender)" class="ec-radio radio-thin mb-3 mr-4">
+                            <input type="radio" asp-for="Gender" id="gender@(gender)" value="@((int)gender)" />
+                            <span class="ec-radio__control"></span>
+                            <span class="ec-radio__label">@gender</span>
+                        </label>
+                    }
+                </div>
+            </div>
+            @if (!String.IsNullOrEmpty(Model.StatusMessage))
+            {
+                var statusMessageClass = Model.StatusMessage.StartsWith("Error") ? "danger" : "success";
+                <div class="alert alert-@statusMessageClass alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    @Model.StatusMessage
+                </div>
+            }
+    </div>
+
+    <div class="my-5">
+        <button type="submit" class="btn btn-success m-2">Güncelle</button>
+        <a asp-action="Profile" class="btn btn-danger m-2">İptal</a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        @if (Model.Gender == RenderMentor.Models.ApplicationUser.Genders.Male)
+        {
+            <text>$('#genderMale').prop("checked", true);</text>
+        }
+        else
+        {
+            <text>$('#genderFemale').prop("checked", true);</text>
+        }
+    </script>
+}

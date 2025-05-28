@@ -1,0 +1,78 @@
+﻿@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Giriş Yap | RenderMentor";
+}
+
+<section class="padding-y-100 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 mx-auto">
+                <div class="card shadow-v2">
+                    <div class="card-header border-bottom">
+                        <h4 class="mt-4">RenderMentor Hesabınıza Giriş Yapın!</h4>
+                    </div>
+                    <div class="card-body">
+                        @{
+                            if ((Model.ExternalLogins?.Count ?? 0) != 0)
+                            {
+                                <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+                                    <div class="row">
+                                        @foreach (var provider in Model.ExternalLogins)
+                                        {
+                                            <div class="col my-2">
+                                                <button type="submit" class="btn btn-block btn-@provider.Name" name="provider"  value="@provider.Name">
+                                                    <i class="ti-@provider.Name mr-1"></i>
+                                                    <span>@provider.DisplayName Giriş Yap</span>
+                                                </button>
+                                            </div>
+                                        }
+                                    </div>
+                                    <p class="text-center my-4">
+                                        VEYA
+                                    </p>
+                                </form>
+                                
+                            }
+                        }
+
+                        <form id="account" method="post" class="px-lg-4">
+                            <div asp-validation-summary="All" class="text-danger"></div>
+                            <div class="input-group input-group--focus mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text bg-white ti-email"></span>
+                                </div>
+                                <input asp-for="Input.Email" class="form-control border-left-0 pl-0" placeholder="Email">
+                                <span asp-validation-for="Input.Email" class="text-danger"></span>
+                            </div>
+                            <div class="input-group input-group--focus mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text bg-white ti-lock"></span>
+                                </div>
+                                <input asp-for="Input.Password" class="form-control border-left-0 pl-0" placeholder="Parola">
+                                <span asp-validation-for="Input.Password" class="text-danger"></span>
+                            </div>
+                            <div class="d-md-flex justify-content-between my-4">
+                                <label class="ec-checkbox check-sm my-2 clearfix">
+                                    <input asp-for="Input.RememberMe">
+                                    <span class="ec-checkbox__control"></span>
+                                    <span class="ec-checkbox__lebel">@Html.DisplayNameFor(m => m.Input.RememberMe)</span>
+                                </label>
+                                <a id="forgot-password" asp-page="./ForgotPassword" class="text-primary my-2 d-block">Parolanızı mı unuttunuz?</a>
+                            </div>
+                            <button type="submit" class="btn btn-block btn-primary">Giriş yap</button>
+                            <p class="my-5 text-center">
+                                Hesabınız yok mu? <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl" class="text-primary">Kayıt olun</a>
+                            </p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div> <!-- END row-->
+    </div> <!-- END container-->
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

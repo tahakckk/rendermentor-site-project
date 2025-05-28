@@ -1,0 +1,269 @@
+﻿@model About
+
+@{
+    Layout = "~/Views/Shared/_Layout-admin.cshtml";
+}
+
+<div class="col-lg-10">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h1>Hakkımızda</h1>
+            <ol class="breadcrumb breadcrumb-double-angle bg-transparent p-0">
+                <li class="breadcrumb-item"><a asp-area="Base" asp-controller="Home" asp-action="Index">Anasayfa</a></li>
+                <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Admin</a></li>
+                <li class="breadcrumb-item"> Hakkımızda</li>
+            </ol>
+        </div>
+        <div class="col-md-6">
+            <div class="admin-top-actions d-flex justify-content-end">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <a asp-area="Base" asp-controller="Home" asp-action="About" target="_blank" class="btn btn-light"><i class="fa fa-search"></i> Sayfayı İncele</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card shadow-v1 padding-30">
+        <ul class="nav tab-line tab-line border-bottom mb-4" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#Tabs_1-1" role="tab" aria-selected="true">
+                    Sayfa İçeriği
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#Tabs_1-2" role="tab" aria-selected="true">
+                    Ekip Üyeleri
+                </a>
+            </li>
+        </ul>
+
+        <div class="tab-content">
+            <div class="tab-pane fade show active" id="Tabs_1-1" role="tabpanel">
+                <form method="post" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    @if (Model.Id != 0)
+                    {
+                        <input type="hidden" asp-for="Id" />
+                    }
+                    <div class="border-bottom mb-4 pb-4">
+                        <div class="form-group row">
+                            <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                                Sayfa Başlığı
+                                <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Hakkımızda sayfasının sayfa fotoğrafı yanında yer alacak sayfa içi başlığı yazınız.">
+                                    <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                </span>
+                            </label>
+                            <div class="col-md-10">
+                                <input asp-for="PageTitle" class="form-control" value="@Model.PageTitle" autofocus>
+                                <span asp-validation-for="PageTitle" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                                Sayfa Açıklaması
+                                <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Hakkımızda sayfa açıklamasını yazınız.">
+                                    <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                </span>
+                            </label>
+                            <div class="col-md-10">
+                                <textarea asp-for="PageDesc" rows="6" class="form-control ckeditor">@Model.PageDesc</textarea>
+                                <span asp-validation-for="PageDesc" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                                Sayfa Görseli
+                                <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Hakkımızda sayfa içi görselini yükleyiniz.">
+                                    <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                </span>
+                            </label>
+                            <div class="col-md-10">
+                                <div class="image-input media align-items-end mt-4">
+                                    <div class="position-relative">
+                                        @if (Model.PageImage != null)
+                                        {
+                                            <a href="@Model.PageImage" data-fancybox="PageImage">
+                                                <img id="blah" src="@Model.PageImage" width="180" height="150">
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <img id="blah" src="~/images/placeholder/about-page-image.jpg">
+                                        }
+                                    </div>
+                                    <div class="media-body ml-4 mb-4 mb-md-0">
+                                        <p>JPG veya PNG 690x575 px</p>
+                                        <a href=""></a>
+                                        <button type="button" class="upload btn btn-outline-primary">
+                                            <input type="file" name="PageImage">
+                                            Yükle
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                                Sayfa Arkaplan Görseli
+                                <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Hakkımızda sayfasının arkaplan görselini yükleyiniz.">
+                                    <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                </span>
+                            </label>
+                            <div class="col-md-10">
+                                <div class="image-input media align-items-end mt-4">
+                                    <div class="position-relative">
+                                        @if (Model.PageBg != null)
+                                        {
+                                            <a href="@Model.PageBg" data-fancybox="PageBg">
+                                                <img src="@Model.PageBg" width="853" height="120">
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <img src="~/images/placeholder/inner-background-image.jpg">
+                                        }
+                                    </div>
+                                    <div class="media-body ml-4 mb-4 mb-md-0">
+                                        <p>JPG veya PNG 1920x270 px</p>
+                                        <a href=""></a>
+                                        <button type="button" class="upload btn btn-outline-primary">
+                                            <input type="file" name="PageBg">
+                                            Yükle
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="border-bottom mb-4 pb-4">
+                        <h4 class="mb-4">SEO İçerikleri</h4>
+                        <div class="form-group row">
+                            <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                                Meta Title
+                                <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Sayfanın meta title başlığını maksimum 60 karakter olmak üzere yazınız. Meta title google arama sonuçlarında gözüken başlıktır ve ayrıca ilgili sayfadayken tarayıcı sekmesinde yer alır.">
+                                    <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                </span>
+                            </label>
+                            <div class="col-md-10">
+                                <input asp-for="MetaTitle" class="form-control" value="@Model.MetaTitle">
+                                <span asp-validation-for="MetaTitle" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                                Meta Description
+                                <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Sayfanın meta description açıklamasını maksimum 160 karakter olmak üzere yazınız. Meta description google arama sonuçlarında gözüken açıklamadır. Google her aramada sonuçları buradan getirmese de sayfanın içerik indekslemesi ve sayfa puanlaması için önem verilen bir özelliktir.">
+                                    <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                </span>
+                            </label>
+                            <div class="col-md-10">
+                                <input asp-for="MetaDesc" class="form-control" value="@Model.MetaDesc">
+                                <span asp-validation-for="MetaDesc" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="my-5">
+                        <button type="submit" class="icon-btn btn btn-success mr-2"><i class="fa fa-check-circle"></i> Kaydet</button>
+                        <a asp-area="Base" asp-controller="Home" asp-action="About" class="icon-btn btn btn-info mr-2"><i class="fa fa-search"></i> İncele</a>
+                    </div>
+                </form>
+            </div>
+            <div class="tab-pane fade" id="Tabs_1-2" role="tabpanel">
+                <h6 class="col-md-2 text-dark font-weight-bold">
+                    Ekip Üyeleri
+                    <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Hakkımızda sayfasında gösterilen ekip üyelerini buradan ekleyiniz.">
+                        <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                    </span>
+                </h6>
+                <div class="table-responsive my-4">
+                    <table id="tblData" class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th scope="col">Sıra</th>
+                                <th scope="col">Üye Fotoğrafı</th>
+                                <th scope="col">Üye Adı</th>
+                                <th scope="col">Eylemler</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div class="my-3">
+                    <a href="#addMember" data-toggle="modal" class="icon-btn btn btn-success text-white mr-2"><i class="fa fa-plus"></i> Üye Ekle</a>
+                    <a asp-action="Index" class="icon-btn btn btn-info mr-2"><i class="fa fa-arrow-left"></i> Listeye Dön</a>
+                    <a asp-area="Base" asp-controller="Home" asp-action="About" target="_blank" class="icon-btn btn btn-light mr-2"><i class="fa fa-search"></i> Sayfayı İncele</a>
+                </div>
+            </div>
+        </div>
+    </div> <!-- END card-->
+</div> <!-- END col-md-8 -->
+
+<partial name="_addMember.cshtml">
+
+<partial name="_editMember.cshtml">
+
+
+@section Scripts {
+    <script src="~/datatables/team.js"></script>
+    <script src="~/js/jquery.form.min.js"></script>
+    <script>
+        $('#tblData').on('click', '.edit', function () {
+            var id = $(this).parent().parent().find('.editId').val();
+            $.ajax({
+                type: 'Get',
+                url: '/findMember/' + id,
+                success: function (member) {
+                    $('#editMember #memberId').val(member.id);
+                    $('#editMember #memberName').val(member.name);
+                    $('#editMember #memberTitle').val(member.title);
+                    $('#editMember #memberDesc').val(member.desc);
+                    if (member.avatarImage != null) {
+                        $('#editMember #avatarImage').attr("href", member.avatarImage);
+                        $('#editMember #avatarImage img').attr("src", member.avatarImage);
+                        $('#editMember #avatarImageInput').val(member.avatarImage);
+                    } else {
+                        $('#editMember #avatarImage').attr("href", "/images/team/rendermentor-member-default.jpg");
+                        $('#editMember #avatarImage img').attr("src", "/images/team/rendermentor-member-default.jpg");
+                    }
+                }
+            });
+        });
+
+        // When adding members in row, if an image is selected for the previous entry it may add the same file for the new entry when there is no image uploaded for it. We empty the input file value to prevent this.
+        $('#editMember').on('hidden.bs.modal', function (e) {
+            $('#AvatarImageFile').val('');
+        });
+
+        function serializeModal(thisSelector, event, modalId) {
+            event.preventDefault();
+            $(thisSelector).addClass('loading');
+            $(thisSelector).children('span').text('Kaydediliyor...');
+            selectForm = $(thisSelector).parent().parent();
+            serializeAjax(selectForm, modalId);
+        }
+
+        function serializeAjax(form, modal) {
+            form.ajaxSubmit({
+                url: form.attr('action'),
+                success: function (data) {
+                    if (data.success) {
+                        toastr.success(data.message);
+                        dataTable.ajax.reload();
+                    } else {
+                        toastr.error(data.message);
+                    }
+                    $(modal + " button[type='submit']").removeClass('loading');
+                    $(modal + " button[type='submit'] span").text('Kaydet');
+                    $(modal).modal('hide');
+                }
+            });
+        }
+
+        $("#editMember button[type='submit']").click(function (event) {
+            serializeModal(this, event, '#editMember');
+        });
+        $("#addMember button[type='submit']").click(function (event) {
+            serializeModal(this, event, '#addMember');
+        });
+
+    </script>
+}

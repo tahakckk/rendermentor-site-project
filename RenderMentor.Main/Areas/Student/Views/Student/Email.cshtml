@@ -1,0 +1,66 @@
+﻿@model RenderMentor.Models.ViewModels.StudentEmailVM
+@{
+    ViewData["Title"] = "Email";
+    Layout = "~/Views/Shared/_Layout-student.cshtml";
+}
+<form method="post">
+    <div class="border-bottom mb-4 pb-4">
+        <h4 class="mb-4">Email Değiştirme</h4>
+        <div class="alert alert-info alert-dismissible d-flex align-items-center mb-4" role="alert">
+            <i class="fa fa-info-circle fa-2x mr-3"></i>
+            <span>Email hesabınız aynı zamanda <strong>kullanıcı adınızdır</strong>. Buradan yaptığınız değişiklik ancak mailinize gelen email değişim linki ile aktif olacaktır. Değişikliği emailden onaylayana kadar önceki emailiniz geçerli olmaya devam edecektir.</span>
+        </div>
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        @if (Model.IsEmailConfirmed)
+        { 
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label text-dark">Email Adresiniz</label>
+            <div class="col-md-9">
+                <div class="input-group">
+                    <input asp-for="Email" class="form-control" disabled>
+                    <div class="input-group-append">
+                        <span class="input-group-text text-success font-weight-bold">✓</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        }
+        else
+        {
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label text-dark">Email Adresiniz</label>
+            <div class="col-md-9">
+                <input asp-for="Email" class="form-control" disabled>
+                <button id="email-verification" type="submit" asp-action="SendVerificationEmail" class="btn btn-sm btn-warning mt-2">Onay mailini gönder</button>
+            </div>
+        </div>
+        }
+
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label text-dark">Yeni Email</label>
+            <div class="col-md-9">
+                <input asp-for="NewEmail" class="form-control">
+                <span asp-validation-for="NewEmail" class="text-danger"></span>
+            </div>
+        </div>
+
+        @if (!String.IsNullOrEmpty(Model.StatusMessage))
+        {
+            var statusMessageClass = Model.StatusMessage.StartsWith("Error") ? "danger" : "success";
+            <div class="alert alert-@statusMessageClass alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                @Model.StatusMessage
+            </div>
+        }
+    </div>
+
+    <div class="my-5">
+        <button id="change-email-button" type="submit" class="btn btn-success m-2">Email Değiştir</button>
+        <a asp-action="Profile" class="btn btn-danger m-2">İptal</a>
+    </div>
+    <input type="hidden" name="Name" value="@Model.Name" />
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

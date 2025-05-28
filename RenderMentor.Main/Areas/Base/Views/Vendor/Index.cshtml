@@ -1,0 +1,59 @@
+﻿@using RenderMentor.Utility
+@model Pagination<Vendor>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var setBg = "/images/breadcrumb-bg.jpg";
+    setBg = setBg.Replace("\\", "/");
+}
+
+<div class="padding-y-60 bg-cover" data-dark-overlay="6" style="background:url(@setBg) no-repeat">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 my-2 text-white">
+                <ol class="breadcrumb breadcrumb-double-angle bg-transparent p-0">
+                    <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Anasayfa</a></li>
+                    <li class="breadcrumb-item">Bayilikler</li>
+                </ol>
+                <h1 class="h1">Bayilikler</h1>
+            </div>
+            <!-- Search form here -->
+        </div>
+    </div>
+</div>
+
+<section class="paddingTop-50 paddingBottom-100 bg-light">
+    <div class="container">
+        <div class="row">
+            @if (Model.Count() > 0)
+            {
+                foreach (var vendor in Model)
+                {
+                    <div class="col-lg-4 col-md-6 marginTop-30">
+                        <div class="card height-100p shadow-v1">
+                            <a asp-action="Details" asp-route-SEOUrl="@vendor.SEOUrl"><img class="card-img-top" src="@vendor.Thumbnail" alt="@vendor.Name"></a>
+                            <div class="card-body">
+                                <a asp-action="Details" asp-route-SEOUrl="@vendor.SEOUrl" class="h4">@vendor.Name</a>
+                                <div class="my-4">
+                                    <p>@Html.Raw(vendor.ShortDesc)</p>
+                                </div>
+                                <a asp-action="Details" asp-route-SEOUrl="@vendor.SEOUrl" class="btn btn-link pl-0">Detaylı İncele</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+                <partial name="_Pagination" />
+            }
+            else
+            {
+                <div class="alert alert-info alert-dismissible d-flex my-5" role="alert">
+                    <i class="fa fa-pencil-alt fa-3x mr-3"></i>
+                    <div>
+                        <p>Bayilikler sayfamız hazırlanmaktadır. En kısa zamanda bu sayfadan inceleyebilirsiniz.</p>
+                        <a class="icon-btn btn btn-info" href="/"><i class="fa fa-home"></i> Anasayfaya Dön</a>
+                    </div>
+                </div>
+            }
+        </div><!-- END row-->
+    </div><!-- END container-->
+</section>
+

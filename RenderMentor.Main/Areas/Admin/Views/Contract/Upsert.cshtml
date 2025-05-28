@@ -1,0 +1,82 @@
+﻿@model Contract
+@{
+    Layout = "~/Views/Shared/_Layout-admin.cshtml";
+    var title = "Sözleşme Ekle";
+}
+
+<div class="col-lg-10">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            @if (Model.Id != 0)
+            {
+                // edit
+                title = "Sözleşmeyi Düzenle";
+            }
+            <h1>@title</h1>
+            <ol class="breadcrumb breadcrumb-double-angle bg-transparent p-0">
+                <li class="breadcrumb-item"><a asp-area="Base" asp-controller="Home" asp-action="Index">Anasayfa</a></li>
+                <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Admin</a></li>
+                <li class="breadcrumb-item"><a asp-action="Index"> Yasal Sözleşmeler</a></li>
+                <li class="breadcrumb-item"> @(Model.Id != 0 ? Model.Name : "Sözleşme Ekle")</li>
+            </ol>
+        </div>
+        <div class="col-md-6">
+            <div class="admin-top-actions d-flex justify-content-end">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <a asp-action="Upsert" asp-route-id="" class="btn btn-light"><i class="fa fa-plus"></i> Yeni Ekle</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card shadow-v1 padding-30">
+        <form method="post" enctype="multipart/form-data">
+            <div class="border-bottom mb-4 pb-4">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                @if (Model.Id != 0)
+                {
+                    <input type="hidden" asp-for="Id" />
+                }
+                <div class="form-group row">
+                    <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                        Sözleşme Adı
+                        <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Sözleşmenin adını yazınız.">
+                            <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                        </span>
+                    </label>
+                    <div class="col-md-10">
+                        <input asp-for="Name" class="form-control" value="@Model.Name" autofocus>
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                        Sözleşme İçeriği
+                        <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Sözleşmenin içeriğini yazınız. Madde imleri ve iç başlıklar kullanabilirsiniz.">
+                            <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                        </span>
+                    </label>
+                    <div class="col-md-10">
+                        <textarea asp-for="Desc" rows="6" class="form-control ckeditor">@Model.Desc</textarea>
+                        <span asp-validation-for="Desc" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="my-5">
+                @if (Model.Id != 0)
+                {
+                    <partial name="_EditAndBackToListButton" model="@Model.Id" />
+                }
+                else
+                {
+                    <button type="submit" class="icon-btn btn btn-success mr-2"><i class="fa fa-check-circle"></i> Kaydet</button>
+                    <a asp-action="Index" class="icon-btn btn btn-info mr-2"><i class="fa fa-arrow-left"></i> Listeye Dön</a>
+                }
+            </div>
+        </form>
+    </div> <!-- END card-->
+</div> <!-- END col-md-8 -->
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,48 @@
+﻿@model IEnumerable<RenderMentor.Models.Team>
+
+@{
+    Layout = null;
+    var avatar = "/images/team/rendermentor-member-default.jpg";
+}
+
+@if (Model.Count() > 0)
+{
+<section class="padding-y-100 wow fadeIn">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center mb-4">
+                <h2>Ekibimiz</h2>
+                <div class="width-4rem height-4 bg-primary rounded mt-4 marginBottom-40 mx-auto"></div>
+            </div>
+            @foreach (var item in Model)
+            {
+                if (item.AvatarImage != null)
+                {
+                    avatar = item.AvatarImage;
+                    avatar = avatar.Replace("\\", "/");
+                }
+                else
+                {
+                    avatar = "/images/team/rendermentor-member-default.jpg";
+                }
+                <div class="col-lg-6 mt-2 wow fadeInUp">
+                    <div class="row">
+                        <div class="col-md-6 my-2">
+                            <img src="@avatar" alt="@item.Name RenderMentor Team Member">
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <h4 class="mb-0">@item.Name</h4>
+                            <p class="text-muted mb-0">
+                                @item.Title
+                            </p>
+                            <p class="my-4">
+                                @item.Desc
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div> <!-- END row-->
+    </div> <!-- END container-->
+</section>
+}

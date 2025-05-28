@@ -1,0 +1,194 @@
+﻿@model Contact
+
+@{
+    Layout = "~/Views/Shared/_Layout-admin.cshtml";
+}
+
+<div class="col-lg-10">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h1>İletişim</h1>
+            <ol class="breadcrumb breadcrumb-double-angle bg-transparent p-0">
+                <li class="breadcrumb-item"><a asp-area="Base" asp-controller="Home" asp-action="Index">Anasayfa</a></li>
+                <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Admin</a></li>
+                <li class="breadcrumb-item"> İletişim</li>
+            </ol>
+        </div>
+        <div class="col-md-6">
+            <div class="admin-top-actions d-flex justify-content-end">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <a asp-area="Base" asp-controller="Home" asp-action="Contact" target="_blank" class="btn btn-light"><i class="fa fa-search"></i> Sayfayı İncele</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card shadow-v1 padding-30">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @if (Model.Id != 0)
+            {
+                <input type="hidden" asp-for="Id" />
+            }
+        <div class="border-bottom mb-4 pb-4">
+            <div class="form-group row">
+                <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                    Telefon
+                    <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Sitede yer alacak telefon numarasını yazınız.">
+                        <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                    </span>
+                </label>
+                <div class="col-md-10">
+                    <input asp-for="Phone" class="form-control" value="@Model.Phone" autofocus>
+                    <span asp-validation-for="Phone" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                    Birincil Mail Adresi
+                    <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Müşteri işlemleri, satış gibi faaliyetler için belirlediğiniz birincil mail adresini yazınız.">
+                        <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                    </span>
+                </label>
+                <div class="col-md-10">
+                    <input asp-for="EmailSales" class="form-control" value="@Model.EmailSales">
+                    <span asp-validation-for="EmailSales" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                    İkincil Mail Adresi
+                    <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Destek ve çeşitli faaliyetler için belirlediğiniz ikincil mail adresini yazınız.">
+                        <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                    </span>
+                </label>
+                <div class="col-md-10">
+                    <input asp-for="EmailSupport" class="form-control" value="@Model.EmailSupport">
+                    <span asp-validation-for="EmailSupport" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                    Adres
+                    <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Açık adresi yazınız.">
+                        <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                    </span>
+                </label>
+                <div class="col-md-10">
+                    <textarea asp-for="Address" rows="2" class="form-control">@Model.Address</textarea>
+                    <span asp-validation-for="Address" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                    Harita Konumu
+                    <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Google Maps yerleştir komutuyla alacağınız harita konumunu buraya yapıştırınız. Tam genişlik görünümü için iframe etiketindeki width alanını 100% olarak kullanınız.">
+                        <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                    </span>
+                </label>
+                <div class="col-md-10">
+                    <textarea asp-for="Map" rows="4" class="form-control">@Model.Map</textarea>
+                    <span asp-validation-for="Map" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                    Vergi Dairesi
+                    <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Vergi dairesinin bağlı olduğu ilçeyi yazınız.">
+                        <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                    </span>
+                </label>
+                <div class="col-md-10">
+                    <input asp-for="TaxDistrict" class="form-control" value="@Model.TaxDistrict">
+                    <span asp-validation-for="TaxDistrict" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                    Vergi Numarası
+                    <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Vergi numaranızı sadece rakam olarak yazınız.">
+                        <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                    </span>
+                </label>
+                <div class="col-md-10">
+                    <input asp-for="TaxNumber" class="form-control" value="@Model.TaxNumber">
+                    <span asp-validation-for="TaxNumber" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+            <div class="border-bottom mb-4 pb-4">
+                <h4 class="mb-4">Sosyal Medya Hesapları</h4>
+                <div class="table-responsive my-4">
+                    <table id="tblData" class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th scope="col">Sıra</th>
+                                <th scope="col">Sosyal Medya Adı</th>
+                                <th scope="col">Link</th>
+                                <th scope="col">Eylemler</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div class="my-3">
+                    <a href="#createSocial" data-toggle="modal" class="icon-btn btn btn-success text-white mr-2"><i class="fa fa-plus"></i> Sosyal Medya Ekle</a>
+                </div>
+            </div>
+            <div class="border-bottom mb-4 pb-4">
+                <h4 class="mb-4">SEO İçerikleri</h4>
+                <div class="form-group row">
+                    <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                        Meta Title
+                        <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Sayfanın meta title başlığını maksimum 60 karakter olmak üzere yazınız. Meta title google arama sonuçlarında gözüken başlıktır ve ayrıca ilgili sayfadayken tarayıcı sekmesinde yer alır.">
+                            <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                        </span>
+                    </label>
+                    <div class="col-md-10">
+                        <input asp-for="MetaTitle" class="form-control" value="@Model.MetaTitle">
+                        <span asp-validation-for="MetaTitle" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                        Meta Description
+                        <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Sayfanın meta description açıklamasını maksimum 160 karakter olmak üzere yazınız. Meta description google arama sonuçlarında gözüken açıklamadır. Google her aramada sonuçları buradan getirmese de sayfanın içerik indekslemesi ve sayfa puanlaması için önem verilen bir özelliktir.">
+                            <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                        </span>
+                    </label>
+                    <div class="col-md-10">
+                        <input asp-for="MetaDesc" class="form-control" value="@Model.MetaDesc">
+                        <span asp-validation-for="MetaDesc" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="my-5">
+                <button type="submit" class="icon-btn btn btn-success mr-2"><i class="fa fa-check-circle"></i> Kaydet</button>
+                <a asp-area="Base" asp-controller="Home" asp-action="Contact" class="icon-btn btn btn-info mr-2"><i class="fa fa-search"></i> İncele</a>
+            </div>
+        </form>
+
+    </div> <!-- END card-->
+</div> <!-- END col-md-8 -->
+
+<partial name="_createSocial.cshtml">
+
+<partial name="_editSocial.cshtml">
+
+
+@section Scripts {
+    <script src="~/datatables/social.js"></script>
+    <script>
+        $('#tblData').on('click', '.edit', function () {
+            var id = $(this).parent().parent().find('.editId').val();
+            $.ajax({
+                type: 'Get',
+                url: '/findSocial/' + id,
+                success: function (social) {
+                    $('#editSocial #socialId').val(social.id);
+                    $('#editSocial #socialName').val(social.name);
+                    $('#editSocial #socialLink').val(social.link);
+                }
+            });
+        });
+    </script>
+}

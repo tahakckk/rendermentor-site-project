@@ -1,0 +1,87 @@
+﻿@model RenderMentor.Models.ViewModels.TrialOnlineVM
+
+@{
+    Layout = "~/Views/Shared/_Layout-admin.cshtml";
+}
+
+<div class="col-lg-10">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h1>Üyelik Paketleri</h1>
+            <ol class="breadcrumb breadcrumb-double-angle bg-transparent p-0">
+                <li class="breadcrumb-item"><a asp-area="Base" asp-controller="Home" asp-action="Index">Anasayfa</a></li>
+                <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Admin</a></li>
+                <li class="breadcrumb-item">Üyelik Paketleri</li>
+            </ol>
+        </div>
+        <div class="col-md-6">
+            <div class="admin-top-actions d-flex justify-content-end">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <a asp-action="Details" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Yeni Üyelik Paketi Ekle
+                    </a>
+                    <a asp-area="Base" asp-controller="Home" asp-action="Subscription" target="_blank" class="btn btn-light">
+                        <i class="fa fa-search"></i> Sayfayı İncele
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        @foreach (var subscription in Model.Subscriptions)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">@subscription.Name</h5>
+                        <p class="card-text">@subscription.Description</p>
+                        <p class="card-text">
+                            <strong>Fiyat:</strong> @subscription.Price ₺<br />
+                            <strong>Süre:</strong> @subscription.ExpirationDays gün<br />
+                            <strong>Durum:</strong> @(subscription.IsActive ? "Aktif" : "Pasif")
+                        </p>
+                        <div class="btn-group">
+                            <a asp-action="Details" asp-route-id="@subscription.Id" class="btn btn-primary">
+                                <i class="fas fa-edit"></i> Düzenle
+                            </a>
+                            <button onclick="deleteSubscription(@subscription.Id)" class="btn btn-danger">
+                                <i class="fas fa-trash"></i> Sil
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function deleteSubscription(id) {
+            swal({
+                title: "Emin misiniz?",
+                text: "Bu üyelik paketini silmek istediğinizden emin misiniz?",
+                icon: "warning",
+                buttons: ["İptal", "Sil"],
+                dangerMode: true
+            }).then((willDelete) => {
+                if (willDelete) {
+                    $.ajax({
+                        url: '/Admin/Subscription/Delete/' + id,
+                        type: 'DELETE',
+                        success: function (data) {
+                            if (data.success) {
+                                swal("Başarılı!", data.message, "success").then(() => {
+                                    location.reload();
+                                });
+                            } else {
+                                swal("Hata!", data.message, "error");
+                            }
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+}

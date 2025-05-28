@@ -1,0 +1,183 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Http
+@using RenderMentor.Utility
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@inject IHttpContextAccessor HttpContextAccessor
+@inject RenderMentor.DataAccess.Data.ApplicationDbContext db
+@{
+    var username = "";
+    var badgeStatus = "danger";
+    var packageDesc = "Üyelik pakedi aktif değil";
+}
+@if (SignInManager.IsSignedIn(User))
+{
+    var userId = UserManager.GetUserId(User);
+    var user = db.ApplicationUsers.FirstOrDefault(u => u.Id == userId);
+    if (user != null)
+    {
+        username = user.Name;
+        if (User.IsInRole(SD.Role_User_Individual))
+        {
+            var userStudent = db.Students.FirstOrDefault(u => u.UserId == userId);
+            var package = db.Subscriptions.FirstOrDefault(u => u.Id == 1);
+            if (userStudent != null && package != null)
+            {
+                if (userStudent.SubscribeActive)
+                {
+                    badgeStatus = "success";
+                    packageDesc = package.Name;
+                }
+            }
+        }
+        else
+        {
+            badgeStatus = "success";
+            packageDesc = "Yönetici Hesabı";
+        }
+    }
+}
+else
+{
+    username = "Kullanıcı";
+}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+
+    <!-- Title-->
+    <title>@ViewData["Title"] - Render Mentor</title>
+
+    <!-- SEO Meta-->
+    <meta name="author" content="Octopus Interactive Agency">
+
+    <!-- viewport scale-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <!-- Favicon and Apple Icons-->
+    <link rel="icon" type="image/x-icon" href="~/images/favicon/favicon.ico">
+    <link rel="shortcut icon" href="~/images/favicon/114x114.png">
+    <link rel="apple-touch-icon-precomposed" href="~/images/favicon/96x96.png">
+
+    <!--Google fonts-->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Maven+Pro:400,500,700%7CWork+Sans:400,500">
+
+    <!-- Icon fonts -->
+    <link rel="stylesheet" href="~/fonts/fontawesome/css/all.css">
+    <link rel="stylesheet" href="~/fonts/themify-icons/css/themify-icons.css">
+
+    <!-- stylesheet-->
+    <link rel="stylesheet" href="~/css/vendors.bundle.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
+    <link rel="stylesheet" href="~/css/style.css?v=1.06">
+
+    @RenderSection("Styles", required: false)
+
+</head>
+
+<body>
+
+    <partial name="_Header" />
+
+    <section class="paddingTop-50 paddingBottom-120 bg-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 mt-4">
+                    <div class="card shadow-v1">
+                        <div class="card-header text-center border-bottom mb-4">
+                            <p class="mb-0">Hoşgeldiniz</p>
+                            <h4>@username</h4>
+                            <hr />
+                            <span class="badge badge-@badgeStatus">@packageDesc</span>
+                        </div>
+                        <div class="admin-menu border-bottom">
+                            <ul class="list-unstyled">
+                                <li class="mb-2 @(ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")"><a asp-action="Index"><i class="fa fa-book-open"></i> Kurslar</a></li>
+                                @if (User.IsInRole(SD.Role_User_Individual))
+                                {
+                                    <li class="mb-2 @(ViewContext.RouteData.Values["Action"].ToString() == "Orders" || ViewContext.RouteData.Values["Action"].ToString() == "OrderDetails" ? "active" : "")"><a asp-action="Orders"><i class="fa fa-clipboard"></i> Siparişler</a></li>
+                                    <li class="mb-2">
+                                        <a class="cart-link" asp-area="Base" asp-controller="Cart" asp-action="Index">
+                                            <i class="ti-shopping-cart"></i>
+                                            @if (HttpContextAccessor.HttpContext.Session.GetInt32(SD.ssShoppingCart) != null)
+                                            {
+                                                var count = HttpContextAccessor.HttpContext.Session.GetInt32(SD.ssShoppingCart);
+                                                if (count > 0)
+                                                {
+                                                    <span class="quantity">@count</span>
+                                                }
+                                            }
+                                            Sepetiniz
+                                        </a>
+                                    </li>
+                                }
+
+                                @*<li class="mb-2 "><a href="#"><i class="fa fa-comments"></i> Yorumlar</a></li>*@
+                                <li class="mb-2 @(ViewContext.RouteData.Values["Action"].ToString() == "Questions" ? "active" : "")"><a asp-action="Questions"><i class="fas fa-question"></i> Sorularınız</a></li>
+                                <li class="mb-2 @(ViewContext.RouteData.Values["Action"].ToString() == "Profile" ? "active" : "")"><a asp-action="Profile"><i class="fa fa-user"></i> Profil</a></li>
+                                <li class="mb-2 @(ViewContext.RouteData.Values["Action"].ToString() == "Email" ? "active" : "")"><a asp-action="Email"><i class="fa fa-envelope"></i> Email Değiştirme</a></li>
+                                <li class="mb-2 @(ViewContext.RouteData.Values["Action"].ToString() == "Password" ? "active" : "")"><a asp-action="Password"><i class="fa fa-lock"></i> Parola Ayarları</a></li>
+                                <li class="mb-2">
+                                    <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                                        <button type="submit"><i class="fa fa-sign-out-alt"></i> Çıkış Yap</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div> <!-- END col-md-4 -->
+                <div class="col-lg-9 mt-4">
+                    <div class="card shadow-v1 padding-30">
+                        <ul class="nav tab-line tab-line border-bottom mb-4">
+                            <li class="nav-item">
+                                <a class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")" asp-action="Index">Kurslar</a>
+                            </li>
+                            @if (User.IsInRole(SD.Role_User_Individual))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Orders" || ViewContext.RouteData.Values["Action"].ToString() == "OrderDetails" ? "active" : "")" asp-action="Orders">Siparişler</a>
+                                </li>
+
+                            }
+
+                            @*<li class="nav-item">
+                                    <a class="nav-link" href="#">Yorumlar</a>
+                                </li>*@
+                            <li class="nav-item">
+                                <a class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Questions" ? "active" : "")" asp-action="Questions">Sorularınız</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Profile" ? "active" : "")" asp-action="Profile">Profil</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Email" ? "active" : "")" asp-action="Email">Email Değiştirme</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Password" ? "active" : "")" asp-action="Password">Parola Ayarları</a>
+                            </li>
+                        </ul>
+
+                        <div class="page-content">
+                            @RenderBody()
+                        </div> <!-- END tab-content-->
+                    </div> <!-- END card-->
+                </div> <!-- END col-md-8 -->
+            </div> <!--END row-->
+        </div> <!--END container-->
+    </section>
+
+    <partial name="_Footer" />
+
+    <div class="scroll-top">
+        <i class="ti-angle-up"></i>
+    </div>
+
+    <script src="~/js/vendors.bundle.js"></script>
+    <script src="~/js/scripts.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

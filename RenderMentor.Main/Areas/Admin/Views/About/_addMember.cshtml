@@ -1,0 +1,80 @@
+﻿<div class="container">
+    <div class="popupModal modal fade" id="addMember" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Üye Ekle</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" asp-controller="About" asp-action="AddMember" enctype="multipart/form-data">
+                        <div class="border-bottom mb-4 pb-4">
+                            @*<input type="hidden" name="memberId" id="memberId" />*@
+                            <div class="form-group row">
+                                <div class="col-12">
+                                    <label class="col-form-label text-dark font-weight-bold">
+                                        Üye Fotoğrafı
+                                        <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Ekip üyesinin fotoğrafını yükleyiniz.">
+                                            <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                        </span>
+                                    </label>
+                                    <div class="image-input media align-items-end mt-4">
+                                        <div class="position-relative">
+                                            <img src="~/images/placeholder/instructor-avatar-image.jpg" width="120" height="120">
+                                        </div>
+                                        <div class="media-body ml-4 mb-4 mb-md-0">
+                                            <p>JPG veya PNG 270x270 px</p>
+                                            <a href=""></a>
+                                            <button type="button" class="upload btn btn-outline-primary">
+                                                <input type="file" name="AvatarImageFile">
+                                                Yükle
+                                                <input type="hidden" value="AvatarImage" />
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                                    Üye Adı
+                                    <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Üyenin adını yazınız.">
+                                        <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                    </span>
+                                </label>
+                                <div class="col-md-10">
+                                    <input name="memberName" class="form-control" autofocus>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                                    Üye Görev ve Pozisyonu
+                                    <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Üyenin RenderMentor'daki görevini veya meslek tanımını yazınız.">
+                                        <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                    </span>
+                                </label>
+                                <div class="col-md-10">
+                                    <input name="memberTitle" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                                    Üye Açıklaması
+                                    <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Üyenin sayfada yer alacak açıklamasını yazınız.">
+                                        <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                    </span>
+                                </label>
+                                <div class="col-md-10">
+                                    <textarea name="memberDesc" rows="3" class="form-control"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="my-5">
+                            <button type="submit" class="icon-btn btn btn-success mr-2"><i class="fa fa-check-circle"></i> <span>Kaydet</span></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

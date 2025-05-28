@@ -1,0 +1,50 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout-admin.cshtml";
+}
+
+<div class="col-lg-10">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h1>Sıkça Sorulan Sorular</h1>
+            <ol class="breadcrumb breadcrumb-double-angle bg-transparent p-0">
+                <li class="breadcrumb-item"><a asp-area="Base" asp-controller="Home" asp-action="Index">Anasayfa</a></li>
+                <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Admin</a></li>
+                <li class="breadcrumb-item"> Sıkça Sorulan Sorular</li>
+            </ol>
+        </div>
+        <div class="col-md-6">
+            <div class="admin-top-actions d-flex justify-content-end">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <a asp-action="Upsert" class="btn btn-light"><i class="fa fa-plus"></i> Yeni Ekle</a>
+                    <a asp-area="Base" asp-controller="Home" asp-action="Faq" target="_blank" class="btn btn-light"><i class="fa fa-search"></i> Sayfayı İncele</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card shadow-v1 padding-30">
+
+        <div class="table-responsive my-4">
+            <table id="tblData" class="table table-bordered no-order">
+                <thead>
+                    <tr>
+                        <th scope="col">Sıra</th>
+                        <th scope="col">Soru</th>
+                        <th scope="col">Eylemler</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div class="my-3">
+            <a asp-action="Upsert" class="icon-btn btn btn-success mr-2"><i class="fa fa-plus"></i> Yeni Ekle</a>
+        </div>
+
+
+    </div> <!-- END card-->
+</div> <!-- END col-md-8 -->
+
+
+@section Scripts {
+    <script src="~/datatables/faq.js"></script>
+}
+

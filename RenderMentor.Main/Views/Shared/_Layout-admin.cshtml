@@ -1,0 +1,230 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Http
+@using RenderMentor.Utility
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@inject IHttpContextAccessor HttpContextAccessor
+@inject RenderMentor.DataAccess.Data.ApplicationDbContext db
+@{
+    var userId = UserManager.GetUserId(User);
+    var user = db.ApplicationUsers.FirstOrDefault(u => u.Id == userId);
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+
+    <!-- Title-->
+    <title>Admin Paneli - Render Mentor</title>
+
+    <!-- SEO Meta-->
+    <meta name="author" content="Octopus Interactive Agency">
+
+    <!-- viewport scale-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <!-- Favicon and Apple Icons-->
+    <link rel="icon" type="image/x-icon" href="~/images/favicon/favicon.ico">
+    <link rel="shortcut icon" href="~/images/favicon/114x114.png">
+    <link rel="apple-touch-icon-precomposed" href="~/images/favicon/96x96.png">
+
+    <!--Google fonts-->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Maven+Pro:400,500,700%7CWork+Sans:400,500">
+
+    <!-- Icon fonts -->
+    <link rel="stylesheet" href="~/fonts/fontawesome/css/all.css">
+    <link rel="stylesheet" href="~/fonts/themify-icons/css/themify-icons.css">
+
+    <!-- stylesheet-->
+    <link rel="stylesheet" href="~/css/vendors.bundle.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/rowreorder/1.2.6/css/rowReorder.dataTables.min.css" />
+    <link rel="stylesheet" href="~/css/style.css?v=1.08">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
+    @RenderSection("Styles", required: false)
+</head>
+
+<body>
+
+    <header class="site-header bg-dark text-white-0_5">
+        <div class="container-fluid">
+            <div class="row align-items-center justify-content-between mx-0">
+                <ul class="list-inline d-none d-lg-block mb-0">
+                    <li class="list-inline-item mr-3">
+                        <div class="d-flex align-items-center">
+                            <a class="logo-default" asp-area="Base" asp-controller="Home" asp-action="Index"><img alt="" src="~/images/render-mentor-logo-white.png"></a>
+                        </div>
+                    </li>
+                </ul>
+                <ul class="list-inline mb-0">
+                    <li class="list-inline-item mr-0 p-3 border-right border-white-0_1">
+                        <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Giriş Ekranı">
+                            <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index"><i class="fa fa-tachometer-alt"></i></a>
+                        </span>
+                    </li>
+                    <li class="list-inline-item mr-0 p-3 border-right border-white-0_1">
+                        <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Öğrenciler">
+                            <a asp-area="Admin" asp-controller="User" asp-action="Index"><i class="fa fa-users"></i></a>
+                        </span>
+                    </li>
+                    <li class="list-inline-item mr-0 p-3 border-right border-white-0_1">
+                        <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Profil">
+                            <a asp-area="Student" asp-controller="Student" asp-action="Profile"><i class="fa fa-user"></i></a>
+                        </span>
+                    </li>
+                    <li class="list-inline-item mr-0 p-3 border-right border-white-0_1">
+                        <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Siparişler">
+                            <a asp-area="Admin" asp-controller="Order" asp-action="Index"><i class="fa fa-clipboard"></i></a>
+                        </span>
+                    </li>
+                    <li class="list-inline-item mr-0 p-3 border-right border-white-0_1">
+                        <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Üyelikler">
+                            <a asp-area="Admin" asp-controller="Subscription" asp-action="Index"><i class="fas fa-calendar"></i></a>
+                        </span>
+                    </li>
+                </ul>
+                <ul class="list-inline mb-0">
+                    <li class="list-inline-item mr-0 p-md-3 p-2 border-right border-left border-white-0_1">
+                        <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                            <button class="btn-primary-outline" type="submit"><i class="fa fa-sign-out-alt"></i> Çıkış</button>
+                        </form>
+                    </li>
+                    <li class="list-inline-item mr-0 p-md-3 p-2 border-right border-white-0_1">
+                        <a asp-area="Base" asp-controller="Home" asp-action="Index" target="_blank"><i class="fas fa-search"></i> Siteyi Gör</a>
+                    </li>
+                </ul>
+            </div> <!-- END END row-->
+        </div> <!-- END container-->
+    </header><!-- END site header-->
+    <section id="admin" class="paddingTop-50 paddingBottom-120 bg-light">
+        <div class="container-fluid">
+
+            <div class="row">
+                <div class="col-lg-2">
+                    <div class="admin-menu shadow-v1">
+                        <div class="card">
+                            <div class="card-header">
+                                <p>Hoşgeldiniz <strong>@user.Name</strong></p>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header border-bottom">
+                                <a href="#" class="submenu" data-toggle="collapse" data-target="#main-collapse" aria-expanded="false" aria-controls="main-collapse">
+                                    <h5 class="mb-0">
+                                        Yayınlar
+                                        <i class="right fas fa-angle-right"></i>
+                                    </h5>
+                                </a>
+                            </div>
+                            <div id="main-collapse" class="card-body collapse show">
+                                <ul class="list-unstyled">
+                                    <li class="mb-2 @(ViewContext.RouteData.Values["Controller"].ToString() == "CourseCategory" ? "active" : "")"><a asp-area="Admin" asp-controller="CourseCategory" asp-action="Index"><i class="fa fa-tag"></i> Kurs Kategorileri</a></li>
+                                    <li class="mb-2 @(ViewContext.RouteData.Values["Controller"].ToString() == "Course" ? "active" : "")"><a asp-area="Admin" asp-controller="Course" asp-action="Index"><i class="fa fa-award"></i> Kurslar</a></li>
+                                    <li class="mb-2 @(ViewContext.RouteData.Values["Controller"].ToString() == "Subscription" ? "active" : "")"><a asp-area="Admin" asp-controller="Subscription" asp-action="Index"><i class="fa fa-calendar"></i> Üyelikler</a></li>
+                                    <li class="mb-2 @(ViewContext.RouteData.Values["Controller"].ToString() == "Blog" ? "active" : "")"><a asp-area="Admin" asp-controller="Blog" asp-action="Index"><i class="fa fa-pencil-alt"></i> Blog</a></li>
+                                    <li class="mb-2 @(ViewContext.RouteData.Values["Controller"].ToString() == "Vendor" ? "active" : "")"><a asp-area="Admin" asp-controller="Vendor" asp-action="Index"><i class="fa fa-store"></i> Bayilikler</a></li>
+                                    <li class="mb-2 @(ViewContext.RouteData.Values["Controller"].ToString() == "Draw" ? "active" : "")"><a asp-area="Admin" asp-controller="Draw" asp-action="Index"><i class="fa fa-trophy"></i> Çekiliş Kampanyası</a></li>
+                                    <li class="mb-2 @(ViewContext.RouteData.Values["Controller"].ToString() == "CourseReview" ? "active" : "")"><a asp-area="Admin" asp-controller="CourseReview" asp-action="Index"><i class="fa fa-comment"></i> Kurs Yorumları</a></li>
+                                    <li class="mb-2 @(ViewContext.RouteData.Values["Controller"].ToString() == "Question" ? "active" : "")">
+                                        <a asp-area="Admin" asp-controller="Question" asp-action="Index">
+                                            <i class="fas fa-question"></i>
+                                            @if (HttpContextAccessor.HttpContext.Session.GetInt32(SD.PendingQuestions) != null)
+                                            {
+                                                var unanswered = HttpContextAccessor.HttpContext.Session.GetInt32(SD.PendingQuestions);
+                                                if (unanswered > 0)
+                                                {
+                                                    <span class="quantity">@unanswered</span>
+                                                }
+                                            }
+                                            Soru &amp; Cevap
+                                        </a>
+                                    </li>
+                                    <li class="mb-2 @(ViewContext.RouteData.Values["Controller"].ToString() == "MediaGallery" ? "active" : "")"><a asp-area="Admin" asp-controller="MediaGallery" asp-action="Index"><i class="fa fa-images"></i> Medya Galerisi</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header border-bottom">
+                                <a href="#" class="submenu" data-toggle="collapse" data-target="#pages-collapse" aria-expanded="false" aria-controls="pages-collapse">
+                                    <h5 class="mb-0">
+                                        Sayfalar
+                                        <i class="right fas fa-angle-right"></i>
+                                    </h5>
+                                </a>
+                            </div>
+                            <div id="pages-collapse" class="card-body collapse">
+                                <ul class="list-unstyled">
+                                    <li class="mb-2 @(ViewContext.RouteData.Values["Controller"].ToString() == "Home" ? "active" : "")"><a asp-area="Admin" asp-controller="Home" asp-action="Index"><i class="fa fa-home"></i> Anasayfa</a></li>
+                                    <li class="mb-2 @(ViewContext.RouteData.Values["Controller"].ToString() == "About" ? "active" : "")"><a asp-area="Admin" asp-controller="About" asp-action="Index"><i class="fa fa-briefcase"></i> Hakkımızda</a></li>
+                                    <li class="mb-2 @(ViewContext.RouteData.Values["Controller"].ToString() == "Faq" ? "active" : "")"><a asp-area="Admin" asp-controller="Faq" asp-action="Index"><i class="fa fa-question"></i> Sıkça Sorulan Sorular</a></li>
+                                    <li class="mb-2 @(ViewContext.RouteData.Values["Controller"].ToString() == "Mentor" ? "active" : "")"><a asp-area="Admin" asp-controller="Mentor" asp-action="Index"><i class="fas fa-crown"></i> Mentorlar</a></li>
+                                    <li class="mb-2 @(ViewContext.RouteData.Values["Controller"].ToString() == "Contact" ? "active" : "")"><a asp-area="Admin" asp-controller="Contact" asp-action="Index"><i class="fa fa-envelope"></i> İletişim</a></li>
+                                    <li class="mb-2 @(ViewContext.RouteData.Values["Controller"].ToString() == "Contract" ? "active" : "")"><a asp-area="Admin" asp-controller="Contract" asp-action="Index"><i class="fa fa-file-contract"></i> Yasal Sözleşmeler</a></li>
+                                    <li class="mb-2 @(ViewContext.RouteData.Values["Controller"].ToString() == "Memberships" ? "active" : "")"><a asp-area="Admin" asp-controller="Memberships" asp-action="Index"><i class="fa fa-box-open"></i> Üyelikler Hakkında</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header border-bottom">
+                                <a href="#" class="submenu" data-toggle="collapse" data-target="#manage-collapse" aria-expanded="true" aria-controls="manage-collapse">
+                                    <h5 class="mb-0">
+                                        Yönetim
+                                        <i class="right fas fa-angle-right"></i>
+                                    </h5>
+                                </a>
+                            </div>
+                            <div id="manage-collapse" class="card-body collapse show">
+                                <ul class="list-unstyled">
+                                    <li class="mb-2 @(ViewContext.RouteData.Values["Controller"].ToString() == "Dashboard" ? "active" : "")"><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index"><i class="fa fa-tachometer-alt"></i> Giriş Ekranı</a></li>
+                                    <li class="mb-2 @(ViewContext.RouteData.Values["Controller"].ToString() == "User" ? "active" : "")"><a asp-area="Admin" asp-controller="User" asp-action="Index"><i class="fa fa-users"></i> Öğrenciler</a></li>
+                                    <li class="mb-2 @(ViewContext.RouteData.Values["Controller"].ToString() == "Instructor" ? "active" : "")"><a asp-area="Admin" asp-controller="Instructor" asp-action="Index"><i class="fa fa-graduation-cap"></i> Eğitmenler</a></li>
+                                    <li class="mb-2 @(ViewContext.RouteData.Values["Controller"].ToString() == "Company" ? "active" : "")"><a asp-area="Admin" asp-controller="Company" asp-action="Index"><i class="fa fa-building"></i> Firmalar</a></li>
+                                    <li class="mb-2 @(ViewContext.RouteData.Values["Controller"].ToString() == "Order" ? "active" : "")"><a asp-area="Admin" asp-controller="Order" asp-action="Index"><i class="fa fa-clipboard"></i> Siparişler</a></li>
+                                    <li class="mb-2"><a asp-area="Student" asp-controller="Student" asp-action="Profile"><i class="fa fa-user"></i> Profil</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @RenderBody()
+
+            </div> <!--END row-->
+        </div> <!--END container-->
+    </section>
+
+    <footer class="site-footer">
+        <div class="footer-bottom bg-black-0_9 py-3 text-center">
+            <div class="container">
+                <p class="text-white-0_5 mb-0">&copy; 2020 Render Mentor. All rights reserved.</p>
+            </div>
+        </div>  <!-- END footer-bottom-->
+    </footer> <!-- END site-footer -->
+
+    <div class="scroll-top">
+        <i class="ti-angle-up"></i>
+    </div>
+
+    <script src="~/js/vendors.bundle.js"></script>
+    <script src="~/js/scripts.js"></script>
+    <script src="~/js/admin-scripts.js"></script>
+    <script src="~/vendor/ckeditor/ckeditor.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/rowreorder/1.2.6/js/dataTables.rowReorder.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(".card-body").each(function () {
+                if ($(this).find('li.active').length !== 0) {
+                    $(this).collapse('show');
+                }
+            });
+        });
+    </script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

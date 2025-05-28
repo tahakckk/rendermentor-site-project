@@ -1,0 +1,126 @@
+﻿<div class="container">
+    <div class="popupModal modal fade" id="editLecture" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Dersi Düzenle</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" asp-controller="Course" asp-action="UpdateLecture">
+                        <input type="hidden" name="lectureId" id="lectureId" />
+                        <input type="hidden" name="courseId" value="@Model.Course.Id" />
+                        <div class="form-group row">
+                            <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                                Ders Adı
+                                <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Dersin adını yazınız.">
+                                    <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                </span>
+                            </label>
+                            <div class="col-md-10">
+                                <input type="text" name="title" id="lec-title" class="form-control" required autofocus>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                                Dersin Bölümü
+                                <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Dersin yer alacağı bölümü buradan değiştirebilirsiniz.">
+                                    <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                </span>
+                            </label>
+                            <div class="col-md-10">
+                                <select name="courseSecId" id="lectureSection" class="form-control">
+                                </select>
+                            </div>
+                        </div>
+                        <ul class="nav tab-line border-bottom mb-4" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-toggle="tab" href="#LecTabs_2-1" role="tab" aria-selected="true">
+                                    Ders İçeriği
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#LecTabs_2-2" role="tab" aria-selected="true">
+                                    Ders Açıklaması
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane fade show active" id="LecTabs_2-1" role="tabpanel">
+                                <div class="content-types">
+                                    <div class="alert alert-info" role="alert">
+                                        <i class="fa fa-info-circle mr-3"></i> Dersin video veya makale kullanımı için aşağıdaki butonlarla seçim yapabilirsiniz. <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Video kısmını doldurduğunuz anda makale dolu olsa bile video ders olarak kabul edilecektir. Makale ders kullanımı için video alanını boş bırakıp yazılı ders alanını doldurunuz.">
+                                            <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                        </span>
+                                    </div>
+                                    <div class="content-ts btn-group btn-group-sm mb-4" role="group" aria-label="Content type selector">
+                                        <button type="button" class="for-video btn btn-primary"><i class="ti-control-play small mr-1"></i> Video Dersi</button>
+                                        <button type="button" class="for-text btn btn-light"><i class="ti-file small mr-1"></i> Makale Ders</button>
+                                    </div>
+                                    <div class="video-content">
+                                        <div class="form-group row">
+                                            <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                                                Vimeo Video Kodu
+                                                <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Vimeo video kodunu yazınız. (Url'den alıyorsanız vimeo.com sonrasındaki sayısal kodu ekleyiniz.)">
+                                                    <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                                </span>
+                                            </label>
+                                            <div class="col-md-7">
+                                                <input type="number" name="video" id="lec-video" class="form-control" autofocus>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <a href="#videoPreview" data-toggle="modal" class="previewButton btn btn-info btn-sm">Video Önizleme</a>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                                                Önizleme Var mı?
+                                                <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Vimeo video kodunu yazınız. (Url'den alıyorsanız vimeo.com sonrasındaki sayısal kodu ekleyiniz.)">
+                                                    <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                                </span>
+                                            </label>
+                                            <div class="col-md-10">
+                                                <input name="isPreview" id="lec-prev" type="checkbox" value="true" class="form-check-input" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="text-content">
+                                        <div class="form-group row">
+                                            <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                                                Makale İçeriği
+                                                <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Video yerine makale tipi ders kullanacaksanız yazınız. (Video kodu eklediğiniz durumda geçersiz olacaktır.)">
+                                                    <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                                </span>
+                                            </label>
+                                            <div class="col-md-10">
+                                                <textarea rows="6" name="description" id="lec-desc" class="form-control"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            <div class="tab-pane fade" id="LecTabs_2-2" role="tabpanel">
+                                <div class="form-group row">
+                                    <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                                        Açıklama
+                                        <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Dersin video altında yer alan özel açıklamasını yazınız. (Dersle ilgili tarifler, eklenen linkler ve kılavuz amaçlı açıklamalar içindir.)">
+                                            <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                        </span>
+                                    </label>
+                                    <div class="col-md-10">
+                                        <textarea rows="12" name="mainDescription" id="lec-mainDesc" class="form-control"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="my-5">
+                            <button type="submit" class="icon-btn btn btn-success mr-2"><i class="fa fa-check-circle"></i> <span>Kaydet</span></button>
+                            <input type="hidden" name="tableNumber" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

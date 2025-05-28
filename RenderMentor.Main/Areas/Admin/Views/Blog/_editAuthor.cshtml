@@ -1,0 +1,61 @@
+﻿<div class="container">
+    <div class="popupModal modal fade" id="editAuthor" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Slaytı Düzenle</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" asp-controller="Blog" asp-action="EditAuthor" enctype="multipart/form-data">
+                        <div class="border-bottom mb-4 pb-4">
+                            <input type="hidden" name="authorId" id="authorId" />
+                            <div class="form-group row">
+                                <div class="col-12">
+                                    <label class="col-form-label text-dark font-weight-bold">
+                                        Yazar Fotoğrafı
+                                        <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Yazarın avatar fotoğrafını yükleyiniz.">
+                                            <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                        </span>
+                                    </label>
+                                    <div class="image-input media align-items-end mt-4">
+                                        <div class="position-relative">
+                                            <!-- 80 x 80 -->
+                                            <a id="avatar" href="~/images/placeholder/instructor-avatar-image.jpg" data-fancybox="gallery">
+                                                <img src="~/images/placeholder/instructor-avatar-image.jpg" width="80" height="80">
+                                            </a>
+                                            <input type="hidden" name="avatar" id="avatarInput" />
+                                        </div>
+                                        <div class="media-body ml-4 mb-4 mb-md-0">
+                                            <p>JPG veya PNG 80x80 px</p>
+                                            <a href=""></a>
+                                            <button type="button" class="upload btn btn-outline-primary">
+                                                <input type="file" name="avatarFile" id="uploadEditAvatar" multiple>
+                                                Yükle
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                                    Yazar Adı
+                                    <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Yazarın adını ve soyadını yazınız.">
+                                        <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                    </span>
+                                </label>
+                                <div class="col-md-10">
+                                    <input id="name" name="name" class="form-control" autofocus>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="my-5">
+                            <button type="submit" class="icon-btn btn btn-success mr-2"><i class="fa fa-check-circle"></i> <span>Kaydet</span></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

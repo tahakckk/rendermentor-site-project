@@ -1,0 +1,31 @@
+﻿@model string
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ödeme Kapısı - Yönlendiriliyor...</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .loading {
+            margin-top: 50px;
+            font-size: 18px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="loading">Ödeme sayfası yükleniyor, lütfen bekleyin...</div>
+    @Html.Raw(Model)
+</body>
+</html>
+

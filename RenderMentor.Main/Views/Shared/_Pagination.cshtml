@@ -1,0 +1,29 @@
+﻿@if (Model.TotalItems > Model.PageSize)
+{
+    <div class="col-12 marginTop-70">
+        <ul class="pagination pagination-primary align-items-center justify-content-center">
+            @if (Model.PreviousPage)
+            {
+                <li class="page-item mx-2"><a asp-action="Index" asp-route-page="@(Model.PageIndex - 1)"><i class="ti-arrow-left small mr-2"></i> Önceki</a></li>
+            }
+            else
+            {
+                <li class="page-item mx-2"><span class="text-gray-lightest"><i class="ti-arrow-left small mr-2"></i> Önceki</span></li>
+            }
+            @for (int i = 0; i < Model.TotalPages; i++)
+            {
+                int page = i + 1;
+                <li class="page-item @(Model.PageIndex == page ? "active" : "") mx-2 font-weight-bold"><a class="page-link" asp-action="Index" asp-route-page="@(page)">@(page)</a></li>
+            }
+            @if (Model.NextPage)
+            {
+                <li class="page-item mx-2"><a asp-action="Index" asp-route-page="@(Model.PageIndex + 1)">Sonraki <i class="ti-arrow-right small ml-2"></i></a></li>
+            }
+            else
+            {
+                <li class="page-item mx-2"><span class="text-gray-lightest">Sonraki <i class="ti-arrow-right small ml-2"></i></span></li>
+            }
+
+        </ul>
+    </div>
+}

@@ -1,0 +1,121 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Http
+@using RenderMentor.Utility
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@inject IHttpContextAccessor HttpContextAccessor
+
+<header class="site-header bg-dark text-white-0_5">
+    <div class="container">
+        <div class="row align-items-center @(SignInManager.IsSignedIn(User) ? "justify-content-end" : "justify-content-between")  mx-0">
+            @if (!SignInManager.IsSignedIn(User))
+            {
+                @await Component.InvokeAsync("Contact", new { viewName = "Header" })
+
+                @await Component.InvokeAsync("Social", new { viewName = "Header" })
+            }
+            <ul class="login-lang-list list-inline mb-0">
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    if (User.IsInRole(SD.Role_Admin))
+                    {
+                        <li class="list-inline-item mr-0 p-md-3 p-2 border-right border-left border-white-0_1">
+                            <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="btn-warning btn-admin-nav"><i class="fa fa-user-secret"></i> Admin Paneli</a>
+                        </li>
+                        <li class="list-inline-item mr-0 p-md-3 p-2 border-right border-left border-white-0_1">
+                            <a asp-area="Student" asp-controller="Student" asp-action="Profile" class="btn-info btn-admin-nav"><i class="fa fa-user"></i> Öğrenci Paneli</a>
+                        </li>
+                    }
+                    else if (User.IsInRole(SD.Role_Instructor))
+                    {
+
+                        <li class="list-inline-item mr-0 p-md-3 p-2 border-right border-left border-white-0_1">
+                            <a asp-area="Admin" asp-controller="Course" asp-action="Index" class="btn-warning btn-admin-nav"><i class="fa fa-graduation-cap"></i> Eğitmen Paneli</a>
+                        </li>
+
+                    }
+                    else
+                    {
+                        <li class="list-inline-item mr-0 p-md-3 p-2 border-right border-left border-white-0_1">
+                            <a asp-area="Student" asp-controller="Student" asp-action="Index" class="btn-warning btn-admin-nav"><i class="fa fa-award"></i> Kurs İzle</a>
+                        </li>
+                        <li class="list-inline-item mr-0 p-md-3 p-2 border-right border-left border-white-0_1">
+                            <a asp-area="Student" asp-controller="Student" asp-action="Profile" class="btn-info btn-admin-nav"><i class="fa fa-user"></i> Öğrenci Paneli</a>
+                        </li>
+                    }
+
+                }
+                <partial name="_LoginPartial" />
+            </ul>
+        </div> <!-- END END row-->
+    </div> <!-- END container-->
+</header><!-- END site header-->
+
+<nav class="ec-nav sticky-top bg-white">
+    <div class="container">
+        <div class="navbar p-0 navbar-expand-lg">
+            <div class="navbar-brand">
+                <a class="logo-default" asp-area="Base" asp-controller="Home" asp-action="Index"><img alt="Render Mentor Logo" src="~/images/render-mentor-logo-partner.png?v=1.01"></a>
+            </div>
+            <span aria-expanded="false" class="navbar-toggler ml-auto collapsed" data-target="#ec-nav__collapsible" data-toggle="collapse">
+                <div class="hamburger hamburger--spin js-hamburger">
+                    <div class="hamburger-box">
+                        <div class="hamburger-inner"></div>
+                    </div>
+                </div>
+            </span>
+            <div class="collapse navbar-collapse when-collapsed" id="ec-nav__collapsible">
+                <ul class="nav navbar-nav ec-nav__navbar ml-auto">
+                    <li class="nav-item nav-item__has-dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">Kurslar</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="nav-link__list special" asp-area="Base" asp-controller="Home" asp-action="Subscription">Üyelik Satın Al</a></li>
+                            <li><a class="nav-link__list" asp-area="Base" asp-controller="CourseList" asp-action="Index" asp-route-courseCategory="">Tüm Kurslar</a></li>
+                            @await Component.InvokeAsync("CourseCategory", new { viewName = "Menu" })
+                        </ul>
+                    </li>
+                    <li class="nav-item nav-item__has-dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">Kurumsal</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="nav-link__list" asp-area="Base" asp-controller="Home" asp-action="About">Hakkımızda</a></li>
+                            <li><a class="nav-link__list" asp-area="Base" asp-controller="Home" asp-action="Mentors">Mentorlar</a></li>
+                            <li><a class="nav-link__list" asp-area="Base" asp-controller="Home" asp-action="Memberships">Üyelikler Hakkında</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item nav-item__has-dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">Bayilikler</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="nav-link__list" asp-area="Base" asp-controller="Vendor" asp-action="Index">Tüm Bayilikler</a></li>
+                            @await Component.InvokeAsync("Vendor", new { viewName = "Menu" })
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" asp-area="Base" asp-controller="Blog" asp-action="Index">Blog</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-area="Base" asp-controller="Home" asp-action="Faq">SSS</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-area="Base" asp-controller="Home" asp-action="Contact">İletişim</a></li>
+                </ul>
+            </div>
+            <div class="nav-toolbar">
+                <ul class="navbar-nav ec-nav__navbar">
+                    
+                    <!-- Shopping Cart  -->
+                    <li class="nav-item">
+                        <a class="nav-link cart-link" asp-area="Base" asp-controller="Cart" asp-action="Index" title="Alışveriş Sepeti">
+                            <i class="ti-shopping-cart"></i>
+                            @if (HttpContextAccessor.HttpContext.Session.GetInt32(SD.ssShoppingCart) != null)
+                            {
+                                var count = HttpContextAccessor.HttpContext.Session.GetInt32(SD.ssShoppingCart);
+                                if (count > 0)
+                                {
+                                    <span class="quantity">@count</span>
+                                }
+                            }
+                        </a>
+                    </li>
+                    <!-- Search Toggler -->
+                    <li class="nav-item ml-3"><a class="nav-link btn-primary" asp-area="Base" asp-controller="Home" asp-action="Memberships">Üyelikler</a></li>
+                </ul>
+            </div>
+        </div>
+    </div> <!-- END container-->
+</nav> <!-- END ec-nav -->
+<!-- Site Search -->

@@ -1,0 +1,61 @@
+﻿@model IEnumerable<Faq>
+@{
+    ViewData["Title"] = "Sıkça Sorulan Sorular | RenderMentor";
+}
+
+<div class="padding-y-60 bg-cover" data-dark-overlay="6" style="background:url(/images/breadcrumb-bg.jpg) no-repeat">
+    <div class="container">
+        <h1 class="text-white">
+            Sıkça Sorulan Sorular
+        </h1>
+        <ol class="breadcrumb breadcrumb-double-angle text-white bg-transparent p-0">
+            <li class="breadcrumb-item"><a asp-action="Index">Anasayfa</a></li>
+            <li class="breadcrumb-item">Sıkça Sorulan Sorular</li>
+        </ol>
+    </div>
+</div>
+
+<section class="padding-y-100 bg-light-v2">
+    <div class="container">
+
+        <div class="row">
+            <div class="col-12 mt-4">
+                <div id="accordion-7" class="accordion-style-7 bg-white shadow-v1">
+                    @if (Model.Count() > 0)
+                    {
+                        foreach (var faq in Model)
+                        {
+                            <div class="accordion-item border-bottom border-light">
+                                <a href="#acc7_@faq.ListOrder" class="accordion__title h6 mb-0 py-3 px-4 @(faq.ListOrder != 1 ? "collapsed": "")" data-toggle="collapse" aria-expanded="true">
+                                    <span class="accordion__icon small mr-2 mt-1">
+                                        <i class="ti-angle-down"></i>
+                                        <i class="ti-angle-up"></i>
+                                    </span>
+                                    @faq.Question
+                                </a>
+                                <div id="acc7_@faq.ListOrder" class="collapse @(faq.ListOrder == 1 ? "show": "")" data-parent="#accordion-7">
+                                    <div class="px-4">
+                                        @Html.Raw(faq.Answer)
+                                    </div>
+                                </div>
+                            </div> <!-- END accordion-item-->
+                        }
+                    }
+                    else
+                    {
+                        <div class="alert alert-info alert-dismissible d-flex my-5" role="alert">
+                            <i class="fa fa-question fa-3x mr-3"></i>
+                            <div>
+                                <p>Sıkça sorulan sorularımız hazırlanmaktadır. En kısa zamanda bu sayfadan inceleyebilirsiniz.</p>
+                                <a class="icon-btn btn btn-info" href="/"><i class="fa fa-home"></i> Anasayfaya Dön</a>
+                            </div>
+                        </div>
+                    }
+                </div> <!-- END accordion-item-->
+                </div> <!-- END accordion-7-->
+            </div> <!-- END col-12 -->
+
+        </div> <!-- END row-->
+
+    </div> <!-- END container-->
+</section> <!-- END section-->

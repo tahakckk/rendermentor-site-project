@@ -1,0 +1,588 @@
+﻿@model RenderMentor.Models.ViewModels.CourseSectionsLecturesVM
+
+@{
+    ViewData["Title"] = "Presentation";
+    Layout = "~/Views/Shared/_Layout-watch.cshtml";
+}
+
+<div class="padding-y-10 bg-cover" data-dark-overlay="6">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-12 my-2 text-white">
+
+                <h2 class="h1">
+                    @Model.Course.Title
+                </h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="paddingBottom-100">
+    <div class="container-fluid">
+        <div id="lecture-content" class="row">
+            <div class="col-lg-8 marginTop-15">
+                <div id="videoPlace" class="ec-video-container my-4">
+
+                </div>
+
+                <div id="articlePlace" class="my-4">
+
+                </div>
+
+                <div class="col-12 mt-4">
+                    <ul class="nav tab-line tab-line tab-line--3x border-bottom mb-5" role="tablist">
+                        <li id="lecDesc-nav" class="nav-item disabled">
+                            <a class="nav-link" data-toggle="tab" href="#tabLecDescription" role="tab" aria-selected="true">
+                                Ders Açıklaması
+                            </a>
+                        </li>
+                        <li id="lecQuest-nav" class="nav-item disabled">
+                            <a class="nav-link" data-toggle="tab" href="#tabLecQuestion" role="tab" aria-selected="true">
+                                Soru &amp; Cevap
+                            </a>
+                        </li>
+                        <li id="courseDesc-nav" class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#tabDescription" role="tab" aria-selected="true">
+                                Kurs Açıklaması
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#tabInstructors" role="tab" aria-selected="true">
+                                Eğitmen
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade" id="tabLecDescription" role="tabpanel">
+                            <h4>
+                                Ders Açıklaması
+                            </h4>
+                            <p id="lecture-description">
+
+                            </p>
+
+                        </div> <!-- END tab-pane-->
+
+                        <div class="tab-pane fade" id="tabLecQuestion" role="tabpanel">
+                            <h4>
+                                Soru &amp; Cevap
+                            </h4>                            
+                            <div id="lecture-question"></div>
+                            <div class="col-12 mt-4">
+                                <div id="review" class="card shadow-v3 mt-5 padding-40">
+                                    <h4>Ders hakkında soru sorun</h4>
+                                    <p>Bu ders hakkında kafanıza takılan herhangi bir konu veya öğrenmek istediğiniz ek bir detay için eğitmeninize soru sorabilirsiniz.</p>
+                                    <form id="AskQuestion" method="POST" asp-controller="Student" asp-action="AskQuestion">
+                                        <textarea class="form-control mb-4" name="question" rows="5" placeholder="Sorunuz *"></textarea>
+                                        <input type="hidden" name="lectureId" id="lecQuestId" />
+                                        <input type="hidden" name="courseId" id="courseId" />
+                                        <button class="btn btn-primary">Soru Sor</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div> <!-- END tab-pane-->
+
+                        <div class="tab-pane fade show active" id="tabDescription" role="tabpanel">
+                            <h4>
+                                Kurs Açıklaması
+                            </h4>
+                            <p>
+                                @Html.Raw(Model.Course.Description)
+                            </p>                            
+                        </div> <!-- END tab-pane-->
+
+                        <div class="tab-pane fade" id="tabInstructors" role="tabpanel">
+                            <h4 class="mb-4">
+                                Eğitmen Hakkında
+                            </h4>
+
+                            <div class="border-bottom mb-4 pb-4">
+                                <div class="d-md-flex mb-4">
+                                    <a href="#">
+                                        <img class="iconbox iconbox-xxxl" src="@Model.Instructor.AvatarImage" alt="@Model.Instructor.ApplicationUser.Name">
+                                    </a>
+                                    <div class="media-body ml-md-4 mt-4 mt-md-0">
+                                        <h6>@Model.Instructor.ApplicationUser.Name</h6>
+                                        @if (Model.InstructorCategories.Count() != 0)
+                                        {
+                                            var last = Model.InstructorCategories.Last();
+                                            <p class="mb-2">
+                                                <i class="fa fa-graduation-cap mr-2"></i>
+                                                @foreach (var category in Model.InstructorCategories)
+                                                {
+                                                    if (category.Equals(last))
+                                                    {
+                                                        @(category.CourseCategory.Name)
+                                                    }
+                                                    else
+                                                    {
+                                                        @(category.CourseCategory.Name)<span>, </span>
+                                                    }
+                                                }
+                                            </p>
+                                        }
+                                    </div>
+                                </div>
+                                @Html.Raw(Model.Instructor.Desc)
+                            </div>
+
+                        </div> <!-- END tab-pane -->
+
+                    </div> <!-- END tab-content-->
+                </div> <!-- END col-12 -->
+            </div> <!-- END col-lg-9 -->
+
+            <aside id="fixedSidebar" class="col-lg-4 marginTop-60">
+                <div id="courseSection" class="mb-4">
+
+                    @foreach (var item in Model.CourseSections)
+                    {
+                        <div class="accordion-item list-group mb-3">
+
+                            <div class="list-group-item bg-light">
+                                <a class="row" href="#courseSection_@item.ListOrder" data-toggle="collapse" aria-expanded="true">
+                                    <span class="col-6 col-md-6 d-flex">
+                                        <span class="accordion__icon text-primary mr-2">
+                                            <i class="ti-plus"></i>
+                                            <i class="ti-minus"></i>
+                                        </span>
+                                        <span class="h6 d-inline">@item.Title</span>
+                                    </span>
+                                    <span class="col-4 col-md-4 d-none d-md-block text-right">
+                                        @item.TotalLectures Ders
+                                    </span>
+                                    <span class="showDuration col-2 col-md-2 text-right">
+                                        @item.TotalDuration
+                                    </span>
+
+                                </a>
+                            </div>
+
+                            <div id="courseSection_@item.ListOrder" class="collapse show">
+
+                                @foreach (var lecture in item.Lectures)
+                                {
+                                    <div id="course_Lecture_@(item.ListOrder)_@lecture.ListOrder" class="courseLecture list-group-item" data-id="@lecture.Id">
+                                        <span class="row">
+                                            <a class="selectLecture col-9 col-md-8 d-flex align-items-center" href="#">
+                                                <i class="@(lecture.Video != null ? "ti-control-play": "ti-file") small mr-2"></i>
+                                                <span class="lecture-title">@lecture.Title</span>
+                                                @if (lecture.Video != null)
+                                                {
+                                                    <input class="lectureVideo" type="hidden" value="@lecture.Video" />
+                                                }
+                                                <input class="lectureId" type="hidden" value="@lecture.Id" />
+                                            </a>
+                                            @if (lecture.Video != null)
+                                            {
+                                                <span class="showDuration col-3 col-md-2 ml-auto text-right">@lecture.Duration</span>
+                                            }
+                                        </span>
+                                    </div>
+                                }
+
+                            </div>
+                        </div> <!-- END accordion-item -->
+                    }
+
+                </div> <!-- END accordion-->
+            </aside> <!-- END col-lg-3 -->
+
+        </div> <!-- END row-->
+    </div> <!-- END container-->
+</section>
+
+<div class="sidebar-transparent-area"></div>
+
+<div id="sidebarToggle">
+    <a href="javascript: void(0);">Kurs Menüsü</a>
+</div>
+
+<<form id="AnswerQuestion" method="POST" asp-controller="Student" asp-action="AnswerQuestion">
+    <input type="hidden" name="answer" id="AnswerAnswer" />
+    <input type="hidden" name="questionId" id="QuestionId" />
+    <input type="hidden" name="courseId" value="@Model.Course.Id" />
+</form>
+
+@section Styles {
+    <style>
+        footer {
+            position: relative;
+            z-index: 6;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script src="~/js/jquery.form.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://player.vimeo.com/api/player.js"></script>
+    <script>
+        $(window).scroll(function () {
+            var scrollTop = $(window).scrollTop();
+            if (scrollTop >= 50) {
+                $('#fixedSidebar').addClass('accordionSticky');
+            } else {
+                $('#fixedSidebar').removeClass('accordionSticky');
+            }
+        });
+
+        var answerQuestion;
+
+        $(document).ready(function () {
+
+            $.fn.isInViewport = function () {
+                var elementTop = $(this).offset().top;
+                var elementBottom = elementTop + $(this).outerHeight();
+
+                var viewportTop = $(window).scrollTop();
+                var viewportBottom = viewportTop + $(window).height();
+
+                return elementBottom > viewportTop && elementTop < viewportBottom;
+            };
+
+            var lectureOrder = 1;
+            $('.lecture-title').each(function () {
+
+                oldText = $(this).text();
+                $(this).text(lectureOrder + ": " + oldText);
+                lectureOrder++;
+            });
+
+            $('#articlePlace').height(($('#articlePlace').width() * 8.84) / 16);
+
+            var fixedSidebar = $('#fixedSidebar'),
+                height = fixedSidebar.height(),
+                scrollHeight = fixedSidebar.get(0).scrollHeight;
+
+            fixedSidebar.off("mousewheel").on("mousewheel", function (event) {
+                var blockScrolling = this.scrollTop === scrollHeight - height && event.deltaY < 0 || this.scrollTop === 0 && event.deltaY > 0;
+                return !blockScrolling;
+            });
+
+            $('.fixed-content').height($('#lecture-content').height());
+
+            $('.sidebar-transparent-area').fadeOut(500);
+            $('#sidebarToggle a').click(function () {
+                if ($(this).hasClass('open')) {
+                    if ($(window).width() > 420) {
+                        $('#fixedSidebar').animate({ 'right': '-500px' });
+                    } else {
+                        $('#fixedSidebar').animate({ 'right': '-450px' });
+                    }
+                    $(this).addClass('closed');
+                    $(this).removeClass('open');
+                    $('.sidebar-transparent-area').fadeOut(500);
+                } else {
+                    $(this).addClass('open');
+                    $(this).removeClass('closed');
+                    $('#fixedSidebar').animate({ 'right': '0' });
+                    $('.sidebar-transparent-area').fadeIn(500);
+                }
+            });
+            
+            $('.sidebar-transparent-area').on('click', function () {
+                if ($(window).width() > 420) {
+                    $('#fixedSidebar').animate({ 'right': '-500px' });
+                } else {
+                    $('#fixedSidebar').animate({ 'right': '-450px' });
+                }
+                $('.sidebar-transparent-area').fadeOut(500);
+                $('#sidebarToggle a').addClass('closed');
+                $('#sidebarToggle a').removeClass('open');
+            });
+
+            function fillDescription(item) {
+                if (item != null) {
+                    $('.nav-item .nav-link').removeClass('active show');
+                    $('#lecDesc-nav .nav-link').addClass('active show');
+                    $('#lecDesc-nav').removeClass('disabled');
+                    $('.tab-pane').removeClass('show active');
+                    $('#tabLecDescription').addClass('show active');
+                    $('#lecture-description').html(item);
+                } else {
+                    $('.nav-item .nav-link').removeClass('active show');
+                    $('#courseDesc-nav .nav-link').addClass('active show');
+                    $('#lecDesc-nav').addClass('disabled');
+                    $('.tab-pane').removeClass('show active');
+                    $('#tabDescription').addClass('show active');
+                }
+            }
+
+            function fillQuestions(data) {
+
+            }
+
+            function fillQuestions(data) {
+                $('#lecture-question').html("");
+                var questions = "";
+                if (data.length > 0) {
+                    $.each(data, function (i, item) {
+                        questions = questions.concat(`
+                            <div class="row question-box">
+                                <div class="col-md-12 my-1 media">
+                                    <div class="media-body">
+                                        <small class="text-gray">${data[i].date}</small>
+                                        <h6>${data[i].name}</h6>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 my-1">
+                                    <p>${data[i].question}</p>
+                                </div>
+                        `);
+                        if (data[i].lectureAnswers.length > 0) {
+                            questions = questions.concat(`
+                                <div id="question${data[i].id}" class="col-md-12">
+                                    <a class="btn-link text-warning mb-3 d-inline-block" href="#lectureAnswers_${data[i].id}" data-toggle="collapse" aria-expanded="true"><i class="fa fa-chevron-down"></i> Cevapları Göster</a>
+                                </div>
+                                <div id="lectureAnswers_${data[i].id}" class="answer-block collapse" aria-labelledby="question${data[i].id}" data-parent="#lecture-question">
+                            `);
+                            $.each(data[i].lectureAnswers, function (y, item) {
+                                questions = questions.concat(`
+                                    <div class="row answer-box ${data[i].lectureAnswers[y].isInstructor ? "instructor" : ""}">
+                                        <div class="col-md-12 my-1 media ">
+                                            <div class="media-body">
+                                                <small class="text-gray">${data[i].lectureAnswers[y].date}</small>
+                                                <h6>${data[i].lectureAnswers[y].name}</h6>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 my-1">
+                                            <p>${data[i].lectureAnswers[y].answer}</p>
+                                        </div>
+                                    </div>
+                                `);
+                            });
+                            questions = questions.concat(`
+                                </div>
+                            `);
+                        }
+                        questions = questions.concat(`
+                                <div class="col-md-12 my-1">
+                                    <button onclick="answerQuestion(this);" data-id="${data[i].id}" type="button" class="answer-btn btn btn-outline-warning btn-sm marginLeft-40">Cevap Yaz</button>
+                                </div>
+                                <div class="col-md-12 answer-form"></div>
+                            </div>
+                        `);
+                    });
+                    $('#lecture-question').html(`
+                        <div class="border-bottom mx-0 pb-4">
+                            <hr>
+                            ${questions}
+                        </div>
+                    `);
+                }
+            }
+
+            answerQuestion = function (el) {
+                $(".answer-form").html("");
+                var id = $(el).data("id");
+                $('#QuestionId').val(id);
+                $(el).parent().next(".answer-form").html(`
+                    <div class="col-12 mt-4">
+                        <div id="answer" class="mt-2 padding-10 paddingLeft-40">
+                            <h6>Soruya cevap verin</h6>
+                            <p>Bu soru için aydınlatıcı bir cevabınız ya da soruya eklemek istedikleriniz varsa paylaşabilirsiniz.</p>
+                            <textarea class="form-control mb-4" name="streamAnswer" id="StreamAnswer" rows="4" placeholder="Cevabınız *"></textarea>
+                            <button id="StreamAction" type="button" class="btn btn-primary btn-sm">Cevabı Gönder</button>
+                        </div>
+                    </div>
+                `);
+            }
+
+            $('#AskQuestion').submit(function (e) {
+                e.preventDefault();
+                var url = $(this).attr('action');
+                $(this).ajaxSubmit({
+                    type: 'POST',
+                    url: url,
+                    success: function (data) {
+                        if (data.success) {
+                            window.location.href = data.url;
+                        } else {
+                            swal({
+                                title: "Hata!",
+                                text: data.message,
+                                icon: "warning",
+                                buttons: ["Tamam"],
+                                dangerMode: true
+                            });
+                        }
+                    }
+                });
+            });
+
+            $('#lecture-question').on("click", "#StreamAction", function (e) {
+                var form = $('#AnswerQuestion');
+                var url = form.attr('action');
+                var answer = $(this).parent().find('#StreamAnswer').val();
+                $('#AnswerAnswer').val(answer);
+                form.ajaxSubmit({
+                    type: 'POST',
+                    url: url,
+                    success: function (data) {
+                        if (data.success) {
+                            window.location.href = data.url;
+                        } else {
+                            swal({
+                                title: "Hata!",
+                                text: data.message,
+                                icon: "warning",
+                                buttons: ["Tamam"],
+                                dangerMode: true
+                            });
+                        }
+                    }
+                });
+            });
+
+            var selectedVideo = '32615209';
+            var videoOptions = {
+                id: 32615209,
+                width: 640,
+                autoplay: true,
+                loop: false
+            };
+            var player = new Vimeo.Player('videoPlace', videoOptions);
+            var firstLecture = $('#courseSection_1 #course_Lecture_1_1');
+            var watchingId = @Model.WatchingLectureId;
+            var lectureId = 0;
+
+            function putVideo(firstOrWatching) {
+                if (firstOrWatching.find('input').hasClass('lectureVideo')) {
+                    selectedVideo = firstOrWatching.find('input.lectureVideo').val();
+                    player.loadVideo(selectedVideo);
+                } else {
+                    $('#videoPlace').hide();
+                    player.pause();
+                    $('#articlePlace').show();
+                }
+            }
+
+            if (watchingId != 0) {
+                var watching = $(`.courseLecture[data-id='${watchingId}']`);
+                watching.addClass('viewing');
+                if (!watching.isInViewport()) {
+                    $('#fixedSidebar').stop().animate({
+                        scrollTop: watching.offset().top
+                    }, 2000);
+                }
+                lectureId = watching.find('.lectureId').val();
+                putVideo(watching);
+            } else {
+                firstLecture.addClass('viewing');
+                lectureId = firstLecture.find('.lectureId').val();
+                putVideo(firstLecture);
+            }
+            $.ajax({
+                type: 'Get',
+                url: '/findLectureView/' + @Model.Course.Id + '/' + lectureId,
+                success: function (lectureJson) {
+                    if (lectureJson.lecture.description != null) {
+                        var articleSource = lectureJson.lecture.description;
+                        $('#articlePlace').html(articleSource);
+                    } else {
+                        $('#articlePlace').html('');
+                    }
+                    var descSource = lectureJson.lecture.mainDescription;
+                    fillDescription(descSource);
+                    var questionSource = lectureJson.lectureQuestions;
+                    fillQuestions(questionSource);
+                    $('#lecQuestId').val(lectureJson.lecture.id);
+                    $('#courseId').val(@Model.Course.Id);
+                }
+            });
+
+            $('.selectLecture').click(function (e) {
+                e.preventDefault();
+                $('.courseLecture').removeClass('viewing');
+                $(this).parent().parent().addClass('viewing');
+                var lectureId = $(this).find('.lectureId').val();
+                $.ajax({
+                    type: 'Get',
+                    url: '/findLectureView/' + @Model.Course.Id + '/' + lectureId,
+                    success: function (lectureJson) {
+                        if (lectureJson.lecture.description != null) {
+                            var articleSource = lectureJson.lecture.description;
+                            $('#articlePlace').html(articleSource);
+                        } else {
+                            $('#articlePlace').html('');
+                        }
+                        var descSource = lectureJson.lecture.mainDescription;
+                        fillDescription(descSource);
+                        var questionSource = lectureJson.lectureQuestions;
+                        fillQuestions(questionSource);
+                        $('#lecQuestId').val(lectureJson.lecture.id);
+                        $('#courseId').val(@Model.Course.Id);
+                    }
+                });
+                $.ajax({
+                    type: 'GET',
+                    url: '/rememberWatching/' + @Model.StudentId + '/' + @Model.Course.Id,
+                    data: { watchingId: lectureId},
+                    dataType: "json"
+                });
+
+                if ($(this).find('input').hasClass('lectureVideo')) {
+                    $('#articlePlace').hide();
+                    $('#videoPlace').show();
+                    selectedVideo = $(this).find('.lectureVideo').val();
+                    player.loadVideo(selectedVideo);
+                } else {
+                    $('#videoPlace').hide();
+                    player.pause();
+                    $('#articlePlace').show();
+                }
+            });
+
+            player.on('ended', function () {
+                var nextItem = $('.courseLecture.viewing').next();
+                $('.courseLecture').removeClass('viewing');
+                nextItem.addClass('viewing');
+
+                var lectureId = nextItem.find('.lectureId').val();
+                $.ajax({
+                    type: 'Get',
+                    url: '/findLecture/' + @Model.Course.Id + '/' + lectureId,
+                    success: function (lectureJson) {
+                        if (lectureJson.lecture.description != null) {
+                            var articleSource = lectureJson.lecture.description;
+                            $('#articlePlace').html(articleSource);
+                        } else {
+                            $('#articlePlace').html('');
+                        }
+                        var descSource = lectureJson.lecture.mainDescription;
+                        fillDescription(descSource);
+                    }
+                });
+                $.ajax({
+                    type: 'GET',
+                    url: '/rememberWatching/' + @Model.StudentId + '/' + @Model.Course.Id,
+                    data: { watchingId: lectureId},
+                    dataType: "json"
+                });
+                if (nextItem.find('input').hasClass('lectureVideo')) {
+                    $('#articlePlace').hide();
+                    $('#videoPlace').show();
+                    selectedVideo = nextItem.find('input.lectureVideo').val();
+                    player.loadVideo(selectedVideo);
+                } else {
+                    $('#videoPlace').hide();
+                    player.pause();
+                    $('#articlePlace').show();
+                }
+            });
+
+            $('.showDuration').each(function () {
+                var trimDuration = ($(this).text()).replace(/ /g, '');
+                $(this).text(trimDuration);
+                var hideHours = ($(this).text()).substring(3, $(this).text().length);
+                if ($(this).text().match("^00:")) {
+                    $(this).text(hideHours);
+                }
+            });
+
+
+        });
+    </script>
+}

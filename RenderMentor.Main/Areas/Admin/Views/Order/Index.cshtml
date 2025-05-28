@@ -1,0 +1,92 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout-admin.cshtml";
+
+    var status = Context.Request.Query["status"];
+
+    var all = "text-secondary";
+    var inprocess = "text-secondary";
+    var pending = "text-secondary";
+    var completed = "text-secondary";
+    var rejected = "text-secondary";
+
+    switch (status)
+    {
+        case "inprocess":
+            inprocess = "active text-white";
+            break;
+        case "pending":
+            pending = "active text-white";
+            break;
+        case "completed":
+            completed = "active text-white";
+            break;
+        case "rejected":
+            rejected = "active text-white";
+            break;
+        default:
+            all = "active text-white";
+            break;
+    }
+}
+
+<div class="col-lg-10">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h1>Siparişler</h1>
+            <ol class="breadcrumb breadcrumb-double-angle bg-transparent p-0">
+                <li class="breadcrumb-item"><a asp-area="Base" asp-controller="Home" asp-action="Index">Anasayfa</a></li>
+                <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Admin</a></li>
+                <li class="breadcrumb-item"> Siparişler</li>
+            </ol>
+        </div>
+        <div class="col-md-6">
+            <div class="admin-top-actions d-flex justify-content-end">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card shadow-v1 padding-30">
+        
+        <ul class="list-group flex-md-row">
+            <a asp-controller="Order" asp-action="Index" asp-route-status="all">
+                <li class="list-group-item @all">Tümü</li>
+            </a>
+            <a asp-controller="Order" asp-action="Index" asp-route-status="inprocess">
+                <li class="list-group-item @inprocess">İşleniyor</li>
+            </a>
+            <a asp-controller="Order" asp-action="Index" asp-route-status="pending">
+                <li class="list-group-item @pending">Bekleniyor</li>
+            </a>
+            <a asp-controller="Order" asp-action="Index" asp-route-status="completed">
+                <li class="list-group-item @completed">Tamamlandı</li>
+            </a>
+            <a asp-controller="Order" asp-action="Index" asp-route-status="rejected">
+                <li class="list-group-item @rejected">Reddedildi</li>
+            </a>
+        </ul>
+        <br />
+        <div class="table-responsive my-4">
+            <table id="tblData" class="table table-bordered no-order">
+                <thead>
+                    <tr>
+                        <th scope="col">Tarih</th>
+                        <th scope="col">Sipariş Kodu</th>
+                        <th scope="col">Ad</th>
+                        <th scope="col">E-Mail</th>
+                        <th scope="col">Telefon</th>
+                        <th scope="col">Toplam (TL)</th>
+                        <th scope="col">Durum</th>
+                        <th scope="col">Eylemler</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div> <!-- END card-->
+</div> <!-- END col-md-8 -->
+
+
+@section Scripts {
+    <script src="~/datatables/order.js?v=1.02"></script>
+}

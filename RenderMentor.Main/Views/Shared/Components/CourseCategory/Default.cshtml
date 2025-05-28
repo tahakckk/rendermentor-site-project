@@ -1,0 +1,21 @@
+﻿@model IEnumerable<RenderMentor.Models.CourseCategory>
+
+@{
+    ViewData["Title"] = "Default";
+}
+
+<ul class="list-inline">
+    <li class="list-inline-item my-2">
+        <div class="dropdown dropdown-select">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Kategori Seçiniz</a>
+            <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 29px, 0px); top: 0px; left: 0px; will-change: transform;">
+                @foreach (var item in Model)
+                {
+                    <a asp-controller="CourseList" asp-action="Index" asp-route-courseCategory="@item.SEOUrl" class="dropdown-item">@item.Name</a>
+                }
+            </div>
+        </div>
+    </li>
+</ul>
+
+

@@ -1,0 +1,83 @@
+﻿@model Contact
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="py-5 bg-cover" data-dark-overlay="6" style="background:url(images/breadcrumb-bg.jpg) no-repeat">
+    <div class="container">
+        <h1 class="text-white">
+            İletişim
+        </h1>
+        <ol class="breadcrumb breadcrumb-double-angle text-white bg-transparent p-0">
+            <li class="breadcrumb-item"><a asp-action="Index">Anasayfa</a></li>
+            <li class="breadcrumb-item">İletişim</li>
+        </ol>
+    </div>
+</div>
+
+<div class="py-5 shadow-v2 position-relative">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-lg-4 col-md-6 mt-4">
+                <div class="media">
+                    <span class="iconbox iconbox-md bg-primary text-white"><i class="ti-mobile"></i></span>
+                    <div class="media-body ml-3">
+                        @if (Model.Phone != null)
+                        {
+                            <h5 class="mb-0">Telefon</h5>
+
+                            <hr />
+                            <p><a href="tel:@Model.Phone.Replace(" ", "")" class="h6">@Model.Phone</a></p>
+                            <small><i class="fab fa-whatsapp"></i> Whatsapp üzerinden ulaşabileceğiniz hattımızdır.</small>
+                        }
+                        <h5 class="mb-0 mt-5">Sosyal Medya</h5>
+                        <hr />
+                        @await Component.InvokeAsync("Social")
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 mt-4">
+                <div class="media">
+                    <span class="iconbox iconbox-md bg-primary text-white"><i class="ti-email"></i></span>
+                    <div class="media-body ml-3">
+                        <h5 class="mb-0">E-Posta Adreslerimiz</h5>
+                        <hr />
+                        @if (Model.EmailSales != null)
+                        {
+                        <p>Satış: <a href="mailto:@Model.EmailSales" class="h6">@Model.EmailSales</a></p>
+                        }
+                        @if (Model.EmailSupport != null)
+                        {
+                        <p>Destek: <a href="mailto:@Model.EmailSupport" class="h6">@Model.EmailSupport</a></p>
+                        }                        
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 mt-4">
+                <div class="media">
+                    <span class="iconbox iconbox-md bg-primary text-white"><i class="ti-location-pin"></i></span>
+                    <div class="media-body ml-3">
+                        <h5 class="mb-0">Adresimiz</h5>
+                        <hr />
+                        <p>@Model.Address</p>
+                        @if (!String.IsNullOrEmpty(Model.TaxNumber))
+                        {
+                            <h5 class="mb-0 mt-5">Vergi ve Hesap Bilgileri</h5>
+                            <hr />
+                            <p><strong>Vergi Dairesi:</strong> @Model.TaxDistrict</p>
+                            <p><strong>Vergi No:</strong> @Model.TaxNumber</p>
+                        }
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@Html.Raw(Model.Map)
+

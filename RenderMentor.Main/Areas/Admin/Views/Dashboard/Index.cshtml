@@ -1,0 +1,111 @@
+﻿@model RenderMentor.Models.ViewModels.DashboardVM
+@using RenderMentor.Utility
+
+@{
+    ViewData["Title"] = "Giriş Ekranı";
+}
+
+<div class="col-lg-10">
+    <div class="container d-flex justify-content-center align-items-center margin-b-100">
+        <div class="row text-center">
+            <div class="col-lg-12">
+                <div class="card shadow-v1 align-items-center p-2 pb-3 mb-4">
+                    <h4>Durum</h4>
+                    <hr />
+                    <div class="row w-100">
+                        <div class="col-md-3">
+                            <div class="border-right text-success" role="alert">
+                                <div class="d-flex justify-content-center">
+                                    <i class="fa fa-users fa-3x mr-3"></i>
+                                    <div><strong>Kayıtlı Öğrenci:</strong></div>
+                                </div>
+                                <p class="lead">@Model.TotalStudents</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="border-right text-info" role="alert">
+                                <div class="d-flex justify-content-center">
+                                    <i class="fa fa-award fa-3x mr-3"></i>
+                                    <div><strong>Kurs Adedi:</strong></div>
+                                </div>
+                                <p class="lead">@Model.TotalCourses</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="border-right text-warning" role="alert">
+                                <div class="d-flex justify-content-center">
+                                    <i class="fa fa-clipboard fa-3x mr-3"></i>
+                                    <div><strong>Toplam Sipariş:</strong></div>
+                                </div>
+                                <p class="lead">@Model.TotalOrders</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="text-center" role="alert">
+                                <div class="d-flex justify-content-center">
+                                    <i class="fa fa-building fa-3x mr-3"></i>
+                                    <div><strong>Kayıtlı Firma:</strong></div>
+                                </div>
+                                <p class="lead">@Model.TotalCompanies</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4 marginTop-30">
+                <a asp-controller="User" asp-action="Index" class="card shadow-v1 align-items-center p-5 hover:transformTop">
+                    <i class="text-success fa fa-users fa-4x mb-2"></i>
+                    <h3 class="mt-2">
+                        Öğrenciler
+                    </h3>
+                </a>
+            </div>
+
+            <div class="col-md-6 col-lg-4 marginTop-30">
+                <a asp-controller="Course" asp-action="Index" class="card shadow-v1 align-items-center p-5 hover:transformTop">
+                    <i class="text-info fa fa-award fa-4x mb-2"></i>
+                    <h3 class="mt-2">
+                        Kurslar
+                    </h3>
+                </a>
+            </div>
+
+            <div class="col-md-6 col-lg-4 marginTop-30">
+                <a asp-controller="Subscription" asp-action="Index" class="card shadow-v1 align-items-center p-5 hover:transformTop">
+                    <i class="text-primary fa fa-calendar fa-4x mb-2"></i>
+                    <h3 class="mt-2">
+                        Üyelikler
+                    </h3>
+                </a>
+            </div>
+
+            <div class="col-md-6 col-lg-4 marginTop-30">
+                <a asp-controller="Order" asp-action="Index" class="card shadow-v1 align-items-center p-5 hover:transformTop">
+                    <i class="text-warning fa fa-clipboard fa-4x mb-2"></i>
+                    <h3 class="mt-2">
+                        Siparişler
+                    </h3>
+                </a>
+            </div>
+
+            <div class="col-md-6 col-lg-4 marginTop-30">
+                <a asp-controller="Company" asp-action="Index" class="card shadow-v1 align-items-center p-5 hover:transformTop">
+                    <i class="text-secondary fa fa-building fa-4x mb-2"></i>
+                    <h3 class="mt-2">
+                        Firmalar
+                    </h3>
+                </a>
+            </div>
+
+            <div class="col-md-6 col-lg-4 marginTop-30">
+                <a asp-controller="Blog" asp-action="Index" class="card shadow-v1 align-items-center p-5 hover:transformTop">
+                    <i class="text-danger fa fa-pencil-alt fa-4x mb-2"></i>
+                    <h3 class="mt-2">
+                        Bloglar
+                    </h3>
+                </a>
+            </div>            
+
+        </div> <!-- END row-->
+    </div> <!-- END container-->
+</div> <!-- END col-md-8 -->

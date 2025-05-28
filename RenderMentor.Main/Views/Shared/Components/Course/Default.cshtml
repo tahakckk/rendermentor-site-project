@@ -1,0 +1,80 @@
+﻿@model IEnumerable<RenderMentor.Models.Course>
+@{
+    Layout = null;
+}
+
+@if (Model.Count() > 0)
+{
+    <section class="padding-y-100" data-primary-overlay="7" style="background:url(/images/home-course-bg.jpg) no-repeat">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-12 text-center text-white mb-md-4">
+                    <h2 class="mb-4">
+                        Kurslar
+                    </h2>
+                    <div class="width-3rem height-4 rounded bg-white mx-auto"></div>
+                </div>
+
+                @foreach (var item in Model.Take(3))
+                {
+                    <div class="col-lg-4 col-md-6 marginTop-30 marginBottom-30">
+                        <div class="card height-100p text-gray shadow-v1">
+                            <a asp-area="Base" asp-controller="CourseList" asp-action="Details" asp-route-courseCategory="@item.CourseCategory.SEOUrl" asp-route-SEOUrl="@item.SEOUrl">
+                                <img class="card-img-top" src="@item.CoverImage" alt="@item.Title">
+                            </a>
+                            <div class="card-body">
+                                <a asp-area="Base" asp-controller="CourseList" asp-action="Details" asp-route-courseCategory="@item.CourseCategory.SEOUrl" asp-route-SEOUrl="@item.SEOUrl" class="h5">
+                                    @item.Title
+                                </a>
+                                <p class="mt-1 mb-0">
+                                    <i class="ti-user mr-2"></i>
+                                    @item.Instructor.ApplicationUser.Name
+                                </p>
+                            </div>
+                            <div class="card-footer media align-items-center justify-content-between">
+                                <ul class="list-unstyled mb-0">
+                                    <li class="mb-1">
+                                        <i class="ti-headphone small mr-2"></i>
+                                        @if (item.TotalLectures == 0)
+                                        {
+                                            <span>Ders yok</span>
+                                        }
+                                        else
+                                        {
+                                            @item.TotalLectures <span>ders</span>
+                                        }
+                                    </li>
+                                    <li class="mb-1">
+                                        <i class="ti-time small mr-2"></i>
+                                        @if (item.TotalDuration.TotalHours < 1 && item.TotalDuration.TotalHours > 0)
+                                        {
+                                            @(String.Format("{0:0.0}", item.TotalDuration.TotalMinutes)) <span>dakika</span>
+
+                                        }
+                                        else if (item.TotalDuration.TotalHours == 0)
+                                        {
+                                            <span>Video ders yok</span>
+                                        }
+                                        else
+                                        {
+                                            @(String.Format("{0:0.0}", item.TotalDuration.TotalHours)) <span>saat</span>
+                                        }
+                                    </li>
+                                </ul>
+                                <h4 class="h5 text-right">
+                                    
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                <div class="col-12 mt-5 text-center">
+                    <a asp-area="Base" asp-controller="CourseList" asp-action="Index" class="btn btn-outline-white-hover">Tüm Kurslar</a>
+                </div>
+            </div> <!-- END row-->
+        </div> <!-- END container-->
+    </section>
+}
+

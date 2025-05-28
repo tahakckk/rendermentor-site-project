@@ -1,0 +1,73 @@
+﻿<div class="container">
+    <div class="popupModal modal fade" id="createPodcast" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Podcast Ekle</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" asp-controller="Blog" asp-action="AddAudio" enctype="multipart/form-data">
+                        <div class="border-bottom mb-4 pb-4">
+                            <input type="hidden" name="blogId" id="blogIdCreate" />
+                            <div id="message_box"></div>
+                            <div class="progress" id="progressHide">
+                                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="60"
+                                     aria-valuemin="0" aria-valuemax="100" style="width: 0%;" id="progressBar">
+                                    <Span class="sr-only"> 40% complete </ span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-12">
+                                    <label class="col-form-label text-dark font-weight-bold">
+                                        MP3 Ses Dosyası
+                                        <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Lütfen .mp3 formatında ses dosyasını yükleyiniz.">
+                                            <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                        </span>
+                                    </label>
+                                    <div class="audio-input row mt-4">
+                                        <div class="col-md-3">
+                                            <p><strong>MP3 Dosya Adı:</strong></p>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <p id="BlogAudioTextCreate">MP3 formatında Ses Dosyası</p>
+                                        </div>
+                                        <div class="audio-body col-md-9 mb-4">
+                                            <input type="file" name="BlogAudioFile" id="uploadAudioFile">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label text-dark font-weight-bold">
+                                    Podcast Başlığı
+                                    <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Podcastin bölüm başlığını yazınız.">
+                                        <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                    </span>
+                                </label>
+                                <div class="col-md-9">
+                                    <input name="audioTitle" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label text-dark font-weight-bold">
+                                    Podcast Açıklaması
+                                    <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Podcastin bölüm açıklamasını yazınız.">
+                                        <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                    </span>
+                                </label>
+                                <div class="col-md-9">
+                                    <textarea name="audioDesc" rows="3" class="form-control"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="my-5">
+                            <button type="submit" class="icon-btn btn btn-success mr-2"><i class="fa fa-check-circle"></i> Kaydet</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

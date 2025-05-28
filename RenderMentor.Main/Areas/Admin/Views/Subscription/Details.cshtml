@@ -1,0 +1,130 @@
+﻿@model Subscription
+
+@{
+    Layout = "~/Views/Shared/_Layout-admin.cshtml";
+}
+
+<div class="col-lg-10">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h1>Üyelik Detayları</h1>
+            <ol class="breadcrumb breadcrumb-double-angle bg-transparent p-0">
+                <li class="breadcrumb-item"><a asp-area="Base" asp-controller="Home" asp-action="Index">Anasayfa</a></li>
+                <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Admin</a></li>
+                <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Subscription" asp-action="Index">Üyelikler</a></li>
+                <li class="breadcrumb-item"> Üyelik Detayları</li>
+            </ol>
+        </div>
+        <div class="col-md-6">
+            <div class="admin-top-actions d-flex justify-content-end">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <a asp-area="Base" asp-controller="Home" asp-action="Subscription" target="_blank" class="btn btn-light"><i class="fa fa-search"></i> Sayfayı İncele</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card shadow-v1 padding-30">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @if (Model != null && Model.Id != 0)
+            {
+                <input type="hidden" asp-for="Id" />
+            }
+            <div class="border-bottom mb-4 pb-4">
+                <div class="form-group row">
+                    <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                        Üyelik Tipi
+                        <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Üyeliği tanımlayan isim etiketini yazınız.">
+                            <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                        </span>
+                    </label>
+                    <div class="col-md-10">
+                        <input asp-for="Name" class="form-control" value="@(Model?.Name ?? "")" autofocus>
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                        Üyeliğin Fiyatı
+                        <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Üyeliğin satın olan öğrenciler için süresi boyunca aktif olacak bedeli için belirleyeceğiniz fiyatını sadece sayı olarak yazınız. (₺ sembolü otomatik eklenecektir.)">
+                            <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                        </span>
+                    </label>
+                    <div class="col-md-10">
+                        <input asp-for="Price" class="form-control" value="@Model.Price">
+                        <span asp-validation-for="Price" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                        Aktif Gün Sayısı
+                        <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Üyeliğin satın olan öğrenciler için kaç gün aktif olarak kalacağını sadece rakam olarak yazınız. 1 aylık üyelik için 30 rakamını girmeniz yeterlidir. (Not: Üyelikler gün olarak belirlendiği için 31 gün çeken aylar için durum değişmeyecektir.)">
+                            <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                        </span>
+                    </label>
+                    <div class="col-md-10">
+                        <input asp-for="ExpirationDays" class="form-control" value="@Model.ExpirationDays">
+                        <span asp-validation-for="ExpirationDays" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                        Üyelik Yayında
+                        <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Üyeliğin yayında olup olmadığını bu bölümden görebilirsiniz. İşareti kaldırmanız durumunda üyelik tipi satın almalar için deaktif olacaktır. Yayından kaldırdığınız üyelikler önceden satın almış öğrenciler için süreleri bitene kadar aktif kalmaya devam edecektir.">
+                            <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                        </span>
+                    </label>
+                    <div class="col-md-10">
+                        <input type="checkbox" asp-for="IsActive" class="form-check-input">
+                        <span asp-validation-for="IsActive" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                        Üyelik Açıklaması
+                        <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Üyeliğin satın alma sayfasındaki kartında yer alan açıklama yazısını yazınız.">
+                            <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                        </span>
+                    </label>
+                    <div class="col-md-10">
+                        <textarea id="course-desc" asp-for="Description" rows="3" class="form-control">@Model.Description</textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="border-bottom mb-4 pb-4">
+                <h4 class="mb-4">SEO İçerikleri</h4>
+                <div class="form-group row">
+                    <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                        Meta Title
+                        <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Sayfanın meta title başlığını maksimum 60 karakter olmak üzere yazınız. Meta title google arama sonuçlarında gözüken başlıktır ve ayrıca ilgili sayfadayken tarayıcı sekmesinde yer alır.">
+                            <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                        </span>
+                    </label>
+                    <div class="col-md-10">
+                        <input asp-for="MetaTitle" class="form-control" value="@Model.MetaTitle">
+                        <span asp-validation-for="MetaTitle" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                        Meta Description
+                        <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Sayfanın meta description açıklamasını maksimum 160 karakter olmak üzere yazınız. Meta description google arama sonuçlarında gözüken açıklamadır. Google her aramada sonuçları buradan getirmese de sayfanın içerik indekslemesi ve sayfa puanlaması için önem verilen bir özelliktir.">
+                            <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                        </span>
+                    </label>
+                    <div class="col-md-10">
+                        <input asp-for="MetaDesc" class="form-control" value="@Model.MetaDesc">
+                        <span asp-validation-for="MetaDesc" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="my-5">
+                <button type="submit" class="icon-btn btn btn-success mr-2"><i class="fa fa-check-circle"></i> Kaydet</button>
+                <a asp-area="Base" asp-controller="Home" asp-action="Subscription" class="icon-btn btn btn-info mr-2"><i class="fa fa-search"></i> İncele</a>
+            </div>
+        </form>
+
+    </div> <!-- END card-->
+</div> <!-- END col-md-8 -->

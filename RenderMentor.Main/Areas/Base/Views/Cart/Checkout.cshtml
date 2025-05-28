@@ -1,0 +1,333 @@
+﻿@using Microsoft.AspNetCore.Http
+@using RenderMentor.Utility
+@inject IHttpContextAccessor HttpContextAccessor
+@model RenderMentor.Models.ViewModels.ShoppingCartVM
+@{
+    ViewData["Title"] = "Ödeme";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="py-5 bg-light-v2">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h2>Ödeme</h2>
+            </div>
+            <div class="col-md-6">
+                <ol class="breadcrumb justify-content-md-end bg-transparent">
+                    <li class="breadcrumb-item">
+                        <a asp-controller="Home" asp-action="Index">Anasayfa</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a asp-controller="CourseList" asp-action="Index"> Kurslar</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a asp-controller="Cart" asp-action="Index"> Sepet</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        Ödeme
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form id="payment-form" method="post">
+    <section class="padding-y-150">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 order-md-2 mb-4">
+                    <div class="text-right">
+                        <a asp-action="Index" class="icon-btn btn btn-secondary"><i class="fa fa-arrow-left"></i> Sepete Dön</a>
+                    </div>
+                    <h4 class="d-flex justify-content-between align-items-center my-3">
+                        <span>Sepetiniz</span>
+                        @if (HttpContextAccessor.HttpContext.Session.GetInt32(SD.ssShoppingCart) != null)
+                        {
+                            var count = HttpContextAccessor.HttpContext.Session.GetInt32(SD.ssShoppingCart);
+                            if (count > 0)
+                            {
+                                <span class="badge badge-primary badge-pill">@count</span>
+                            }
+                        }
+                    </h4>
+                    <ul class="list-group mb-3">
+                        @foreach (var details in Model.ListCart)
+                        {
+                            <li class="list-group-item d-flex justify-content-between lh-condensed">
+                                @if (details.PackageId != 2)
+                                {
+                                    <div>
+                                        <h6 class="my-0">@details.Subscription.Name</h6>
+                                        <small class="text-muted">Üyelik Pakedi</small>
+                                    </div>
+                                    <span class="text-muted">@details.Subscription.Price ₺</span>
+                                }
+                                else
+                                {
+                                    <div>
+                                        <h6 class="my-0">@details.Course.Title</h6>
+                                        <small class="text-muted">@details.Course.CourseCategory.Name</small>
+                                    </div>
+                                    <span class="text-muted">@details.Course.Price ₺</span>
+                                }
+                            </li>
+                        }
+
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>Toplam (TL)</span>
+                            <strong>@(Model.OrderHeader.OrderTotal) ₺</strong>
+                        </li>
+                    </ul>
+
+                    <div class="card p-2">
+                        <div class="text-right">
+                            <button type="submit" class="icon-btn btn btn-primary"><i class="fa fa-check-circle"></i> Alışverişi Tamamla</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8 order-md-1">
+                    <h4 class="mb-3">Ödeme Bilgileriniz</h4>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="firstName">Adınız</label>
+                            <input asp-for="OrderHeader.Name" type="text" class="form-control" id="name" placeholder="" required="required">
+                            <span asp-validation-for="OrderHeader.Name" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="email">E-postanız</label>
+                            <input asp-for="OrderHeader.Email" type="email" class="form-control" id="email" placeholder="you@example.com" required="required">
+                            <span asp-validation-for="OrderHeader.Email" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="phone">Telefon Numaranız <span class="text-muted">(Opsiyonel)</span></label>
+                        <input asp-for="OrderHeader.PhoneNumber" type="text" class="form-control" id="phone" placeholder="+905555555">
+                        <span asp-validation-for="OrderHeader.PhoneNumber" class="text-danger"></span>
+                    </div>
+
+                    <hr class="mb-4">
+
+                    <h4 class="mb-3">Ödeme</h4>
+
+                    <hr class="mb-4">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="cc-name">Karttaki isim</label>
+                            <input asp-for="CardHolderName" type="text" class="form-control" id="cc-name" placeholder="">
+                            <small class="text-muted">Kartın üzerinde yazan tam isminiz.</small><br />
+                            <span asp-validation-for="CardHolderName" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="cc-number">Kredi kartı numarası</label>
+                            <input asp-for="CardNumber" type="text" class="form-control" id="cc-number" placeholder="">
+                            <span asp-validation-for="CardNumber" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <label for="cc-expiration">Son kullanma tarihi</label>
+                            <div class="d-flex">
+                                <input asp-for="ExpireMonth" type="text" class="form-control mr-3" id="cc-expiration" placeholder="">
+                                <input asp-for="ExpireYear" type="text" class="form-control ml-3" id="cc-expiration" placeholder="">
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="cc-cvv">CVV</label>
+                            <input asp-for="CvvCode" type="text" class="form-control" id="cc-cvv" placeholder="">
+                        </div>
+                        <div class="col-12">
+                            <span asp-validation-for="ExpireMonth" class="text-danger"></span><br />
+                            <span asp-validation-for="ExpireYear" class="text-danger"></span><br />
+                            <span asp-validation-for="CvvCode" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <hr class="mb-4">
+                    <div class="clearfix">
+                        <label class="ec-checkbox check-xs mb-3 mr-4">
+                            <input type="checkbox" asp-for="OrderHeader.TermsAndConditions">
+                            <span class="ec-checkbox__control"></span>
+                            <span class="ec-checkbox__lebel"><a class="text-info" href="https://rendermentor.com/yasal-sozlesmeler/odeme-iade-ve-teslimat-bilgileri" target="_blank">Ödeme, İade ve Teslimat Bilgileri formu</a>nu okudum ve onaylıyorum.</span>
+                        </label>
+                        <span asp-validation-for="OrderHeader.TermsAndConditions" class="text-danger"></span>
+                    </div>
+                    <hr class="mb-4">
+                    <button type="submit" class="btn btn-primary btn-lg btn-block">Ödemeyi Tamamla</button>
+                </div>
+            </div>
+        </div> <!-- END container-->
+    </section>
+</form>
+
+<!-- payment modal -->
+<div class="modal fade" id="payment-modal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="paymentModalTitle" aria-modal="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="paymentModalTitle">Ödeme İşlemi</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Kapat">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center mb-3">
+                    <div class="spinner-border text-primary" role="status" style="display: none;">
+                        <span class="sr-only">Yükleniyor...</span>
+                    </div>
+                    <p style="display: none;">Ödeme sayfası yükleniyor...</p>
+                </div>
+                <div id="payment-form-container"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script>
+        // extend range validator method to treat checkboxes differently
+        var defaultRangeValidator = $.validator.methods.range;
+        $.validator.methods.range = function (value, element, param) {
+            if (element.type === 'checkbox') {
+                return element.checked;
+            } else {
+                return defaultRangeValidator.call(this, value, element, param);
+            }
+        }
+
+        var messageToggle = false;
+        var $modal = $("#payment-modal");
+        var $iframe = $("#payment-iframe");
+        var $spinner = $(".spinner-border");
+        var $loadingText = $(".modal-body p");
+
+        function showError(message) {
+            swal({
+                title: "Hata!",
+                text: message || "Ödeme sırasında bir hata oluştu.",
+                icon: "warning",
+                buttons: ["Tamam"],
+                dangerMode: true
+            });
+        }
+
+        function resetModal() {
+            $iframe.attr("src", "");
+            $iframe.hide();
+            $spinner.show();
+            $loadingText.show();
+            $modal.modal("hide");
+        }
+
+        $(document).on("submit", "#payment-form", function (e) {
+            e.preventDefault();
+            console.log("Form submit edildi");
+
+            // Form verilerini kontrol et
+            var $form = $(this);
+            if (!$form.valid()) {
+                showError("Lütfen tüm zorunlu alanları doldurun.");
+                return;
+            }
+
+            // Modal'ı göster ve yükleniyor mesajını ayarla
+            $modal.modal("show");
+            
+            //submit payment form params
+            fetch("@Url.Action("Checkout", "Cart")", {
+                body: new URLSearchParams(new FormData(document.getElementById("payment-form"))),
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "X-Requested-With": "XMLHttpRequest"
+                },
+                method: "POST",
+                credentials: "same-origin"
+            })
+            .then(function (response) {
+                console.log("Sunucu yanıtı:", response);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(function (response) {
+                console.log("JSON yanıtı:", response);
+                if (response && response.gatewayUrl) {
+                    console.log("Ödeme sayfası açılıyor:", response.gatewayUrl);
+                    
+                    // Form container'ı temizle
+                    $("#payment-form-container").empty();
+                    
+                    // Yeni form oluştur
+                    var form = $("<form>", {
+                        id: "PaymentForm",
+                        name: "PaymentForm",
+                        action: response.gatewayUrl,
+                        method: "POST",
+                        target: "_top"
+                    });
+                    
+                    // Parametreleri ekle
+                    if (response.parameters) {
+                        Object.keys(response.parameters).forEach(function(key) {
+                            $("<input>", {
+                                type: "hidden",
+                                name: key,
+                                value: response.parameters[key]
+                            }).appendTo(form);
+                        });
+                    }
+                    
+                    // Formu container'a ekle
+                    form.appendTo("#payment-form-container");
+                    
+                    // Formu gönder
+                    form.submit();
+                } else {
+                    resetModal();
+                    console.error("Geçersiz yanıt:", response);
+                    showError(response.errorMessage || "Ödeme işlemi başlatılamadı.");
+                }
+            })
+            .catch(function (error) {
+                resetModal();
+                console.error("Ödeme hatası:", error);
+                showError("Ödeme sırasında bir hata oluştu. Lütfen daha sonra tekrar deneyiniz.");
+            });
+            messageToggle = true;
+        });
+
+        // Modal kapatıldığında iframe'i temizle
+        $modal.on("hidden.bs.modal", function () {
+            resetModal();
+        });
+
+        $(window).on("message", function (e) {
+            console.log("Mesaj alındı:", e.originalEvent.data);
+            var data = e.originalEvent.data;
+            if (data) {
+                if (data.Success && data.OrderNumber) {
+                    console.log("Ödeme başarılı, yönlendiriliyor...");
+                    resetModal();
+                    window.location = `@Url.Action("Completed", "Cart")/${data.OrderNumber}`;
+                } else {
+                    console.error("Ödeme hatası:", data);
+                    resetModal();
+                    showError(data.ErrorMessage || "Ödeme işlemi başarısız oldu.");
+                }
+            } else {
+                if (messageToggle) {
+                    console.error("Boş yanıt alındı");
+                    resetModal();
+                    showError("Ödeme sırasında bir hata oluştu.");
+                }
+            }
+        });
+    </script>
+}
+
+

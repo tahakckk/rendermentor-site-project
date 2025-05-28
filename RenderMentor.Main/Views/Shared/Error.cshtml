@@ -1,0 +1,25 @@
+﻿@model ErrorViewModel
+@using RenderMentor.Models.ViewModels
+@{
+    ViewData["Title"] = "Hata | RenderMentor";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="my-5 flex-center">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h1 class="text-danger display-1">Hata</h1>
+                <h2 class="mb-4">
+                    Üzgünüz! Bir hata oluştu <i class="fas fa-frown text-warning" aria-hidden="true"></i>
+                </h2>
+                <p>Gerçekleştirmek istediğiniz işlemde bir hata oluştu. Hatanın tekrarlanması durumunda hata aldığınız işlem ve aldığınız hata kodu ile birlikte <strong><a href="mailto:info@rendermentor.com">info@rendermentor.com</a></strong> mail adresimiz üzerinden bize ulaşabilirsiniz. Site yöneticilerimiz en kısa zamanda problemin çözümü için gerekli güncellemeleri uygulayacaktır.</p>
+                @if (Model.ShowRequestId)
+                {
+                    <p><strong>Hata Kodu:</strong> <code>@Model.RequestId</code></p>
+                }
+                <a asp-area="Base" asp-controller="Home" asp-action="Index" class="btn btn-rounded btn-primary mt-5">Anasayfaya Dön</a>
+            </div>
+        </div> <!-- END row-->
+    </div> <!-- END container-->
+</section>

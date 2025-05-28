@@ -1,0 +1,8 @@
+﻿<rewrite>
+	<rules>
+		<rule name="Rewrite segment to id querystring" stopProcessing="true">
+			<match url="^iis-rules-rewrite/(https://localhost:44348/online-kurslar/sketchup-dersleri/sketchup-render-egitimi)$" />
+			<action type="Rewrite" url="rewritten?id=https://localhost:44348/online-kurslar/rhino-dersleri/rhino-temel-egitim-kursu" appendQueryString="false"/>
+		</rule>
+	</rules>
+</rewrite>

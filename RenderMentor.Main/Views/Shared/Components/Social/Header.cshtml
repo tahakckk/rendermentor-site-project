@@ -1,0 +1,54 @@
+﻿@model IEnumerable<RenderMentor.Models.Social>
+@{
+    Layout = null;
+    string iconName = "";
+    string title = "";
+    string first = "";
+}
+
+@if (Model.Count() > 0)
+{
+    <ul class="list-inline mb-0">
+        @foreach (var social in Model)
+        {
+            switch (social.Name)
+            {
+                case Social.Socials.Facebook:
+                    title = "Facebook";
+                    iconName = "facebook-f";
+                    break;
+                case Social.Socials.Instagram:
+                    title = "Instagram";
+                    iconName = "instagram";
+                    break;
+                case Social.Socials.Twitter:
+                    title = "Twitter";
+                    iconName = "twitter";
+                    break;
+                case Social.Socials.Linkedin:
+                    title = "Linkedin";
+                    iconName = "linkedin";
+                    break;
+                case Social.Socials.Youtube:
+                    title = "Youtube";
+                    iconName = "youtube";
+                    break;
+                case Social.Socials.Vimeo:
+                    title = "Vimeo";
+                    iconName = "vimeo";
+                    break;
+                default:
+                    break;
+            }
+            if (Model.First() == social)
+            {
+                first = " border-left";
+            }
+            else
+            {
+                first = "";
+            }
+            <li class="list-inline-item mr-0 p-3 border-right@(first) border-white-0_1"><a href="@social.Link" target="_blank" title="@title"><i class="fab fa-@iconName"> </i></a></li>
+        }
+    </ul>
+}

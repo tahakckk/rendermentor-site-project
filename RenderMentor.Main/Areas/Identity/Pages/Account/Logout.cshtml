@@ -1,0 +1,25 @@
+﻿@page
+@model LogoutModel
+@{
+    ViewData["Title"] = "Log out";
+}
+
+<section class="padding-y-100 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 mx-auto">
+                <div class="card shadow-v2">
+                    <div class="card-header bordor-bottom">
+                        <h3 class="text-success mt-4">@ViewData["Title"]</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-success d-flex align-items-center">
+                            <i class="fa fa-check-circle fa-2x mr-3"></i>
+                            <span class="text-danger">Siteden başarıyla çıkış yaptınız.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

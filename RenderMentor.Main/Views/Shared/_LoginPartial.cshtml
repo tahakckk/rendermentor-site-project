@@ -1,0 +1,30 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@inject RenderMentor.DataAccess.Data.ApplicationDbContext db
+@{
+    var userId = UserManager.GetUserId(User);
+    var user = db.ApplicationUsers.FirstOrDefault(u => u.Id == userId);
+}
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <li class="list-inline-item mr-0 p-md-3 p-2 border-right border-left border-white-0_1">
+        <a asp-area="Student" asp-controller="Student" asp-action="Profile">Hoşgeldiniz @user.Name!</a>
+    </li>
+    <li class="list-inline-item mr-0 p-md-3 p-2 border-right border-white-0_1">
+        <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+            <button type="submit" class="nav-link btn btn-link"><i class="fa fa-sign-out-alt"></i> Çıkış Yap</button>
+        </form>
+    </li>
+
+}
+else
+{
+    <li class="list-inline-item mr-0 p-md-3 p-2 border-right border-left border-white-0_1">
+        <a asp-area="Identity" asp-page="/Account/Login">Giriş Yap</a>
+    </li>
+    <li class="list-inline-item mr-0 p-md-3 p-2 border-right border-white-0_1">
+        <a asp-area="Identity" asp-page="/Account/Register">Kayıt Ol</a>
+    </li>
+}

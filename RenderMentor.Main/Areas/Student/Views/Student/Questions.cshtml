@@ -1,0 +1,30 @@
+﻿
+@{
+    ViewData["Title"] = "Questions";
+    Layout = "~/Views/Shared/_Layout-student.cshtml";
+}
+
+<div class="border-bottom mb-4 pb-4">
+    <h4 class="mb-4">Kurslara Sorularınız</h4>
+
+    <div class="card shadow-v1 padding-30">
+        <div id="admin" class="table-responsive my-4">
+            <table id="tblData" class="table table-bordered no-order">
+                <thead>
+                    <tr>
+                        <th scope="col">Tarih</th>
+                        <th scope="col">Kurs ve Bölümü</th>
+                        <th scope="col">Ders Adı</th>
+                        <th scope="col">Cevaplandı Mı?</th>
+                        <th scope="col">Eylemler</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div> <!-- END card-->
+</div>
+
+@section Scripts {
+    <script src="~/datatables/student-question.js?v=1.01"></script>
+}
+

@@ -1,0 +1,31 @@
+﻿@model Contract
+@{
+    ViewData["Title"] = Model.Name + " | RenderMentor";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="padding-y-60 bg-cover" data-dark-overlay="6" style="background:url(/images/breadcrumb-bg.jpg) no-repeat">
+    <div class="container">
+        <h1 class="text-white">
+            @Model.Name
+        </h1>
+        <ol class="breadcrumb breadcrumb-double-angle text-white bg-transparent p-0">
+            <li class="breadcrumb-item"><a asp-action="Index">Anasayfa</a></li>
+            <li class="breadcrumb-item"><a asp-action="ContractList">Yasal Sözleşmeler</a></li>
+            <li class="breadcrumb-item">@Model.Name</li>
+        </ol>
+    </div>
+</div>
+
+<section class="padding-y-100">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+
+                @Html.Raw(Model.Desc)
+                
+            </div> <!-- END col-12-->
+        </div> <!-- END row-->
+    </div> <!-- END container-->
+</section>
+

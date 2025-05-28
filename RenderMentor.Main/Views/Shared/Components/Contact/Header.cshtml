@@ -1,0 +1,26 @@
+﻿@model Contact
+@{
+    Layout = null;
+}
+
+<ul class="list-inline d-none d-lg-block mb-0">
+    @if (Model.EmailSales != null)
+    {
+    <li class="list-inline-item mr-3">
+        <div class="d-flex align-items-center">
+            <i class="ti-email mr-2"></i>
+            <a href="mailto:@Model.EmailSales">@Model.EmailSales</a>
+        </div>
+    </li>
+    }
+    @if (Model.Phone != null)
+    {
+    <li class="list-inline-item mr-3">
+        <div class="d-flex align-items-center">
+            <i class="ti-headphone mr-2"></i>
+            <a href="tel:@Model.Phone.Replace(" ", "")">@Model.Phone</a>
+        </div>
+    </li>
+    }
+    
+</ul>

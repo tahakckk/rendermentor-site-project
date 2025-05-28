@@ -1,0 +1,27 @@
+﻿@page
+@model RegisterConfirmationModel
+@{
+    ViewData["Title"] = "Hesabı onayla";
+}
+
+<section class="padding-y-100 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 mx-auto">
+                <div class="card shadow-v2">
+                    <div class="card-header bordor-bottom">
+                        <h4 class="mt-4">@ViewData["Title"]</h4>
+                    </div>
+                    <div class="card-body">
+                        <p>Hesabınızı onaylamak için lütfen e-postanızı kontrol edin.</p>
+                        <form id="email-form" method="post">
+                            <button id="email-verification" type="submit" asp-page-handler="SendVerificationEmail" class="my-3 btn btn-warning"><i class="fa fa-envelope"></i> Tekrar onay e-postası gönder</button>
+                            <partial name="_StatusMessage" model="Model.StatusMessage" />
+                            <input type="hidden" name="email" value="@Model.Email" />
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

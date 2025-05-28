@@ -1,0 +1,20 @@
+﻿@model Contact
+@{
+    Layout = null;
+}
+
+<ul class="list-unstyled marginTop-40">
+    @if (Model.Phone != null)
+    {
+    <li class="mb-3"><i class="ti-headphone mr-3"></i><a href="tel:@Model.Phone.Replace(" ", "")">@Model.Phone</a></li>
+    }
+    <li class="mb-3"><i class="ti-email mr-3"></i><a href="mailto:@Model.EmailSupport">@Model.EmailSupport</a></li>
+    <li class="mb-3">
+        <div class="media">
+            <i class="ti-location-pin mt-2 mr-3"></i>
+            <div class="media-body">
+                <span>@Model.Address</span>
+            </div>
+        </div>
+    </li>
+</ul>

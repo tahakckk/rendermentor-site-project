@@ -1,0 +1,37 @@
+﻿@{
+    ViewData["Title"] = "Medya Galerisi";
+}
+
+<div class="col-lg-10">
+    <div class="container d-flex justify-content-center align-items-center margin-b-100">
+        <div class="row text-center media-cards marginTop-200">
+            <div class="col-md-6 col-lg-4 marginTop-30">
+                <a asp-controller="MediaGallery" asp-action="SlideBg" class="card shadow-v1 align-items-center p-5 hover:transformTop">
+                    <i class="text-warning fa fa-images fa-4x mb-2"></i>
+                    <h3 class="mt-2">
+                        Slide Galerisi
+                    </h3>
+                </a>
+            </div>
+
+            <div class="col-md-6 col-lg-4 marginTop-30">
+                <a asp-controller="MediaGallery" asp-action="CourseCover" class="card shadow-v1 align-items-center p-5 hover:transformTop">
+                    <i class="text-success fa fa-image fa-4x mb-2"></i>
+                    <h3 class="mt-2">
+                        Kurs Kapak Fotoğrafı Galerisi
+                    </h3>
+                </a>
+            </div>
+
+            <div class="col-md-6 col-lg-4 marginTop-30">
+                <a asp-controller="MediaGallery" asp-action="BlogThumb" class="card shadow-v1 align-items-center p-5 hover:transformTop">
+                    <i class="text-danger fa fa-pencil-alt fa-4x mb-2"></i>
+                    <h3 class="mt-2">
+                        Blog Galerisi
+                    </h3>
+                </a>
+            </div>
+
+        </div> <!-- END row-->
+    </div> <!-- END container-->
+</div> <!-- END col-md-8 -->

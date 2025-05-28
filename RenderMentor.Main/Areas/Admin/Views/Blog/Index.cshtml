@@ -1,0 +1,142 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout-admin.cshtml";
+}
+
+<div class="col-lg-10">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h1>Blog</h1>
+            <ol class="breadcrumb breadcrumb-double-angle bg-transparent p-0">
+                <li class="breadcrumb-item"><a asp-area="Base" asp-controller="Home" asp-action="Index">Anasayfa</a></li>
+                <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Admin</a></li>
+                <li class="breadcrumb-item"> Blog Makaleleri</li>
+            </ol>
+        </div>
+        <div class="col-md-6">
+            <div class="admin-top-actions d-flex justify-content-end">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <a asp-action="Upsert" class="btn btn-light"><i class="fa fa-plus"></i> Yeni Ekle</a>
+                    <a asp-area="Base" asp-controller="Blog" asp-action="Index" target="_blank" class="btn btn-light"><i class="fa fa-search"></i> Sayfayı İncele</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card shadow-v1 padding-30">
+        <ul class="nav tab-line tab-line border-bottom mb-4" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#Tabs_1-1" role="tab" aria-selected="true">
+                    Blog Makaleleri
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#Tabs_1-2" role="tab" aria-selected="true">
+                    Blog Yazarları
+                </a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane fade show active" id="Tabs_1-1" role="tabpanel">
+                <div class="table-responsive my-4">
+                    <table id="tblData" class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th scope="col">Sıra</th>
+                                <th scope="col">Makale</th>
+                                <th scope="col">Tarih</th>
+                                <th scope="col">Yazar</th>
+                                <th scope="col">Durum</th>
+                                <th scope="col">Eylemler</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div class="my-3">
+                    <a asp-action="Upsert" class="icon-btn btn btn-success mr-2"><i class="fa fa-plus"></i> Yeni Ekle</a>
+                    <a asp-area="Base" asp-controller="Blog" asp-action="Index" target="_blank" class="icon-btn btn btn-light mr-2"><i class="fa fa-search"></i> Sayfayı İncele</a>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="Tabs_1-2" role="tabpanel">
+                <div class="table-responsive my-4">
+                    <table id="authorTable" class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th scope="col">Sıra</th>
+                                <th scope="col">Yazar Fotoğrafı</th>
+                                <th scope="col">Yazar Adı</th>
+                                <th scope="col">Eylemler</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div class="my-3">
+                    <a href="#createAuthor" data-toggle="modal" class="icon-btn btn btn-success text-white mr-2"><i class="fa fa-plus"></i> Yazar Ekle</a>
+                    <a asp-area="Base" asp-controller="Blog" asp-action="Index" target="_blank" class="icon-btn btn btn-light mr-2"><i class="fa fa-search"></i> Sayfayı İncele</a>
+                </div>
+            </div>
+        </div>
+    </div> <!-- END card-->
+</div> <!-- END col-md-8 -->
+
+<partial name="_createAuthor.cshtml">
+
+<partial name="_editAuthor.cshtml">
+
+@section Scripts {
+    <script src="~/datatables/blog.js?v=1.01"></script>
+    <script src="~/datatables/blog-author.js"></script>
+    <script src="~/js/jquery.form.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#authorTable').on('click', '.edit', function () {
+                var id = $(this).parent().parent().find('.editId').val();
+                $.ajax({
+                    type: 'Get',
+                    url: '/findAuthor/' + id,
+                    success: function (author) {
+                        $('#editAuthor #authorId').val(author.id);
+                        $('#editAuthor #name').val(author.name);
+                        $('#editAuthor #avatar').attr("href", author.avatar);
+                        $('#editAuthor #avatar img').attr("src", author.avatar);
+                        $('#editAuthor #avatarInput').val(author.avatar);
+                    }
+                });
+            });
+
+            function serializeModal(thisSelector, event, modalId) {
+                event.preventDefault();
+                $(thisSelector).addClass('loading');
+                $(thisSelector).children('span').text('Kaydediliyor...');
+                selectForm = $(thisSelector).parent().parent();
+                serializeAjax(selectForm, modalId);
+            }
+
+            function serializeAjax(form, modal) {
+                form.ajaxSubmit({
+                    url: form.attr('action'),
+                    success: function (data) {
+                        if (data.success) {
+                            toastr.success(data.message);
+                            authorTable.ajax.reload();
+                        } else {
+                            toastr.error(data.message);
+                        }
+                        $(modal + " button[type='submit']").removeClass('loading');
+                        $(modal + " button[type='submit'] span").text('Kaydet');
+                        $(modal).modal('hide');
+                    }
+                });
+            }
+
+            $("#editAuthor button[type='submit']").click(function (event) {
+                serializeModal(this, event, '#editAuthor');
+            });
+
+            $("#createAuthor button[type='submit']").click(function (event) {
+                serializeModal(this, event, '#createAuthor');
+            });
+        });
+
+    </script>
+}
+

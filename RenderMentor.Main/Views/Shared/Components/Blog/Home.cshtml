@@ -1,0 +1,60 @@
+﻿@model IEnumerable<RenderMentor.Models.ViewModels.BlogListVM>
+@{
+    Layout = null;
+}
+
+@if (Model.Count() > 0)
+{
+<section class="bg-light-v2 padding-y-100">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center mb-md-4">
+                <h2 class="mb-4">
+                    Son Blog Makaleleri
+                </h2>
+                <div class="width-3rem height-4 rounded bg-primary mx-auto"></div>
+            </div>
+        </div> <!-- END row-->
+        <div class="row">
+            @if (Model.Count() > 1)
+            {
+            <div class="col-lg-6">
+                @foreach (var blog in Model.Skip(1).Take(3))
+                {
+                <div class="list-card align-items-center marginTop-30">
+                    <div class="col-md-4 px-md-0">
+                        <a asp-area="Base" asp-controller="Blog" asp-action="Details" asp-route-SEOUrl="@blog.SEOUrl"><img class="w-100" src="@blog.Thumbnail" alt="@blog.Title"></a>
+                    </div>
+                    <div class="col-md-8 p-4">
+                        <p class="text-primary">@blog.CreateDate</p>
+                        <a asp-area="Base" asp-controller="Blog" asp-action="Details" asp-route-SEOUrl="@blog.SEOUrl" class="h5">@blog.Title</a>
+                    </div>
+                </div>
+                }
+            </div>
+            }
+            @foreach (var single in Model.Take(1))
+            {
+            <div class="col-lg-6 marginTop-30">
+                <div class="card">
+                    <a asp-area="Base" asp-controller="Blog" asp-action="Details" asp-route-SEOUrl="@single.SEOUrl"><img class="card-img-top" src="@single.Image" alt="@single.Title"></a>
+                    <div class="card-body">
+                        <p class="text-primary">
+                            @single.CreateDate
+                        </p>
+                        <h4>
+                            <a asp-area="Base" asp-controller="Blog" asp-action="Details" asp-route-SEOUrl="@single.SEOUrl">@single.Title</a>
+                        </h4>
+                        <p>@single.ShortDesc</p>
+                        <a asp-area="Base" asp-controller="Blog" asp-action="Details" asp-route-SEOUrl="@single.SEOUrl" class="btn btn-outline-primary">
+                            Devamını Oku
+                        </a>
+                    </div>
+                </div>
+            </div>
+            }
+        </div> <!-- END row-->
+    </div> <!-- END container-->
+</section>
+}
+

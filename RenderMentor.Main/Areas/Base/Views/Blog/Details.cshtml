@@ -1,0 +1,136 @@
+﻿@model RenderMentor.Models.ViewModels.BlogDetailVM
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var setBg = "/images/breadcrumb-bg.jpg";
+    setBg = setBg.Replace("\\", "/");
+    var modelImage = "https://" + Context.Request.Host.ToString() + Model.Image.Replace("\\", "/");
+    string author = String.IsNullOrEmpty(Model.Author.Name) ? "Evren Çavuşoğlu" : Model.Author.Name;
+    string avatar = String.IsNullOrEmpty(Model.Author.Avatar) ? "/images/placeholder/instructor-avatar-image.jpg" : Model.Author.Avatar;
+    avatar = avatar.Replace("\\", "/");
+    string twitter = ViewData["Title"].ToString();
+    twitter = twitter.Replace("|", "");
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/tinyPlayer.css">
+}
+
+<div class="padding-y-60 bg-cover" data-dark-overlay="5" style="background:url(@setBg) no-repeat">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-7">
+                <h1 class="text-white">@Model.Title</h1>
+            </div>
+            <div class="col-md-5">
+                <ol class="breadcrumb justify-content-md-end bg-transparent text-white">
+                    <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Anasayfa</a></li>
+                    <li class="breadcrumb-item"><a asp-action="Index">Blog</a></li>
+                    <li class="breadcrumb-item">@Model.Title</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="pt-5 paddingBottom-150 bg-light-v2">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-9 mt-4">
+                <div class="card">
+                    <img class="card-img-top" src="@modelImage" alt="@Model.Title">
+                    <div class="card-body">
+                        <h2 class="my-4">@Model.Title</h2>
+                        <div class="media align-items-center justify-content-between mb-5">
+                            <div class="media align-items-center">
+                                <div class="iconbox mr-3" style="background-image: url(@avatar); background-size: cover;"></div>
+                                <div class="media-body">
+                                    <a class="text-primary" href="javascript:void(0);">@author</a>
+                                    @Model.CreateDate
+                                </div>
+                            </div>
+                        </div>
+                        <div class="article-content">
+                            @Html.Raw(Model.Desc)
+                        </div>
+                        @if (Model.BlogAudios.Count() > 0)
+                        {
+                            <div class="podcast">
+                                @foreach (var item in Model.BlogAudios)
+                                {
+                                    if (item.Title != null)
+                                    {
+                                        <h4>@item.Title</h4>
+                                    }
+                                    if (item.Desc != null)
+                                    {
+                                        <p>@item.Desc</p>
+                                    }
+                                    <audio controls 2 class="iru-tiny-player" 3 data-title="@item.Title">
+                                        4
+                                        <source src="@item.Audio" type="audio/mpeg">
+                                        5
+                                    </audio>
+                                    <hr />
+                                }
+                            </div>
+                        }
+
+                        <div class="row align-items-center mb-5">
+                            <div class="col-md-6 mt-5 ">
+
+                            </div>
+                            <div class="col-md-6  mt-5 text-right">
+                                <div class="animated-share">
+                                    <a href="" class="animated-share__trigger btn btn-outline-primary iconbox iconbox-sm">
+                                        <i class="ti-share"></i>
+                                    </a>
+                                    <div class="animated-share__media">
+                                        <a href="http://www.facebook.com/sharer.php?u=@Context.Request.Host@Context.Request.Path&p[title]=@(ViewData["Title"] != null ? ViewData["Title"] : Model.Title)" target="_blank" class="btn btn-outline-facebook iconbox iconbox-sm">
+                                            <i class="ti-facebook"></i>
+                                        </a>
+                                        <a href="http://twitter.com/share?text=@(ViewData["Title"] != null ? twitter : Model.Title)&url=https://@Context.Request.Host@Context.Request.Path" target="_blank" class="btn btn-outline-twitter iconbox iconbox-sm">
+                                            <i class="ti-twitter"></i>
+                                        </a>
+                                        <a href="https://www.linkedin.com/shareArticle?mini=true&url=@Context.Request.Host@Context.Request.Path&title=@(ViewData["Title"] != null ? ViewData["Title"] : Model.Title)" target="_blank" class="btn btn-outline-linkedin iconbox iconbox-sm">
+                                            <i class="ti-linkedin"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- END card-body-->
+                </div> <!-- END card-->
+            </div> <!-- END col-lg-9 -->
+            <aside class="col-lg-3 mt-4">
+                <div class="widget">
+                    <h2 class="widget-title">
+                        Sosyal Medyada Paylaş
+                    </h2>
+                    <a href="http://www.facebook.com/sharer.php?u=@Context.Request.Host@Context.Request.Path&p[title]=@(ViewData["Title"] != null ? ViewData["Title"] : Model.Title)" target="_blank" class="btn btn-light iconbox hover:bg-primary text-gray m-1">
+                        <i class="ti-facebook"></i>
+                    </a>
+                    <a href="http://twitter.com/share?text=@(ViewData["Title"] != null ? twitter : Model.Title)&url=https://@Context.Request.Host@Context.Request.Path" target="_blank" class="btn btn-light iconbox hover:bg-primary text-gray m-1">
+                        <i class="ti-twitter"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/shareArticle?mini=true&url=@Context.Request.Host@Context.Request.Path&title=@(ViewData["Title"] != null ? ViewData["Title"] : Model.Title)" target="_blank" class="btn btn-light iconbox hover:bg-primary text-gray m-1">
+                        <i class="ti-linkedin"></i>
+                    </a>
+                </div> <!-- END widget-->
+                <div class="widget">
+                    <h2 class="widget-title">
+                        Kurs Kategorileri
+                    </h2>
+                    <ul>
+                        @await Component.InvokeAsync("CourseCategory", new { viewName = "Sidebar" })
+                    </ul>
+                </div> <!-- END widget-->
+                @await Component.InvokeAsync("Blog")
+            </aside> <!-- END col-lg-3 -->
+        </div> <!-- END row-->
+    </div> <!-- END container-->
+</section> <!-- END section -->
+
+@section Scripts {
+    <script src="~/js/howler.min.js"></script>
+    <script src="~/js/tinyPlayer.js"></script>
+}

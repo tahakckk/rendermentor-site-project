@@ -1,0 +1,44 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout-admin.cshtml";
+}
+
+<div class="col-lg-10">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h1>Deneme Üyelikleri</h1>
+            <ol class="breadcrumb breadcrumb-double-angle bg-transparent p-0">
+                <li class="breadcrumb-item"><a asp-area="Base" asp-controller="Home" asp-action="Index">Anasayfa</a></li>
+                <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Admin</a></li>
+                <li class="breadcrumb-item"> Deneme Üyelikleri</li>
+            </ol>
+        </div>
+        <div class="col-md-6">
+            <div class="admin-top-actions d-flex justify-content-end">
+                
+            </div>
+        </div>
+    </div>
+    <div class="card shadow-v1 padding-30">
+        
+        <div class="table-responsive my-4">
+            <table id="tblData" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col">Aktivasyon Tarihi</th>
+                        <th scope="col">Öğrenci Adı</th>
+                        <th scope="col">Öğrenci E-Posta</th>
+                        <th scope="col">Durum</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div> <!-- END card-->
+</div> <!-- END col-md-8 -->
+
+
+
+@section Scripts {
+    <script src="~/datatables/trial-member.js?v=1.01"></script>
+}
+

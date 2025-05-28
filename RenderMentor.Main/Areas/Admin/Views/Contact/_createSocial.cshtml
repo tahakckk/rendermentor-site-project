@@ -1,0 +1,51 @@
+﻿<div class="container">
+    <div class="popupModal modal fade" id="createSocial" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Sosyal Medya Ekle</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" asp-controller="Contact" asp-action="AddSocial">
+                        <div class="border-bottom mb-4 pb-4">
+                            @*<input type="hidden" name="socialId" id="socialId" />*@
+
+                            <div class="form-group row">
+                                <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                                    Sosyal Medya Adı
+                                    <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Sosyal medya hesap adını seçiniz.">
+                                        <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                    </span>
+                                </label>
+                                <div class="col-md-10">
+                                    <select name="socialName" class="form-control" autofocus>
+                                        @foreach (var social in System.Enum.GetValues(typeof(RenderMentor.Models.Social.Socials)))
+                                        {
+                                            <option value="@((int)social)">@social</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-2 col-form-label text-dark font-weight-bold">
+                                    Sosyal Medya Linki
+                                    <span class="d-inline-block" tabindex="-1" data-toggle="tooltip" title="Sosyal medya hesabınızın linkini buraya yapıştırınız.">
+                                        <button class="btn btn-link btn-sm" style="pointer-events: none;" type="button" disabled><i class="fa fa-question-circle"></i></button>
+                                    </span>
+                                </label>
+                                <div class="col-md-10">
+                                    <input name="socialLink" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="my-5">
+                            <button type="submit" onclick="return validateInput()" class="icon-btn btn btn-success mr-2"><i class="fa fa-check-circle"></i> Kaydet</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

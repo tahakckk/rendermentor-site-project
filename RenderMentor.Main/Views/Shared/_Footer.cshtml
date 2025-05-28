@@ -1,0 +1,54 @@
+﻿<footer class="site-footer">
+    <div class="footer-top bg-dark text-white-0_6 py-5">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-lg-4 col-md-6 mt-5">
+                    <a asp-area="Base" asp-controller="Home" asp-action="Index"><img src="~/images/render-mentor-logo-white.png?v=1.01" alt="Render Mentor Footer Logo"></a>
+                    <div class="margin-y-40">
+                        <p>Online render ve 3 boyutlu görselleştirme eğitim portalı.</p>
+                    </div>
+                    @await Component.InvokeAsync("Social")
+                </div>
+
+                <div class="col-lg-2 col-md-6 mt-5">
+                    <h4 class="h5 text-white">Hızlı Linkler</h4>
+                    <div class="width-3rem bg-primary height-3 mt-3"></div>
+                    <ul class="list-unstyled marginTop-40">
+                        <li class="mb-2"><a asp-area="Base" asp-controller="CourseList" asp-action="Index" asp-route-courseCategory="">Kurslar</a></li>
+                        <li class="mb-2"><a asp-area="Base" asp-controller="Blog" asp-action="Index">Blog</a></li>
+                        <li class="mb-2"><a asp-area="Base" asp-controller="Home" asp-action="Memberships">Üyelikler Hakkında</a></li>
+                        <li class="mb-2"><a asp-area="Base" asp-controller="Home" asp-action="Contact">İletişim</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6 mt-5">
+                    <h4 class="h5 text-white">Kurumsal</h4>
+                    <div class="width-3rem bg-primary height-3 mt-3"></div>
+                    <ul class="list-unstyled marginTop-40">
+                        <li class="mb-2"><a asp-area="Base" asp-controller="Home" asp-action="About">Hakkımızda</a></li>
+                        <li class="mb-2"><a asp-area="Base" asp-controller="Home" asp-action="Mentors">Mentorlar</a></li>
+                        <li class="mb-2"><a asp-area="Base" asp-controller="Vendor" asp-action="Index">Bayilikler</a></li>
+                        <li class="mb-2"><a asp-area="Base" asp-controller="Home" asp-action="ContractList">Yasal Sözleşmeler</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-4 col-md-6 mt-5">
+                    <h4 class="h5 text-white">Bize Ulaşın</h4>
+                    <div class="width-3rem bg-primary height-3 mt-3"></div>
+                    @await Component.InvokeAsync("Contact")
+                </div>
+
+            </div> <!-- END row-->
+        </div> <!-- END container-->
+    </div> <!-- END footer-top-->
+
+    <div class="footer-bottom bg-black-0_9 py-5 text-center">
+        <div class="container">
+            <p class="text-white-0_5 mb-0">&copy; 2025 RenderMentor. Tüm hakları saklıdır.</p>
+        </div>
+    </div>  <!-- END footer-bottom-->
+</footer> <!-- END site-footer -->
+
+<div class="scroll-top">
+    <i class="ti-angle-up"></i>
+</div>

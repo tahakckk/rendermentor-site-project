@@ -1,0 +1,53 @@
+﻿@model About
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var setBg = "/images/breadcrumb-bg.jpg";
+    var setImage = "/images/content/rendermentor-about-default.jpg";
+    if (Model.PageBg != null)
+    {
+        setBg = Model.PageBg;
+        setBg = setBg.Replace("\\", "/");
+    }
+    if (Model.PageImage != null)
+    {
+        setImage = Model.PageImage;
+        setImage = setImage.Replace("\\", "/");
+    }
+}
+
+<div class="py-5 bg-cover" data-dark-overlay="6" style="background:url(@setBg) no-repeat">
+    <div class="container">
+        <h1 class="text-white">
+            Hakkımızda
+        </h1>
+        <ol class="breadcrumb breadcrumb-double-angle text-white bg-transparent p-0">
+            <li class="breadcrumb-item"><a asp-action="Index">Anasayfa</a></li>
+            <li class="breadcrumb-item">Hakkımızda</li>
+        </ol>
+    </div>
+</div>
+
+<section class="padding-y-100 border-bottom">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-5 mb-4 mr-auto text-center">
+                <img class="wow fadeInLeft w-100 rounded" src="@setImage" alt="RenderMentor Hakkında">
+            </div>
+            <div class="col-lg-6">
+                <h2 class="title-styled">@Model.PageTitle</h2>
+                <div class="width-4rem height-4 bg-primary rounded mt-4 marginBottom-40"></div>
+                <div class="about-content">
+                    @Html.Raw(Model.PageDesc)
+                </div>
+            </div> <!-- END col-lg-6 ml-auto-->
+        </div> <!-- END row-->
+    </div> <!-- END container-->
+</section>
+
+@await Component.InvokeAsync("CourseCategory", new { viewName = "Cards" })
+
+@await Component.InvokeAsync("Team")
+
+
+
