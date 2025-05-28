@@ -39,11 +39,3 @@
 3. Tüm testleri çalıştırın
 4. Pull request oluşturun
 5. Code review sürecini bekleyin
-
-## Güvenlik Kontrol Listesi
-
-- [ ] Hassas bilgiler ortam değişkenlerinde saklanıyor
-- [ ] Yapılandırma dosyaları güvenli
-- [ ] Kod güvenlik standartlarına uygun
-- [ ] Testler başarılı
-- [ ] Dokümantasyon güncel 
